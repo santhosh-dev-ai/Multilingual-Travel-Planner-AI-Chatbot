@@ -1,6 +1,6 @@
 import httpx
 import asyncio
-from typing import Optional
+from typing import Optional, List, Dict
 from app.core.config import settings
 
 
@@ -72,7 +72,7 @@ Always put a line break before questions like "Would you like...", "What type of
 
 Remember: You're having a conversation, not writing an article. Be helpful, be real, be brief."""
 
-    def _build_messages(self, messages: list[dict], language: str = "en-US") -> list[dict]:
+    def _build_messages(self, messages: List[Dict], language: str = "en-US") -> List[Dict]:
         """Build the messages array for Groq API."""
         
         language_instructions = {
@@ -107,7 +107,7 @@ Remember: You're having a conversation, not writing an article. Be helpful, be r
 
     async def generate_response(
         self, 
-        messages: list[dict], 
+        messages: List[Dict], 
         language: str = "en-US",
         max_tokens: int = 2048,
         temperature: float = 0.7,

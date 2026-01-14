@@ -159,6 +159,50 @@
   scrollbar-width: none;
 }
 
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@utility animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
+@utility animate-slideDown {
+  animation: slideDown 0.2s ease-out;
+}
+
 @media (prefers-color-scheme: dark) {
   @theme inline {
     --color-background: var(--color-dark-background);

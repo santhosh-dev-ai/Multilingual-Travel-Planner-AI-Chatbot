@@ -356,7 +356,7 @@ const chatTranslations = {
   },
 };
 
-export default function ChatInterface({ selectedLanguage }) {
+export default function ChatInterface({ selectedLanguage, initialPrompt = '' }) {
   const t = chatTranslations[selectedLanguage] || chatTranslations['en-US'];
   
   const [messages, setMessages] = useState([
@@ -370,9 +370,22 @@ export default function ChatInterface({ selectedLanguage }) {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [suggestionCategory, setSuggestionCategory] = useState('initial');
+  const [lastProcessedPrompt, setLastProcessedPrompt] = useState('');
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const inputRef = useRef(null);
+
+  // Handle initial prompt from AI integration
+  useEffect(() => {
+    if (initialPrompt && initialPrompt !== lastProcessedPrompt) {
+      setLastProcessedPrompt(initialPrompt);
+      setInputValue(initialPrompt);
+      // Focus the input
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }
+  }, [initialPrompt, lastProcessedPrompt]);
 
   // Function to detect conversation context and update suggestions
   const detectContext = (allMessages) => {
