@@ -142,6 +142,15 @@ async function fetchDatabaseAPI(endpoint, options = {}) {
   };
 
   try {
+    // Check if DATABASE_API_URL is set and valid
+    if (!DATABASE_API_URL || typeof DATABASE_API_URL !== 'string' || DATABASE_API_URL.startsWith('undefined')) {
+      throw new Error('DATABASE_API_URL is not set or invalid. Please check your environment variables.');
+    }
+    // Check endpoint
+    if (!endpoint || typeof endpoint !== 'string') {
+      throw new Error('Database API endpoint is missing or invalid.');
+    }
+    
     const response = await fetch(url, config);
     
     if (!response.ok) {
@@ -151,6 +160,16 @@ async function fetchDatabaseAPI(endpoint, options = {}) {
     
     return await response.json();
   } catch (error) {
+    // Handle network errors (server not running, CORS, etc.)
+    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+      const networkError = new Error('Database API server is not available. Please ensure the database service is running on port 8001.');
+      networkError.name = 'NetworkError';
+      networkError.isNetworkError = true;
+      console.warn('Database API Error (Network):', networkError.message);
+      throw networkError;
+    }
+    
+    // Handle other errors
     console.error('Database API Error:', error);
     throw error;
   }

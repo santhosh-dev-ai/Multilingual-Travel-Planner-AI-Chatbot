@@ -27,20 +27,27 @@ export function useWishlist() {
             wishlistId: item.id, // Keep the database ID for deletion
           }));
           setWishlist(items);
+          setError(null);
+        } else {
+          // Empty wishlist response
+          setWishlist([]);
+          setError(null);
         }
-        setError(null);
       } catch (e) {
-        console.error('Failed to load wishlist from database:', e);
-        setError(e.message);
-        // Fallback to localStorage
-        const saved = localStorage.getItem('travelgenie-wishlist');
-        if (saved) {
-          try {
-            setWishlist(JSON.parse(saved));
-          } catch (parseError) {
-            setWishlist([]);
-          }
+        // For network errors (server not running), don't set error state - just log a warning
+        // This prevents error messages from showing when the server is intentionally not running
+        if (e.isNetworkError || e.name === 'NetworkError') {
+          // Only log to console, don't set error state for initial load
+          // This way the app works normally even if database server isn't running
+          console.debug('Database API server is not running. Wishlist features will be unavailable until the server is started.');
+        } else {
+          // Only set error for actual failures, not network errors
+          console.error('Failed to load wishlist from database:', e.message);
+          setError(`Failed to load wishlist: ${e.message}`);
         }
+        
+        // Set empty wishlist on error
+        setWishlist([]);
       } finally {
         setIsLoading(false);
         setIsLoaded(true);
@@ -49,13 +56,6 @@ export function useWishlist() {
 
     loadWishlist();
   }, []);
-
-  // Also save to localStorage as backup
-  useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem('travelgenie-wishlist', JSON.stringify(wishlist));
-    }
-  }, [wishlist, isLoaded]);
 
   const addToWishlist = useCallback(async (destination) => {
     // Optimistic update
@@ -68,10 +68,19 @@ export function useWishlist() {
 
     try {
       await wishlistAPI.addToWishlist(destination);
+      setError(null);
     } catch (e) {
-      console.error('Failed to add to wishlist:', e);
       // Revert on error
       setWishlist(prev => prev.filter(d => d.id !== destination.id));
+      
+      // Set error message only for non-network errors
+      if (e.isNetworkError || e.name === 'NetworkError') {
+        console.warn('Database service unavailable. Please start the database API server to save wishlist items.');
+        // Don't set error state for network errors - user can still use the app
+      } else {
+        console.error('Failed to add to wishlist:', e.message);
+        setError(`Failed to add to wishlist: ${e.message}`);
+      }
     }
   }, []);
 
@@ -84,11 +93,20 @@ export function useWishlist() {
 
     try {
       await wishlistAPI.removeFromWishlist(destinationId);
+      setError(null);
     } catch (e) {
-      console.error('Failed to remove from wishlist:', e);
       // Revert on error
       if (itemToRemove) {
         setWishlist(prev => [...prev, itemToRemove]);
+      }
+      
+      // Set error message only for non-network errors
+      if (e.isNetworkError || e.name === 'NetworkError') {
+        console.warn('Database service unavailable. Please start the database API server to manage wishlist items.');
+        // Don't set error state for network errors
+      } else {
+        console.error('Failed to remove from wishlist:', e.message);
+        setError(`Failed to remove from wishlist: ${e.message}`);
       }
     }
   }, [wishlist]);
@@ -111,10 +129,19 @@ export function useWishlist() {
 
     try {
       await wishlistAPI.clearWishlist();
+      setError(null);
     } catch (e) {
-      console.error('Failed to clear wishlist:', e);
       // Revert on error
       setWishlist(previousWishlist);
+      
+      // Set error message only for non-network errors
+      if (e.isNetworkError || e.name === 'NetworkError') {
+        console.warn('Database service unavailable. Please start the database API server to manage wishlist items.');
+        // Don't set error state for network errors
+      } else {
+        console.error('Failed to clear wishlist:', e.message);
+        setError(`Failed to clear wishlist: ${e.message}`);
+      }
     }
   }, [wishlist]);
 
@@ -133,9 +160,22 @@ export function useWishlist() {
           wishlistId: item.id,
         }));
         setWishlist(items);
+        setError(null);
+      } else {
+        setWishlist([]);
+        setError(null);
       }
     } catch (e) {
-      console.error('Failed to refresh wishlist:', e);
+      // For network errors, don't set error state
+      if (e.isNetworkError || e.name === 'NetworkError') {
+        console.debug('Database API server is not running. Wishlist refresh unavailable.');
+        // Don't set error state for network errors
+      } else {
+        console.error('Failed to refresh wishlist:', e.message);
+        setError(`Failed to refresh wishlist: ${e.message}`);
+      }
+      // Set empty wishlist on error
+      setWishlist([]);
     } finally {
       setIsLoading(false);
     }

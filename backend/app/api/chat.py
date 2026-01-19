@@ -2,10 +2,9 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
-from app.services.groq_service import GroqService
+from app.services.groq_service import groq_service
 
 router = APIRouter()
-ai_service = GroqService()
 
 class ConversationMessage(BaseModel):
     role: str
@@ -40,7 +39,7 @@ async def send_message(request: ChatRequest):
             "content": request.message
         })
         
-        response = await ai_service.generate_response(
+        response = await groq_service.generate_response(
             messages=messages,
             language=request.language
         )

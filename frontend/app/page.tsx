@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import HamburgerMenu from './components/HamburgerMenu';
 import ChatInterface from './components/ChatInterface';
 import LanguageSelector from './components/LanguageSelector';
 import DestinationCard from './components/DestinationCard';
@@ -51,6 +52,8 @@ export default function Home() {
   
   // Wishlist modal state
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  // Saved Itineraries modal state
+  const [isItinerariesOpen, setIsItinerariesOpen] = useState(false);
   
   // Filter state
   const [searchQuery, setSearchQuery] = useState('');
@@ -331,31 +334,46 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              {/* Wishlist Button */}
-              <button 
-                onClick={() => setIsWishlistOpen(true)}
-                className="flex items-center gap-2 px-3 py-2 hover:bg-(--color-background-secondary) rounded-lg transition-colors"
-                title={`My Wishlist (${wishlist.length})`}
-              >
-                {wishlist.length > 0 ? (
-                  <HeartSolidIcon className="w-5 h-5 text-red-500" />
-                ) : (
-                  <HeartIcon className="w-5 h-5 text-(--color-text-secondary)" />
-                )}
-                <span className="text-sm font-medium text-(--color-text-primary) hidden sm:inline">
-                  My Wishlist
-                </span>
-                {wishlist.length > 0 && (
-                  <span className="min-w-5 h-5 px-1.5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    {wishlist.length}
-                  </span>
-                )}
-              </button>
               <LanguageSelector
                 selectedLanguage={selectedLanguage}
                 onLanguageChange={setSelectedLanguage}
               />
+              <HamburgerMenu
+                onWishlistClick={() => setIsWishlistOpen(true)}
+                onItinerariesClick={() => setIsItinerariesOpen(true)}
+                wishlistCount={wishlist.length}
+                savedItinerariesCount={builtItineraries.length}
+              />
             </div>
+                {/* Saved Itineraries Modal */}
+                {isItinerariesOpen && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                    <div className="bg-white dark:bg-(--color-dark-surface) rounded-xl shadow-xl w-full max-w-2xl max-h-[80vh] overflow-y-auto relative">
+                      <button
+                        className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                        onClick={() => setIsItinerariesOpen(false)}
+                        aria-label="Close"
+                      >
+                        <span style={{fontSize:24}}>&times;</span>
+                      </button>
+                      <div className="p-6">
+                        <h2 className="text-2xl font-bold mb-4 text-(--color-text-primary)">Saved Itineraries</h2>
+                        {builtItineraries.length === 0 ? (
+                          <p className="text-(--color-text-secondary)">No itineraries saved yet. Build an itinerary to see it here!</p>
+                        ) : (
+                          <ul className="space-y-4">
+                            {builtItineraries.map((id, idx) => (
+                              <li key={id} className="p-4 bg-(--color-background-secondary) rounded-lg">
+                                <span className="font-medium text-(--color-text-primary)">Itinerary #{idx + 1}</span>
+                                {/* You can expand this to show more details if available */}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
           </div>
         </div>
       </header>
