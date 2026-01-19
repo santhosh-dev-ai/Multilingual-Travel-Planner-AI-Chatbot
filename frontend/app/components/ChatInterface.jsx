@@ -358,7 +358,7 @@ const chatTranslations = {
 
 export default function ChatInterface({ selectedLanguage, initialPrompt = '' }) {
   const t = chatTranslations[selectedLanguage] || chatTranslations['en-US'];
-  
+
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -371,9 +371,15 @@ export default function ChatInterface({ selectedLanguage, initialPrompt = '' }) 
   const [isTyping, setIsTyping] = useState(false);
   const [suggestionCategory, setSuggestionCategory] = useState('initial');
   const [lastProcessedPrompt, setLastProcessedPrompt] = useState('');
+  const [isClient, setIsClient] = useState(false);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const inputRef = useRef(null);
+
+  // Set isClient to true after component mounts (client-side only)
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Handle initial prompt from AI integration
   useEffect(() => {
@@ -600,7 +606,7 @@ export default function ChatInterface({ selectedLanguage, initialPrompt = '' }) 
                 </div>
               </div>
               <span className="text-xs text-(--color-text-tertiary) mt-1 px-1">
-                {formatTime(message.timestamp)}
+                {isClient ? formatTime(message.timestamp) : ''}
               </span>
             </div>
           </div>

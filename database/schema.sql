@@ -4,31 +4,13 @@
 -- Run this SQL in your Supabase SQL Editor to create the tables
 -- Dashboard: https://supabase.com/dashboard -> SQL Editor
 
--- =============================================
--- HELPER FUNCTION FOR SHORT IDs
--- =============================================
--- Creates readable IDs like: wl_20260103_abc123, it_20260103_xyz789
-
-CREATE OR REPLACE FUNCTION generate_short_id(prefix TEXT)
-RETURNS TEXT AS $$
-DECLARE
-    date_part TEXT;
-    random_part TEXT;
-BEGIN
-    date_part := to_char(NOW(), 'YYYYMMDD');
-    random_part := lower(substring(md5(random()::text) from 1 for 6));
-    RETURN prefix || '_' || date_part || '_' || random_part;
-END;
-$$ LANGUAGE plpgsql;
 
 -- =============================================
 -- WISHLISTS TABLE
 -- =============================================
--- Drop and recreate for new ID format (only run if changing existing table)
--- DROP TABLE IF EXISTS wishlists CASCADE;
 
 CREATE TABLE IF NOT EXISTS wishlists (
-    id TEXT PRIMARY KEY DEFAULT generate_short_id('wl'),
+    id SERIAL PRIMARY KEY,
     user_id TEXT NOT NULL,
     destination_id INTEGER NOT NULL,
     destination_name TEXT NOT NULL,
@@ -37,8 +19,6 @@ CREATE TABLE IF NOT EXISTS wishlists (
     destination_price TEXT,
     destination_rating DECIMAL(2,1),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    
-    -- Prevent duplicate entries for same user and destination
     UNIQUE(user_id, destination_id)
 );
 
@@ -66,11 +46,9 @@ CREATE POLICY "Users can delete own wishlist" ON wishlists
 -- =============================================
 -- ITINERARIES TABLE
 -- =============================================
--- Drop and recreate for new ID format (only run if changing existing table)
--- DROP TABLE IF EXISTS itineraries CASCADE;
 
 CREATE TABLE IF NOT EXISTS itineraries (
-    id TEXT PRIMARY KEY DEFAULT generate_short_id('it'),
+    id SERIAL PRIMARY KEY,
     user_id TEXT NOT NULL,
     destination TEXT NOT NULL,
     destination_country TEXT,
