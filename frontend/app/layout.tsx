@@ -9,9 +9,23 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TravelGenie - AI Travel Planner",
-  description: "Your intelligent multilingual travel companion for planning amazing trips worldwide",
-  keywords: ["travel", "AI", "planner", "multilingual", "destinations", "itinerary"],
+  title: "TravelGenie - Student Trip Planner",
+  description:
+    "TravelGenie helps students plan affordable, efficient, and memorable trips. Get personalized, budget-friendly itineraries using AI, maps, and real-time data—perfect for students with limited budgets!",
+  keywords: [
+    "travel",
+    "AI",
+    "planner",
+    "student",
+    "budget",
+    "multilingual",
+    "destinations",
+    "itinerary",
+    "personalized",
+    "maps",
+    "location data",
+    "affordable"
+  ],
 };
 
 export default function RootLayout({

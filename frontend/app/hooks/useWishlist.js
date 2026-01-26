@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { wishlistAPI } from '../services/api';
+import { wishlistAPI, chatAPI } from '../services/api';
 
 export function useWishlist() {
   const [wishlist, setWishlist] = useState([]); // Array of full destination objects
@@ -13,40 +13,32 @@ export function useWishlist() {
   useEffect(() => {
     const loadWishlist = async () => {
       setIsLoading(true);
+
       try {
         const response = await wishlistAPI.getWishlist();
         if (response.success && response.data) {
-          // Transform database format to frontend format
-          const items = response.data.map(item => ({
+          // Transform database items to full destination objects
+          const fullDestinations = response.data.map(item => ({
             id: item.destination_id,
             name: item.destination_name,
             country: item.destination_country,
             image: item.destination_image,
             price: item.destination_price,
             rating: item.destination_rating,
-            wishlistId: item.id, // Keep the database ID for deletion
+            reviews: 100, // Default value
+            duration: '7-10 days', // Default value
+            description: `Amazing destination in ${item.destination_country}`, // Default value
+            tags: ['culture', 'adventure'], // Default value
+            educational_notes: `This destination offers great learning opportunities for students interested in cultural exploration and adventure.`
           }));
-          setWishlist(items);
-          setError(null);
+          setWishlist(fullDestinations);
         } else {
-          // Empty wishlist response
           setWishlist([]);
-          setError(null);
         }
+        setError(null);
       } catch (e) {
-        // For network errors (server not running), don't set error state - just log a warning
-        // This prevents error messages from showing when the server is intentionally not running
-        if (e.isNetworkError || e.name === 'NetworkError') {
-          // Only log to console, don't set error state for initial load
-          // This way the app works normally even if database server isn't running
-          console.debug('Database API server is not running. Wishlist features will be unavailable until the server is started.');
-        } else {
-          // Only set error for actual failures, not network errors
-          console.error('Failed to load wishlist from database:', e.message);
-          setError(`Failed to load wishlist: ${e.message}`);
-        }
-        
-        // Set empty wishlist on error
+        console.error('Failed to load wishlist from database:', e.message);
+        setError(`Failed to load wishlist: ${e.message}`);
         setWishlist([]);
       } finally {
         setIsLoading(false);
@@ -59,54 +51,53 @@ export function useWishlist() {
 
   const addToWishlist = useCallback(async (destination) => {
     // Optimistic update
-    setWishlist(prev => {
-      if (!prev.find(d => d.id === destination.id)) {
-        return [...prev, destination];
-      }
-      return prev;
-    });
+    const newWishlist = [...wishlist];
+    if (!newWishlist.find(d => d.id === destination.id)) {
+      newWishlist.push({
+        ...destination,
+        educational_notes: `This destination offers great learning opportunities for students interested in ${destination.tags?.join(', ') || 'cultural exploration'}.`
+      });
+      setWishlist(newWishlist);
+    }
 
     try {
-      await wishlistAPI.addToWishlist(destination);
+      // Save to database
+      const response = await wishlistAPI.addToWishlist(destination);
+      if (!response.success) {
+        throw new Error(response.message || 'Failed to add to wishlist');
+      }
+
       setError(null);
     } catch (e) {
-      // Revert on error
+      console.error('Failed to add to wishlist:', e.message);
+      setError(`Failed to add to wishlist: ${e.message}`);
+      // Revert optimistic update on error
       setWishlist(prev => prev.filter(d => d.id !== destination.id));
-      
-      // Set error message only for non-network errors
-      if (e.isNetworkError || e.name === 'NetworkError') {
-        console.warn('Database service unavailable. Please start the database API server to save wishlist items.');
-        // Don't set error state for network errors - user can still use the app
-      } else {
-        console.error('Failed to add to wishlist:', e.message);
-        setError(`Failed to add to wishlist: ${e.message}`);
-      }
     }
-  }, []);
+  }, [wishlist]);
 
   const removeFromWishlist = useCallback(async (destinationId) => {
     // Store the item for potential rollback
     const itemToRemove = wishlist.find(d => d.id === destinationId);
-    
+
     // Optimistic update
-    setWishlist(prev => prev.filter(d => d.id !== destinationId));
+    const newWishlist = wishlist.filter(d => d.id !== destinationId);
+    setWishlist(newWishlist);
 
     try {
-      await wishlistAPI.removeFromWishlist(destinationId);
+      // Remove from database
+      const response = await wishlistAPI.removeFromWishlist(destinationId);
+      if (!response.success) {
+        throw new Error(response.message || 'Failed to remove from wishlist');
+      }
+
       setError(null);
     } catch (e) {
-      // Revert on error
+      console.error('Failed to remove from wishlist:', e.message);
+      setError(`Failed to remove from wishlist: ${e.message}`);
+      // Revert optimistic update on error
       if (itemToRemove) {
         setWishlist(prev => [...prev, itemToRemove]);
-      }
-      
-      // Set error message only for non-network errors
-      if (e.isNetworkError || e.name === 'NetworkError') {
-        console.warn('Database service unavailable. Please start the database API server to manage wishlist items.');
-        // Don't set error state for network errors
-      } else {
-        console.error('Failed to remove from wishlist:', e.message);
-        setError(`Failed to remove from wishlist: ${e.message}`);
       }
     }
   }, [wishlist]);
@@ -128,53 +119,50 @@ export function useWishlist() {
     setWishlist([]);
 
     try {
-      await wishlistAPI.clearWishlist();
+      // Clear from database
+      const response = await wishlistAPI.clearWishlist();
+      if (!response.success) {
+        throw new Error(response.message || 'Failed to clear wishlist');
+      }
+
       setError(null);
     } catch (e) {
-      // Revert on error
+      console.error('Failed to clear wishlist:', e.message);
+      setError(`Failed to clear wishlist: ${e.message}`);
+      // Revert optimistic update on error
       setWishlist(previousWishlist);
-      
-      // Set error message only for non-network errors
-      if (e.isNetworkError || e.name === 'NetworkError') {
-        console.warn('Database service unavailable. Please start the database API server to manage wishlist items.');
-        // Don't set error state for network errors
-      } else {
-        console.error('Failed to clear wishlist:', e.message);
-        setError(`Failed to clear wishlist: ${e.message}`);
-      }
     }
   }, [wishlist]);
 
   const refreshWishlist = useCallback(async () => {
     setIsLoading(true);
     try {
+      // Refresh from database
       const response = await wishlistAPI.getWishlist();
       if (response.success && response.data) {
-        const items = response.data.map(item => ({
+        // Transform database items to full destination objects
+        const fullDestinations = response.data.map(item => ({
           id: item.destination_id,
           name: item.destination_name,
           country: item.destination_country,
           image: item.destination_image,
           price: item.destination_price,
           rating: item.destination_rating,
-          wishlistId: item.id,
+          reviews: 100, // Default value
+          duration: '7-10 days', // Default value
+          description: `Amazing destination in ${item.destination_country}`, // Default value
+          tags: ['culture', 'adventure'], // Default value
+          educational_notes: `This destination offers great learning opportunities for students interested in cultural exploration and adventure.`
         }));
-        setWishlist(items);
-        setError(null);
+        setWishlist(fullDestinations);
       } else {
         setWishlist([]);
-        setError(null);
       }
+
+      setError(null);
     } catch (e) {
-      // For network errors, don't set error state
-      if (e.isNetworkError || e.name === 'NetworkError') {
-        console.debug('Database API server is not running. Wishlist refresh unavailable.');
-        // Don't set error state for network errors
-      } else {
-        console.error('Failed to refresh wishlist:', e.message);
-        setError(`Failed to refresh wishlist: ${e.message}`);
-      }
-      // Set empty wishlist on error
+      console.error('Failed to refresh wishlist:', e.message);
+      setError(`Failed to refresh wishlist: ${e.message}`);
       setWishlist([]);
     } finally {
       setIsLoading(false);

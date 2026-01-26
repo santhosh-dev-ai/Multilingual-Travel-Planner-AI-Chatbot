@@ -17,7 +17,7 @@ import {
   CheckIcon,
 } from '@heroicons/react/24/outline';
 import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
-import { itineraryAPI, savedItineraryAPI } from '../services/api';
+import { itineraryAPI, chatAPI } from '../services/api';
 
 const INTERESTS = [
   'Adventure', 'Culture', 'Food', 'Nature', 'Photography',
@@ -51,8 +51,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [budget, setBudget] = useState('moderate');
   const [travelStyle, setTravelStyle] = useState('balanced');
-  const [customizing, setCustomizing] = useState(false);
-  const [customizePrompt, setCustomizePrompt] = useState('');
+  // ...existing code...
 
   const toggleInterest = (interest) => {
     if (selectedInterests.includes(interest)) {
@@ -93,24 +92,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
     }
   };
 
-  const customizeItinerary = async () => {
-    if (!customizePrompt.trim()) return;
-    
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const result = await itineraryAPI.customize(itinerary, customizePrompt);
-      setItinerary(result);
-      setCustomizing(false);
-      setCustomizePrompt('');
-    } catch (err) {
-      console.error('Customization error:', err);
-      setError('Failed to customize itinerary. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Removed customizeItinerary logic
 
   const handleShare = async () => {
     const shareText = `Check out my ${duration}-day trip to ${destination?.name || destination}! 🌍✈️\n\n${itinerary?.summary}`;
@@ -137,21 +119,28 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
 
   const handleSaveItinerary = async () => {
     if (!itinerary || isSaving) return;
-    
+
     setIsSaving(true);
     try {
-      await savedItineraryAPI.save({
+      // Save to database
+      const itineraryData = {
         destination: destination?.name || destination,
-        destination_country: destination?.country || null,
+        destination_country: destination?.country || 'Unknown',
         duration: itinerary.duration,
         travel_style: travelStyle,
         budget: budget,
         summary: itinerary.summary,
         days: itinerary.days,
         budget_estimate: itinerary.budget_estimate,
-        packing_tips: itinerary.packing_tips,
-        local_phrases: itinerary.local_phrases,
-      });
+        packing_tips: itinerary.packing_tips || [],
+        local_phrases: itinerary.local_phrases || []
+      };
+
+      const response = await itineraryAPI.save(itineraryData);
+      if (!response.success) {
+        throw new Error(response.message || 'Failed to save itinerary');
+      }
+
       setIsSaved(true);
     } catch (err) {
       console.error('Failed to save itinerary:', err);
@@ -346,7 +335,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                 <SparklesIcon className="w-8 h-8 text-purple-600 animate-pulse" />
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">
-                {customizing ? 'Customizing your itinerary...' : 'Creating your perfect itinerary...'}
+                Creating your perfect itinerary...
               </h3>
               <p className="text-gray-500">
                 Our AI is crafting a personalized trip plan just for you
@@ -411,13 +400,6 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                   )}
                 </button>
                 <button
-                  onClick={() => setCustomizing(!customizing)}
-                  className="flex-1 flex items-center justify-center gap-2 py-2 border-2 border-purple-200 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
-                >
-                  <PencilIcon className="w-4 h-4" />
-                  Customize
-                </button>
-                <button
                   onClick={handleShare}
                   className="flex-1 flex items-center justify-center gap-2 py-2 border-2 border-purple-200 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
                 >
@@ -433,27 +415,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                 </button>
               </div>
 
-              {/* Customize Input */}
-              {customizing && (
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    What would you like to change?
-                  </label>
-                  <textarea
-                    value={customizePrompt}
-                    onChange={(e) => setCustomizePrompt(e.target.value)}
-                    placeholder="E.g., 'Add more beach activities', 'Remove Day 3 and add a spa day', 'Make it more budget-friendly'"
-                    className="w-full p-3 border rounded-lg resize-none h-24 focus:ring-2 focus:ring-purple-500 focus:outline-none"
-                  />
-                  <button
-                    onClick={customizeItinerary}
-                    disabled={!customizePrompt.trim()}
-                    className="mt-2 w-full py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors disabled:opacity-50"
-                  >
-                    Apply Changes
-                  </button>
-                </div>
-              )}
+              {/* Customize input removed */}
 
               {/* Daily Itinerary */}
               <div className="space-y-3">

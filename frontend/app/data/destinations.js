@@ -15,6 +15,7 @@ export const destinations = [
     badge: 'Popular',
     bestTimeToVisit: 'Apr - Oct',
     climate: 'Mediterranean',
+    coordinates: { lat: 36.3932, lon: 25.4615 },
     highlights: [
       'Iconic Oia sunset views',
       'Black sand beaches',
@@ -41,6 +42,7 @@ export const destinations = [
     badge: 'Trending',
     bestTimeToVisit: 'Mar - May, Oct - Nov',
     climate: 'Temperate',
+    coordinates: { lat: 35.0116, lon: 135.7681 },
     highlights: [
       'Fushimi Inari Shrine',
       'Arashiyama Bamboo Grove',
@@ -67,6 +69,7 @@ export const destinations = [
     badge: 'Best Value',
     bestTimeToVisit: 'Apr - Oct',
     climate: 'Tropical',
+    coordinates: { lat: -8.3405, lon: 115.0920 },
     highlights: [
       'Ubud rice terraces',
       'Uluwatu Temple sunset',
@@ -235,46 +238,46 @@ export const destinations = [
 export const translations = {
   'en-US': {
     hero: {
-      title: 'Plan Your Dream Journey with AI',
-      subtitle: 'Discover amazing destinations, get personalized itineraries, and chat with our intelligent travel assistant in your language.',
-      cta: 'Start Planning',
-      secondary: 'Explore Destinations',
+      title: 'Learn While You Travel with AI',
+      subtitle: 'Discover educational destinations, get study-focused itineraries, and chat with our AI travel assistant designed for students worldwide.',
+      cta: 'Start Learning',
+      secondary: 'Explore Educational Destinations',
     },
     features: {
-      title: 'Why Choose TravelGenie?',
+      title: 'Why TravelGenie for Students?',
       subtitle: '',
       items: [
         {
-          title: 'Trips that match your vibe',
-          description: 'Tell us what you like—we plan it your way. Personalized experiences crafted just for you.',
+          title: 'Educational Travel Planning',
+          description: 'AI-powered itineraries focused on learning experiences, cultural immersion, and academic growth for students.',
         },
         {
-          title: 'No overthinking, just traveling',
-          description: 'Smart plans, zero stress. Let AI handle the details while you focus on the adventure.',
+          title: 'Student Budget Optimization',
+          description: 'Smart recommendations for affordable accommodations, student discounts, and budget-friendly activities.',
         },
         {
-          title: 'Hidden spots > crowded places',
-          description: 'Discover cool places most people miss. Local gems and secret favorites await.',
+          title: 'Academic Credit Opportunities',
+          description: 'Discover destinations with study abroad programs, internships, and academic partnerships.',
         },
         {
-          title: 'Your travel buddy, 24/7',
-          description: 'Suggestions, updates, and help—anytime you need. Always here for your journey.',
+          title: 'Cultural Learning Focus',
+          description: 'AI-curated experiences that enhance cultural understanding, language skills, and global perspectives.',
         },
         {
-          title: 'One app. All travel stuff.',
-          description: 'Planning, exploring, and enjoying—done. Everything you need in one place.',
+          title: 'Safety & Student Support',
+          description: 'Comprehensive safety information, emergency contacts, and student-specific travel advice.',
         },
         {
-          title: 'Budget-friendly, fun-maximized',
-          description: 'Spend less, experience more. Smart recommendations that respect your wallet.',
+          title: 'Group Travel Coordination',
+          description: 'Easy planning for student groups, educational tours, and university-organized trips.',
         },
         {
-          title: 'Solo, squad, or family trips',
-          description: "Everyone's invited. Perfect plans whether you're traveling alone or with loved ones.",
+          title: 'Language & Cultural Prep',
+          description: 'AI-generated language guides, cultural tips, and preparation materials for international travel.',
         },
         {
-          title: 'Memories over maps',
-          description: 'TravelGenie helps you live the moment. Less scrolling, more experiencing.',
+          title: 'Academic Networking',
+          description: 'Connect with universities, research opportunities, and academic communities worldwide.',
         },
       ],
     },

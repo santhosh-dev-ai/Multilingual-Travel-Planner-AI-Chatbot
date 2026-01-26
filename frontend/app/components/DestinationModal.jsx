@@ -232,8 +232,11 @@ export default function DestinationModal({
             {/* Weather Widget */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-(--color-text-primary) mb-3">Typical Seasons & Weather</h3>
-              <WeatherWidget 
+              <WeatherWidget
                 destination={destination.name}
+                coordinates={destination.coordinates}
+                compact={false}
+                initialTab="forecast"
               />
             </div>
 

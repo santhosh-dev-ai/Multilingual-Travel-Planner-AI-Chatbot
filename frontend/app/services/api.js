@@ -112,23 +112,13 @@ export const itineraryAPI = {
     });
   },
   
-  customize: async (itinerary, modifications, language = 'en-US') => {
-    return fetchAPI('/itinerary/customize', {
-      method: 'POST',
-      body: JSON.stringify({
-        itinerary,
-        modifications,
-        language,
-      }),
-    });
-  },
 };
 
-// ============== DATABASE APIs (Supabase) ==============
+// ============== DATABASE-BASED WISHLIST & ITINERARY APIs ==============
 
 async function fetchDatabaseAPI(endpoint, options = {}) {
   const url = `${DATABASE_API_URL}${endpoint}`;
-  
+
   const defaultHeaders = {
     'Content-Type': 'application/json',
   };
@@ -142,46 +132,27 @@ async function fetchDatabaseAPI(endpoint, options = {}) {
   };
 
   try {
-    // Check if DATABASE_API_URL is set and valid
-    if (!DATABASE_API_URL || typeof DATABASE_API_URL !== 'string' || DATABASE_API_URL.startsWith('undefined')) {
-      throw new Error('DATABASE_API_URL is not set or invalid. Please check your environment variables.');
-    }
-    // Check endpoint
-    if (!endpoint || typeof endpoint !== 'string') {
-      throw new Error('Database API endpoint is missing or invalid.');
-    }
-    
     const response = await fetch(url, config);
-    
+
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
-      throw new Error(error.detail || error.message || `HTTP error! status: ${response.status}`);
+      throw new Error(error.detail || error.error || `HTTP error! status: ${response.status}`);
     }
-    
+
     return await response.json();
   } catch (error) {
-    // Handle network errors (server not running, CORS, etc.)
-    if (error instanceof TypeError && error.message === 'Failed to fetch') {
-      const networkError = new Error('Database API server is not available. Please ensure the database service is running on port 8001.');
-      networkError.name = 'NetworkError';
-      networkError.isNetworkError = true;
-      console.warn('Database API Error (Network):', networkError.message);
-      throw networkError;
-    }
-    
-    // Handle other errors
     console.error('Database API Error:', error);
     throw error;
   }
 }
 
-// Wishlist Database API
+// Database-based Wishlist API
 export const wishlistAPI = {
   getWishlist: async () => {
     const userId = getUserId();
     return fetchDatabaseAPI(`/wishlist/${userId}`);
   },
-  
+
   addToWishlist: async (destination) => {
     const userId = getUserId();
     return fetchDatabaseAPI('/wishlist', {
@@ -197,19 +168,19 @@ export const wishlistAPI = {
       }),
     });
   },
-  
+
   removeFromWishlist: async (destinationId) => {
     const userId = getUserId();
     return fetchDatabaseAPI(`/wishlist/${userId}/destination/${destinationId}`, {
       method: 'DELETE',
     });
   },
-  
+
   checkInWishlist: async (destinationId) => {
     const userId = getUserId();
     return fetchDatabaseAPI(`/wishlist/${userId}/check/${destinationId}`);
   },
-  
+
   clearWishlist: async () => {
     const userId = getUserId();
     return fetchDatabaseAPI(`/wishlist/${userId}/clear`, {
@@ -218,17 +189,17 @@ export const wishlistAPI = {
   },
 };
 
-// Saved Itineraries Database API
+// Database-based Saved Itineraries API
 export const savedItineraryAPI = {
   getAll: async () => {
     const userId = getUserId();
     return fetchDatabaseAPI(`/itinerary/${userId}`);
   },
-  
+
   getById: async (itineraryId) => {
     return fetchDatabaseAPI(`/itinerary/detail/${itineraryId}`);
   },
-  
+
   save: async (itineraryData) => {
     const userId = getUserId();
     return fetchDatabaseAPI('/itinerary', {
@@ -248,20 +219,20 @@ export const savedItineraryAPI = {
       }),
     });
   },
-  
+
   update: async (itineraryId, updateData) => {
     return fetchDatabaseAPI(`/itinerary/${itineraryId}`, {
       method: 'PUT',
       body: JSON.stringify(updateData),
     });
   },
-  
+
   delete: async (itineraryId) => {
     return fetchDatabaseAPI(`/itinerary/${itineraryId}`, {
       method: 'DELETE',
     });
   },
-  
+
   getCount: async () => {
     const userId = getUserId();
     return fetchDatabaseAPI(`/itinerary/${userId}/count`);

@@ -515,7 +515,7 @@ export default function Home() {
           {isSearching && (
             <div className="flex items-center justify-center gap-2 py-4 text-(--color-primary)">
               <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-              <span className="text-sm font-medium">Searching worldwide destinations...</span>
+              <span className="text-sm font-medium">Searching destinations...</span>
             </div>
           )}
 
