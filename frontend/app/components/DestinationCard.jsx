@@ -16,7 +16,7 @@ export default function DestinationCard({
   showCompare = true,
 }) {
   return (
-    <div className="card group overflow-hidden hover:scale-[1.02] transition-transform duration-300 relative">
+    <div className="bg-[#1E293B] rounded-xl border border-[#334155] shadow-sm hover:shadow-md transition-shadow duration-200 group overflow-hidden hover:scale-[1.02] transition-transform duration-300 relative">
       {/* Compare Checkbox */}
       {showCompare && (
         <div className="absolute top-3 left-3 z-10">
@@ -27,11 +27,11 @@ export default function DestinationCard({
                   type="checkbox"
                   checked={isInCompare}
                   onChange={() => onToggleCompare(destination.id)}
-                  className="w-4 h-4 rounded border-white/50 text-(--color-primary) focus:ring-(--color-primary) cursor-pointer"
+                  className="w-4 h-4 rounded border-white/50 text-[#3AA8C1] focus:ring-[#3AA8C1] cursor-pointer"
                 />
                 <span className="text-xs text-white">Compare</span>
               </label>
-              <div className="px-3 py-1 bg-(--color-accent) text-white text-xs font-semibold rounded-full">
+              <div className="px-3 py-1 bg-[#3AA8C1] text-white text-xs font-semibold rounded-full">
                 {destination.badge}
               </div>
             </div>
@@ -41,7 +41,7 @@ export default function DestinationCard({
                 type="checkbox"
                 checked={isInCompare}
                 onChange={() => onToggleCompare(destination.id)}
-                className="w-4 h-4 rounded border-white/50 text-(--color-primary) focus:ring-(--color-primary) cursor-pointer"
+                className="w-4 h-4 rounded border-white/50 text-[#3AA8C1] focus:ring-[#3AA8C1] cursor-pointer"
               />
               <span className="text-xs text-white">Compare</span>
             </label>
@@ -69,13 +69,13 @@ export default function DestinationCard({
           {isInWishlist ? (
             <HeartSolidIcon className="w-5 h-5 text-red-500" />
           ) : (
-            <HeartIcon className="w-5 h-5 text-(--color-text-secondary)" />
+            <HeartIcon className="w-5 h-5 text-[#64748B]" />
           )}
         </button>
 
         {/* Badge - only show if no compare checkbox with badge */}
         {destination.badge && !showCompare && (
-          <div className="absolute top-3 left-3 px-3 py-1 bg-(--color-accent) text-white text-xs font-semibold rounded-full">
+          <div className="absolute top-3 left-3 px-3 py-1 bg-[#3AA8C1] text-white text-xs font-semibold rounded-full">
             {destination.badge}
           </div>
         )}
@@ -89,33 +89,33 @@ export default function DestinationCard({
 
       {/* Content */}
       <div className="p-4">
-        <h3 className="text-lg font-bold text-(--color-text-primary) mb-1">{destination.name}</h3>
-        <p className="text-sm text-(--color-text-secondary) mb-3 line-clamp-2">{destination.description}</p>
+        <h3 className="text-lg font-bold text-white mb-1">{destination.name}</h3>
+        <p className="text-sm text-[#CBD5E1] mb-3 line-clamp-2">{destination.description}</p>
 
         {/* Stats */}
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center gap-1">
             <StarIcon className="w-4 h-4 text-yellow-500" />
-            <span className="text-sm font-semibold text-(--color-text-primary)">{destination.rating}</span>
-            <span className="text-xs text-(--color-text-tertiary)">({destination.reviews})</span>
+            <span className="text-sm font-semibold text-white">{destination.rating}</span>
+            <span className="text-xs text-[#94A3B8]">({destination.reviews})</span>
           </div>
           <div className="flex items-center gap-1">
-            <ClockIcon className="w-4 h-4 text-(--color-primary)" />
-            <span className="text-sm text-(--color-text-secondary)">{destination.duration}</span>
+            <ClockIcon className="w-4 h-4 text-[#3AA8C1]" />
+            <span className="text-sm text-[#CBD5E1]">{destination.duration}</span>
           </div>
         </div>
 
         {/* Price & Actions */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs text-(--color-text-tertiary)">{translations?.startingFrom || 'Starting from'}</p>
-            <p className="text-xl font-bold text-(--color-primary)">{destination.price}</p>
+            <p className="text-xs text-[#94A3B8]">{translations?.startingFrom || 'Starting from'}</p>
+            <p className="text-xl font-bold text-[#3AA8C1]">{destination.price}</p>
           </div>
           <div className="flex items-center gap-2">
             {/* Ask AI Button */}
             <button 
               onClick={() => onAskAI(destination)}
-              className="p-2 border border-(--color-border) text-(--color-text-secondary) rounded-lg hover:border-(--color-primary) hover:text-(--color-primary) transition-all duration-200"
+              className="p-2 border border-[#334155] text-[#CBD5E1] rounded-lg hover:border-[#3AA8C1] hover:text-[#3AA8C1] transition-all duration-200"
               title="Ask AI about this destination"
             >
               <ChatBubbleLeftRightIcon className="w-5 h-5" />
@@ -123,7 +123,7 @@ export default function DestinationCard({
             {/* Explore Button */}
             <button 
               onClick={() => onExplore(destination)}
-              className="px-4 py-2 bg-gradient-to-r from-(--color-primary) to-(--color-secondary) text-white text-sm font-semibold rounded-lg hover:shadow-lg transition-all duration-200 active:scale-95"
+              className="px-4 py-2 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] text-white text-sm font-semibold rounded-lg hover:shadow-lg transition-all duration-200 active:scale-95"
             >
               {translations?.explore || 'Explore'}
             </button>

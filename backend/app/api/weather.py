@@ -7,7 +7,7 @@ from typing import Optional, List
 router = APIRouter()
 
 # OpenWeatherMap API - Free tier
-WEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY", "")
+WEATHER_API_KEY = os.getenv("WEATHER_API_KEY", "")
 WEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5"
 
 class WeatherResponse(BaseModel):
@@ -175,6 +175,94 @@ async def get_weather_forecast(lat: float, lon: float, days: int = 5):
             }
     except httpx.HTTPError as e:
         raise HTTPException(status_code=500, detail=f"Weather API error: {str(e)}")
+
+
+@router.get("/geocode")
+async def geocode_location(city: str, country: Optional[str] = None):
+    """Get coordinates for a city name."""
+    
+    query = f"{city},{country}" if country else city
+    
+    if not WEATHER_API_KEY:
+        # Return mock coordinates for major cities
+        mock_coords = {
+            "santorini": {"lat": 36.3932, "lon": 25.4615},
+            "kyoto": {"lat": 35.0116, "lon": 135.7681},
+            "bali": {"lat": -8.3405, "lon": 115.0920},
+            "swiss alps": {"lat": 46.8182, "lon": 8.2275},
+            "switzerland": {"lat": 46.8182, "lon": 8.2275},
+            "marrakech": {"lat": 31.6295, "lon": -7.9811},
+            "iceland": {"lat": 64.9631, "lon": -19.0208},
+            "maldives": {"lat": 3.2028, "lon": 73.2207},
+            "new zealand": {"lat": -40.9006, "lon": 174.8860},
+            "barcelona": {"lat": 41.3851, "lon": 2.1734},
+            "paris": {"lat": 48.8566, "lon": 2.3522},
+            "london": {"lat": 51.5074, "lon": -0.1278},
+            "tokyo": {"lat": 35.6762, "lon": 139.6503},
+            "new york": {"lat": 40.7128, "lon": -74.0060},
+            "sydney": {"lat": -33.8688, "lon": 151.2093},
+            "rome": {"lat": 41.9028, "lon": 12.4964},
+            "amsterdam": {"lat": 52.3676, "lon": 4.9041},
+            "berlin": {"lat": 52.5200, "lon": 13.4050},
+            "madrid": {"lat": 40.4168, "lon": -3.7038}
+        }
+        
+        city_lower = city.lower()
+        coords = mock_coords.get(city_lower, {"lat": 40.7128, "lon": -74.0060})
+        
+        return {
+            "name": city,
+            "country": country or "",
+            "lat": coords["lat"],
+            "lon": coords["lon"],
+            "note": "Demo coordinates - Add WEATHER_API_KEY for accurate geocoding"
+        }
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                "http://api.openweathermap.org/geo/1.0/direct",
+                params={
+                    "q": query,
+                    "limit": 1,
+                    "appid": WEATHER_API_KEY
+                }
+            )
+            response.raise_for_status()
+            data = response.json()
+            
+            if not data:
+                # Return fallback coordinates instead of error
+                city_lower = city.lower()
+                fallback_coords = {
+                    "santorini": {"lat": 36.3932, "lon": 25.4615},
+                    "kyoto": {"lat": 35.0116, "lon": 135.7681},
+                    "bali": {"lat": -8.3405, "lon": 115.0920},
+                    "swiss alps": {"lat": 46.8182, "lon": 8.2275},
+                    "switzerland": {"lat": 46.8182, "lon": 8.2275},
+                    "marrakech": {"lat": 31.6295, "lon": -7.9811},
+                    "iceland": {"lat": 64.9631, "lon": -19.0208},
+                    "maldives": {"lat": 3.2028, "lon": 73.2207},
+                    "new zealand": {"lat": -40.9006, "lon": 174.8860},
+                    "barcelona": {"lat": 41.3851, "lon": 2.1734}
+                }
+                coords = fallback_coords.get(city_lower, {"lat": 40.7128, "lon": -74.0060})
+                return {
+                    "name": city,
+                    "country": "",
+                    "lat": coords["lat"],
+                    "lon": coords["lon"]
+                }
+            
+            location = data[0]
+            return {
+                "name": location["name"],
+                "country": location.get("country", ""),
+                "lat": location["lat"],
+                "lon": location["lon"]
+            }
+    except httpx.HTTPError as e:
+        raise HTTPException(status_code=500, detail=f"Geocoding API error: {str(e)}")
 
 
 @router.get("/by-city")

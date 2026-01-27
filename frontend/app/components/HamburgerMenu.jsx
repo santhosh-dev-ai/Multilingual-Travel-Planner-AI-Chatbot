@@ -6,32 +6,33 @@ export default function HamburgerMenu({
   onItinerariesClick,
   wishlistCount = 0,
   savedItinerariesCount = 0,
+  translations,
 }) {
   const [open, setOpen] = useState(false);
 
   return (
     <div className="relative">
       <button
-        className="p-2 rounded-lg hover:bg-(--color-background-secondary)"
+        className="p-2 rounded-lg hover:bg-white/10"
         onClick={() => setOpen((prev) => !prev)}
         aria-label="Open menu"
       >
         {open ? (
-          <XMarkIcon className="w-7 h-7 text-(--color-text-primary)" />
+          <XMarkIcon className="w-7 h-7 text-white" />
         ) : (
-          <Bars3Icon className="w-7 h-7 text-(--color-text-primary)" />
+          <Bars3Icon className="w-7 h-7 text-white" />
         )}
       </button>
       {open && (
-        <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-(--color-dark-surface) border border-(--color-border) rounded-xl shadow-lg z-50">
+        <div className="absolute right-0 mt-2 w-56 bg-[#1E293B] border border-[#334155] rounded-xl shadow-lg z-50">
           <ul className="py-2">
             <li>
               <button
-                className="flex items-center w-full px-4 py-3 gap-3 hover:bg-(--color-background-secondary) text-(--color-text-primary)"
+                className="flex items-center w-full px-4 py-3 gap-3 hover:bg-[#334155] text-white"
                 onClick={() => { setOpen(false); onWishlistClick(); }}
               >
                 <HeartIcon className="w-5 h-5 text-red-500" />
-                My Wishlist
+                {translations?.menu?.wishlist || 'My Wishlist'}
                 {wishlistCount > 0 && (
                   <span className="ml-auto min-w-5 h-5 px-1.5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                     {wishlistCount}
@@ -41,13 +42,13 @@ export default function HamburgerMenu({
             </li>
             <li>
               <button
-                className="flex items-center w-full px-4 py-3 gap-3 hover:bg-(--color-background-secondary) text-(--color-text-primary)"
+                className="flex items-center w-full px-4 py-3 gap-3 hover:bg-[#334155] text-white"
                 onClick={() => { setOpen(false); onItinerariesClick(); }}
               >
-                <CalendarDaysIcon className="w-5 h-5 text-blue-500" />
-                Saved Itineraries
+                <CalendarDaysIcon className="w-5 h-5 text-[#3AA8C1]" />
+                {translations?.menu?.savedItineraries || 'Saved Itineraries'}
                 {savedItinerariesCount > 0 && (
-                  <span className="ml-auto min-w-5 h-5 px-1.5 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center">
+                  <span className="ml-auto min-w-5 h-5 px-1.5 bg-[#3AA8C1] text-white text-xs rounded-full flex items-center justify-center">
                     {savedItinerariesCount}
                   </span>
                 )}

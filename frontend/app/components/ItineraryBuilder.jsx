@@ -17,7 +17,7 @@ import {
   CheckIcon,
 } from '@heroicons/react/24/outline';
 import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
-import { itineraryAPI, chatAPI } from '../services/api';
+import { itineraryAPI, chatAPI, savedItineraryAPI } from '../services/api';
 
 const INTERESTS = [
   'Adventure', 'Culture', 'Food', 'Nature', 'Photography',
@@ -25,11 +25,12 @@ const INTERESTS = [
   'Architecture', 'Wildlife', 'Beach', 'Mountains', 'Spiritual'
 ];
 
-const BUDGETS = [
-  { value: 'budget', label: '💰 Budget', desc: 'Hostels, street food' },
-  { value: 'moderate', label: '💵 Moderate', desc: 'Mid-range hotels, restaurants' },
-  { value: 'luxury', label: '💎 Luxury', desc: 'Premium everything' },
-];
+const getBudgetLabel = (amount) => {
+  if (amount <= 300) return { emoji: '💰', label: 'Ultra Budget', desc: 'Hostels, street food, free activities' };
+  if (amount <= 600) return { emoji: '💵', label: 'Budget', desc: 'Budget hotels, local restaurants' };
+  if (amount <= 1200) return { emoji: '💳', label: 'Moderate', desc: 'Mid-range hotels, nice restaurants' };
+  return { emoji: '💎', label: 'Luxury', desc: 'Premium hotels, fine dining' };
+};
 
 const TRAVEL_STYLES = [
   { value: 'relaxed', label: '🌴 Relaxed', desc: '2-3 activities per day' },
@@ -49,7 +50,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
   // Form state
   const [duration, setDuration] = useState(5);
   const [selectedInterests, setSelectedInterests] = useState([]);
-  const [budget, setBudget] = useState('moderate');
+  const [budgetAmount, setBudgetAmount] = useState(500);
   const [travelStyle, setTravelStyle] = useState('balanced');
   // ...existing code...
 
@@ -75,7 +76,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
         destination?.name || destination,
         duration,
         selectedInterests,
-        budget,
+        `$${budgetAmount}`,
         travelStyle
       );
       setItinerary(result);
@@ -128,7 +129,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
         destination_country: destination?.country || 'Unknown',
         duration: itinerary.duration,
         travel_style: travelStyle,
-        budget: budget,
+        budget: `$${budgetAmount}`,
         summary: itinerary.summary,
         days: itinerary.days,
         budget_estimate: itinerary.budget_estimate,
@@ -136,12 +137,17 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
         local_phrases: itinerary.local_phrases || []
       };
 
-      const response = await itineraryAPI.save(itineraryData);
+      const response = await savedItineraryAPI.save(itineraryData);
       if (!response.success) {
         throw new Error(response.message || 'Failed to save itinerary');
       }
 
       setIsSaved(true);
+      
+      // Notify parent that itinerary was saved
+      if (onItineraryBuilt) {
+        onItineraryBuilt();
+      }
     } catch (err) {
       console.error('Failed to save itinerary:', err);
       setError('Failed to save itinerary. Please try again.');
@@ -154,19 +160,21 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 animate-fadeIn overflow-y-auto">
       <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl my-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-          <div className="flex items-center gap-3">
-            <CalendarIcon className="w-6 h-6" />
+        <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r from-[#3AA8C1] via-[#58B8CD] to-[#3E8EDE] text-white">
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+              <CalendarIcon className="w-7 h-7" />
+            </div>
             <div>
-              <h2 className="text-xl font-bold">Trip Itinerary Builder</h2>
-              <p className="text-sm opacity-90">
-                {destination?.name || destination}
+              <h2 className="text-2xl font-bold tracking-tight">Trip Itinerary Builder</h2>
+              <p className="text-sm opacity-90 font-medium">
+                ✈️ {destination?.name || destination}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white/20 rounded-full transition-colors"
+            className="p-3 hover:bg-white/20 rounded-xl transition-all duration-200 backdrop-blur-sm hover:scale-105"
           >
             <XMarkIcon className="w-6 h-6" />
           </button>
@@ -175,18 +183,22 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
         <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
           {/* Step Indicator */}
           {!itinerary && (
-            <div className="flex items-center justify-center gap-4 py-4 border-b bg-gray-50">
+            <div className="flex items-center justify-center gap-6 py-6 border-b bg-gradient-to-r from-[#DEF1F5] to-[#F8FAFB]">
               {[1, 2].map(s => (
-                <div key={s} className="flex items-center gap-2">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
-                    step >= s ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-500'
+                <div key={s} className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg transition-all duration-300 ${
+                    step >= s 
+                      ? 'bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] text-white shadow-lg scale-105' 
+                      : 'bg-white text-[#A3A3A3] border-2 border-[#E2E8F0]'
                   }`}>
                     {s}
                   </div>
-                  <span className={step >= s ? 'text-gray-800' : 'text-gray-400'}>
+                  <span className={`font-semibold transition-colors ${
+                    step >= s ? 'text-[#0F172A]' : 'text-[#94A3B8]'
+                  }`}>
                     {s === 1 ? 'Preferences' : 'Generate'}
                   </span>
-                  {s < 2 && <div className="w-12 h-0.5 bg-gray-200" />}
+                  {s < 2 && <div className="w-16 h-1 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] rounded-full opacity-30" />}
                 </div>
               ))}
             </div>
@@ -194,42 +206,45 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
 
           {/* Step 1: Preferences */}
           {step === 1 && !loading && (
-            <div className="p-6 space-y-6">
+            <div className="p-8 space-y-8">
               {/* Duration */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Trip Duration
+              <div className="space-y-4">
+                <label className="block text-lg font-semibold text-[#0F172A] mb-4">
+                  🗓️ Trip Duration
                 </label>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-6">
                   <input
                     type="range"
                     min="2"
                     max="14"
                     value={duration}
                     onChange={(e) => setDuration(parseInt(e.target.value))}
-                    className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                    className="flex-1 h-3 bg-gradient-to-r from-[#DEF1F5] to-[#BCE2EB] rounded-full appearance-none cursor-pointer slider-thumb"
+                    style={{
+                      background: `linear-gradient(to right, #3AA8C1 0%, #3AA8C1 ${((duration-2)/(14-2))*100}%, #E2E8F0 ${((duration-2)/(14-2))*100}%, #E2E8F0 100%)`
+                    }}
                   />
-                  <div className="bg-purple-100 px-4 py-2 rounded-lg min-w-20 text-center">
-                    <span className="text-2xl font-bold text-purple-600">{duration}</span>
-                    <span className="text-sm text-gray-600"> days</span>
+                  <div className="bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] px-6 py-3 rounded-xl min-w-28 text-center shadow-lg">
+                    <span className="text-3xl font-bold text-white">{duration}</span>
+                    <span className="text-sm text-white/90 block font-medium">days</span>
                   </div>
                 </div>
               </div>
 
               {/* Interests */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Your Interests (select up to 5)
+              <div className="space-y-4">
+                <label className="block text-lg font-semibold text-[#0F172A] mb-4">
+                  🎯 Your Interests (select up to 5)
                 </label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3">
                   {INTERESTS.map(interest => (
                     <button
                       key={interest}
                       onClick={() => toggleInterest(interest)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                      className={`px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                         selectedInterests.includes(interest)
-                          ? 'bg-purple-600 text-white shadow-lg scale-105'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? 'bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] text-white shadow-lg scale-105 border-2 border-[#3AA8C1]'
+                          : 'bg-white text-[#475569] hover:bg-[#F8FAFB] border-2 border-[#E2E8F0] hover:border-[#3AA8C1] hover:scale-102'
                       } ${
                         selectedInterests.length >= 5 && !selectedInterests.includes(interest)
                           ? 'opacity-50 cursor-not-allowed'
@@ -240,17 +255,22 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                     </button>
                   ))}
                 </div>
-                <p className="text-sm text-gray-500 mt-2">
-                  {selectedInterests.length}/5 selected
-                </p>
+                <div className="flex items-center gap-2 mt-3">
+                  <div className={`w-3 h-3 rounded-full ${
+                    selectedInterests.length > 0 ? 'bg-[#10B981]' : 'bg-[#E2E8F0]'
+                  }`} />
+                  <p className="text-sm text-[#475569] font-medium">
+                    {selectedInterests.length}/5 interests selected
+                  </p>
+                </div>
               </div>
 
               <button
                 onClick={() => setStep(2)}
                 disabled={selectedInterests.length === 0}
-                className="w-full py-3 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] text-white rounded-xl font-semibold text-lg hover:from-[#308CA0] hover:to-[#4AA5BA] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
               >
-                Continue
+                Continue to Budget & Style →
               </button>
             </div>
           )}
@@ -258,47 +278,70 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
           {/* Step 2: Budget & Style */}
           {step === 2 && !loading && !itinerary && (
             <div className="p-6 space-y-6">
-              {/* Budget */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Budget Level
+              {/* Budget Slider */}
+              <div className="space-y-5">
+                <label className="block text-lg font-semibold text-[#0F172A] mb-4">
+                  💰 Your Budget (Total Trip Cost)
                 </label>
-                <div className="grid grid-cols-3 gap-3">
-                  {BUDGETS.map(b => (
-                    <button
-                      key={b.value}
-                      onClick={() => setBudget(b.value)}
-                      className={`p-4 rounded-xl text-left transition-all ${
-                        budget === b.value
-                          ? 'bg-purple-100 border-2 border-purple-600 shadow-lg'
-                          : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
-                      }`}
-                    >
-                      <div className="text-lg font-bold text-gray-800">{b.label}</div>
-                      <div className="text-xs text-gray-600">{b.desc}</div>
-                    </button>
-                  ))}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-6">
+                    <input
+                      type="range"
+                      min="150"
+                      max="2000"
+                      step="50"
+                      value={budgetAmount}
+                      onChange={(e) => setBudgetAmount(parseInt(e.target.value))}
+                      className="flex-1 h-3 bg-gradient-to-r from-[#DEF1F5] to-[#BCE2EB] rounded-full appearance-none cursor-pointer slider-thumb"
+                      style={{
+                        background: `linear-gradient(to right, #3AA8C1 0%, #3AA8C1 ${((budgetAmount-150)/(2000-150))*100}%, #E2E8F0 ${((budgetAmount-150)/(2000-150))*100}%, #E2E8F0 100%)`
+                      }}
+                    />
+                    <div className="bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] px-6 py-3 rounded-xl min-w-32 text-center shadow-lg">
+                      <span className="text-2xl font-bold text-white">${budgetAmount}</span>
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-r from-[#F8FAFB] to-[#DEF1F5] rounded-xl p-5 border border-[#BCE2EB]">
+                    <div className="flex items-center gap-4">
+                      <span className="text-3xl">{getBudgetLabel(budgetAmount).emoji}</span>
+                      <div>
+                        <div className="font-bold text-[#0F172A] text-lg">{getBudgetLabel(budgetAmount).label}</div>
+                        <div className="text-sm text-[#475569] font-medium">{getBudgetLabel(budgetAmount).desc}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-4 gap-3">
+                    {[200, 400, 800, 1500].map(amount => (
+                      <button 
+                        key={amount}
+                        onClick={() => setBudgetAmount(amount)} 
+                        className="p-3 bg-white border-2 border-[#E2E8F0] rounded-xl hover:border-[#3AA8C1] hover:bg-[#F8FAFB] transition-all duration-200 text-sm font-semibold text-[#475569] hover:text-[#3AA8C1] hover:scale-105"
+                      >
+                        ${amount}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
               {/* Travel Style */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Travel Pace
+              <div className="space-y-4">
+                <label className="block text-lg font-semibold text-[#0F172A] mb-4">
+                  ⚡ Travel Pace
                 </label>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-4">
                   {TRAVEL_STYLES.map(s => (
                     <button
                       key={s.value}
                       onClick={() => setTravelStyle(s.value)}
-                      className={`p-4 rounded-xl text-left transition-all ${
+                      className={`p-5 rounded-xl text-left transition-all duration-200 border-2 ${
                         travelStyle === s.value
-                          ? 'bg-purple-100 border-2 border-purple-600 shadow-lg'
-                          : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
+                          ? 'bg-gradient-to-br from-[#DEF1F5] to-[#BCE2EB] border-[#3AA8C1] shadow-lg scale-105'
+                          : 'bg-white border-[#E2E8F0] hover:border-[#3AA8C1] hover:bg-[#F8FAFB] hover:scale-102'
                       }`}
                     >
-                      <div className="text-lg font-bold text-gray-800">{s.label}</div>
-                      <div className="text-xs text-gray-600">{s.desc}</div>
+                      <div className="text-xl font-bold text-[#0F172A] mb-1">{s.label}</div>
+                      <div className="text-sm text-[#475569] font-medium">{s.desc}</div>
                     </button>
                   ))}
                 </div>
@@ -310,19 +353,19 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                 </div>
               )}
 
-              <div className="flex gap-3">
+              <div className="flex gap-4">
                 <button
                   onClick={() => setStep(1)}
-                  className="flex-1 py-3 border-2 border-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
+                  className="flex-1 py-4 border-2 border-[#E2E8F0] text-[#475569] rounded-xl font-semibold hover:bg-[#F8FAFB] hover:border-[#3AA8C1] transition-all duration-200 hover:scale-[1.02]"
                 >
-                  Back
+                  ← Back
                 </button>
                 <button
                   onClick={generateItinerary}
-                  className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-medium hover:from-purple-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2"
+                  className="flex-1 py-4 bg-gradient-to-r from-[#3AA8C1] via-[#58B8CD] to-[#3E8EDE] text-white rounded-xl font-semibold hover:from-[#308CA0] hover:via-[#4AA5BA] hover:to-[#2377CB] transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <SparklesIcon className="w-5 h-5" />
-                  Generate Itinerary
+                  <SparklesIcon className="w-6 h-6" />
+                  Generate Itinerary ✨
                 </button>
               </div>
             </div>
@@ -330,21 +373,21 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
 
           {/* Loading State */}
           {loading && (
-            <div className="p-12 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
-                <SparklesIcon className="w-8 h-8 text-purple-600 animate-pulse" />
+            <div className="p-16 text-center">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-[#DEF1F5] to-[#BCE2EB] rounded-2xl mb-6 shadow-lg">
+                <SparklesIcon className="w-10 h-10 text-[#3AA8C1] animate-pulse" />
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">
-                Creating your perfect itinerary...
+              <h3 className="text-2xl font-bold text-[#0F172A] mb-3">
+                Creating your perfect itinerary... ✨
               </h3>
-              <p className="text-gray-500">
-                Our AI is crafting a personalized trip plan just for you
+              <p className="text-[#475569] text-lg font-medium mb-8">
+                Our AI is crafting a personalized ${budgetAmount} trip plan just for you
               </p>
-              <div className="mt-6 flex justify-center gap-1">
+              <div className="flex justify-center gap-2">
                 {[...Array(3)].map((_, i) => (
                   <div
                     key={i}
-                    className="w-3 h-3 bg-purple-600 rounded-full animate-bounce"
+                    className="w-4 h-4 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] rounded-full animate-bounce shadow-lg"
                     style={{ animationDelay: `${i * 0.2}s` }}
                   />
                 ))}
@@ -354,63 +397,74 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
 
           {/* Step 3: Itinerary Display */}
           {itinerary && !loading && (
-            <div className="p-6 space-y-6">
+            <div className="p-8 space-y-8">
               {/* Summary */}
-              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-5">
-                <h3 className="font-bold text-gray-800 mb-2">Trip Summary</h3>
-                <p className="text-gray-600">{itinerary.summary}</p>
-                <div className="flex flex-wrap gap-4 mt-4">
-                  <div className="flex items-center gap-2 text-sm text-gray-700">
-                    <CalendarIcon className="w-4 h-4 text-purple-600" />
-                    <span>{itinerary.duration} days</span>
+              <div className="bg-gradient-to-br from-[#DEF1F5] via-[#F8FAFB] to-[#BCE2EB] rounded-2xl p-6 border border-[#3AA8C1]/20 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] rounded-xl shadow-lg">
+                    <SparklesIcon className="w-6 h-6 text-white" />
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-700">
-                    <CurrencyDollarIcon className="w-4 h-4 text-purple-600" />
-                    <span>{itinerary.budget_estimate}</span>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-[#0F172A] text-xl mb-3">🎯 Trip Summary</h3>
+                    <p className="text-[#475569] text-lg leading-relaxed">{itinerary.summary}</p>
+                    <div className="flex flex-wrap gap-6 mt-5">
+                      <div className="flex items-center gap-3 text-[#0F172A]">
+                        <div className="p-2 bg-white/60 rounded-lg">
+                          <CalendarIcon className="w-5 h-5 text-[#3AA8C1]" />
+                        </div>
+                        <span className="font-semibold">{itinerary.duration} days</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-[#0F172A]">
+                        <div className="p-2 bg-white/60 rounded-lg">
+                          <CurrencyDollarIcon className="w-5 h-5 text-[#00A86B]" />
+                        </div>
+                        <span className="font-semibold">{itinerary.budget_estimate}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <button
                   onClick={handleSaveItinerary}
                   disabled={isSaving || isSaved}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg transition-colors ${
+                  className={`flex-1 flex items-center justify-center gap-3 py-3 rounded-xl transition-all duration-200 font-semibold ${
                     isSaved 
-                      ? 'bg-green-100 text-green-600 border-2 border-green-200'
-                      : 'border-2 border-purple-200 text-purple-600 hover:bg-purple-50'
+                      ? 'bg-gradient-to-r from-[#10B981] to-[#059669] text-white shadow-lg'
+                      : 'border-2 border-[#3AA8C1] text-[#3AA8C1] hover:bg-[#3AA8C1] hover:text-white shadow-lg hover:shadow-xl'
                   }`}
                 >
                   {isSaving ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       Saving...
                     </>
                   ) : isSaved ? (
                     <>
-                      <CheckIcon className="w-4 h-4" />
-                      Saved!
+                      <CheckIcon className="w-5 h-5" />
+                      Saved! ✅
                     </>
                   ) : (
                     <>
-                      <BookmarkIcon className="w-4 h-4" />
-                      Save
+                      <BookmarkIcon className="w-5 h-5" />
+                      Save Itinerary
                     </>
                   )}
                 </button>
                 <button
                   onClick={handleShare}
-                  className="flex-1 flex items-center justify-center gap-2 py-2 border-2 border-purple-200 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-3 py-3 border-2 border-[#3AA8C1] text-[#3AA8C1] rounded-xl hover:bg-[#3AA8C1] hover:text-white transition-all duration-200 font-semibold shadow-lg hover:shadow-xl"
                 >
-                  <ShareIcon className="w-4 h-4" />
+                  <ShareIcon className="w-5 h-5" />
                   Share
                 </button>
                 <button
                   onClick={handlePrint}
-                  className="flex-1 flex items-center justify-center gap-2 py-2 border-2 border-purple-200 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-3 py-3 border-2 border-[#3AA8C1] text-[#3AA8C1] rounded-xl hover:bg-[#3AA8C1] hover:text-white transition-all duration-200 font-semibold shadow-lg hover:shadow-xl"
                 >
-                  <PrinterIcon className="w-4 h-4" />
+                  <PrinterIcon className="w-5 h-5" />
                   Print
                 </button>
               </div>
@@ -418,63 +472,78 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
               {/* Customize input removed */}
 
               {/* Daily Itinerary */}
-              <div className="space-y-3">
-                <h3 className="font-bold text-gray-800 text-lg">Daily Schedule</h3>
+              <div className="space-y-4">
+                <h3 className="font-bold text-[#0F172A] text-2xl flex items-center gap-3">
+                  <div className="p-2 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] rounded-lg">
+                    <ClockIcon className="w-6 h-6 text-white" />
+                  </div>
+                  Daily Schedule
+                </h3>
                 
                 {itinerary.days?.map((day) => (
-                  <div key={day.day} className="border rounded-xl overflow-hidden">
+                  <div key={day.day} className="border-2 border-[#E2E8F0] rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-200">
                     <button
                       onClick={() => setExpandedDay(expandedDay === day.day ? null : day.day)}
-                      className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+                      className="w-full flex items-center justify-between p-6 bg-gradient-to-r from-[#F8FAFB] to-[#DEF1F5] hover:from-[#DEF1F5] hover:to-[#BCE2EB] transition-all duration-200"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-lg">
                           {day.day}
                         </div>
                         <div className="text-left">
-                          <div className="font-bold text-gray-800">{day.title}</div>
-                          <div className="text-sm text-gray-500">
-                            {day.activities?.length || 0} activities
+                          <div className="font-bold text-[#0F172A] text-lg">{day.title}</div>
+                          <div className="text-sm text-[#475569] font-medium">
+                            {day.activities?.length || 0} activities planned
                           </div>
                         </div>
                       </div>
-                      {expandedDay === day.day ? (
-                        <ChevronUpIcon className="w-5 h-5 text-gray-400" />
-                      ) : (
-                        <ChevronDownIcon className="w-5 h-5 text-gray-400" />
-                      )}
+                      <div className="p-2 bg-white/60 rounded-lg">
+                        {expandedDay === day.day ? (
+                          <ChevronUpIcon className="w-6 h-6 text-[#3AA8C1]" />
+                        ) : (
+                          <ChevronDownIcon className="w-6 h-6 text-[#3AA8C1]" />
+                        )}
+                      </div>
                     </button>
                     
                     {expandedDay === day.day && (
-                      <div className="p-4 space-y-4 animate-slideDown">
+                      <div className="p-6 space-y-6 bg-white animate-slideDown">
                         {day.activities?.map((activity, idx) => (
-                          <div key={idx} className="flex gap-4">
+                          <div key={idx} className="flex gap-5">
                             <div className="flex flex-col items-center">
-                              <div className="w-3 h-3 bg-purple-600 rounded-full" />
+                              <div className="w-4 h-4 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] rounded-full shadow-lg" />
                               {idx < day.activities.length - 1 && (
-                                <div className="flex-1 w-0.5 bg-purple-200 my-1" />
+                                <div className="flex-1 w-0.5 bg-gradient-to-b from-[#3AA8C1] to-[#BCE2EB] my-2 min-h-[60px]" />
                               )}
                             </div>
                             <div className="flex-1 pb-4">
                               <div className="flex items-start justify-between">
-                                <div>
-                                  <div className="flex items-center gap-2 text-sm text-purple-600 font-medium">
-                                    <ClockIcon className="w-4 h-4" />
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-3 text-sm text-[#3AA8C1] font-semibold mb-2">
+                                    <div className="p-1 bg-[#DEF1F5] rounded">
+                                      <ClockIcon className="w-4 h-4" />
+                                    </div>
                                     {activity.time}
                                   </div>
-                                  <h4 className="font-bold text-gray-800 mt-1">{activity.title}</h4>
-                                  <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
-                                  <div className="flex flex-wrap gap-3 mt-2 text-xs text-gray-500">
-                                    <span className="flex items-center gap-1">
-                                      <MapPinIcon className="w-3 h-3" />
+                                  <h4 className="font-bold text-[#0F172A] text-lg mb-2">{activity.title}</h4>
+                                  <p className="text-[#475569] mb-3 leading-relaxed">{activity.description}</p>
+                                  <div className="flex flex-wrap gap-4 text-sm">
+                                    <span className="flex items-center gap-2 text-[#475569] bg-[#F8FAFB] px-3 py-1 rounded-lg">
+                                      <MapPinIcon className="w-4 h-4 text-[#3AA8C1]" />
                                       {activity.location}
                                     </span>
-                                    <span>⏱️ {activity.duration}</span>
-                                    {activity.cost && <span>💰 {activity.cost}</span>}
+                                    <span className="bg-[#DEF1F5] text-[#3AA8C1] px-3 py-1 rounded-lg font-medium">
+                                      ⏱️ {activity.duration}
+                                    </span>
+                                    {activity.cost && (
+                                      <span className="bg-[#C6FFEA] text-[#00A86B] px-3 py-1 rounded-lg font-medium">
+                                        💰 {activity.cost}
+                                      </span>
+                                    )}
                                   </div>
                                   {activity.tips && (
-                                    <div className="mt-2 text-xs bg-yellow-50 text-yellow-700 px-2 py-1 rounded inline-block">
-                                      💡 {activity.tips}
+                                    <div className="mt-3 text-sm bg-gradient-to-r from-[#FEF3C7] to-[#FDE68A] text-[#92400E] px-4 py-2 rounded-lg border border-[#F59E0B]/20">
+                                      💡 <span className="font-medium">{activity.tips}</span>
                                     </div>
                                   )}
                                 </div>
@@ -485,25 +554,27 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                         
                         {/* Meals */}
                         {day.meals && (
-                          <div className="bg-orange-50 rounded-lg p-3 mt-2">
-                            <h5 className="font-medium text-orange-800 mb-2">🍽️ Meal Recommendations</h5>
-                            <div className="grid grid-cols-3 gap-2 text-sm">
+                          <div className="bg-gradient-to-r from-[#FEF3C7] to-[#FDE68A] rounded-xl p-5 border border-[#F59E0B]/20">
+                            <h5 className="font-bold text-[#92400E] mb-4 text-lg flex items-center gap-2">
+                              🍽️ Meal Recommendations
+                            </h5>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               {day.meals.breakfast && (
-                                <div>
-                                  <span className="text-orange-600 font-medium">Breakfast:</span>
-                                  <span className="text-gray-600 ml-1">{day.meals.breakfast}</span>
+                                <div className="bg-white/60 p-3 rounded-lg">
+                                  <span className="text-[#92400E] font-semibold block mb-1">🌅 Breakfast:</span>
+                                  <span className="text-[#475569] font-medium">{day.meals.breakfast}</span>
                                 </div>
                               )}
                               {day.meals.lunch && (
-                                <div>
-                                  <span className="text-orange-600 font-medium">Lunch:</span>
-                                  <span className="text-gray-600 ml-1">{day.meals.lunch}</span>
+                                <div className="bg-white/60 p-3 rounded-lg">
+                                  <span className="text-[#92400E] font-semibold block mb-1">☀️ Lunch:</span>
+                                  <span className="text-[#475569] font-medium">{day.meals.lunch}</span>
                                 </div>
                               )}
                               {day.meals.dinner && (
-                                <div>
-                                  <span className="text-orange-600 font-medium">Dinner:</span>
-                                  <span className="text-gray-600 ml-1">{day.meals.dinner}</span>
+                                <div className="bg-white/60 p-3 rounded-lg">
+                                  <span className="text-[#92400E] font-semibold block mb-1">🌙 Dinner:</span>
+                                  <span className="text-[#475569] font-medium">{day.meals.dinner}</span>
                                 </div>
                               )}
                             </div>
@@ -511,8 +582,8 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                         )}
                         
                         {day.notes && (
-                          <div className="text-sm text-gray-500 italic mt-2">
-                            📝 {day.notes}
+                          <div className="text-[#475569] italic bg-[#F8FAFB] p-4 rounded-lg border-l-4 border-[#3AA8C1]">
+                            📝 <span className="font-medium">{day.notes}</span>
                           </div>
                         )}
                       </div>
@@ -522,15 +593,20 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
               </div>
 
               {/* Packing Tips & Local Phrases */}
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-6">
                 {itinerary.packing_tips?.length > 0 && (
-                  <div className="bg-blue-50 rounded-xl p-4">
-                    <h4 className="font-bold text-blue-800 mb-3">🎒 Packing Tips</h4>
-                    <ul className="space-y-2">
+                  <div className="bg-gradient-to-br from-[#DBEAFE] to-[#BFDBFE] rounded-2xl p-6 border border-[#3B82F6]/20 shadow-lg">
+                    <h4 className="font-bold text-[#1E40AF] mb-4 text-xl flex items-center gap-3">
+                      <div className="p-2 bg-white/60 rounded-lg">
+                        🎒
+                      </div>
+                      Packing Tips
+                    </h4>
+                    <ul className="space-y-3">
                       {itinerary.packing_tips.map((tip, idx) => (
-                        <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
-                          <span className="text-blue-500">✓</span>
-                          {tip}
+                        <li key={idx} className="text-[#475569] flex items-start gap-3 bg-white/60 p-3 rounded-lg">
+                          <span className="text-[#10B981] font-bold text-lg">✓</span>
+                          <span className="font-medium">{tip}</span>
                         </li>
                       ))}
                     </ul>
@@ -538,15 +614,20 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                 )}
                 
                 {itinerary.local_phrases?.length > 0 && (
-                  <div className="bg-green-50 rounded-xl p-4">
-                    <h4 className="font-bold text-green-800 mb-3">🗣️ Useful Phrases</h4>
-                    <div className="space-y-2">
+                  <div className="bg-gradient-to-br from-[#D1FAE5] to-[#A7F3D0] rounded-2xl p-6 border border-[#10B981]/20 shadow-lg">
+                    <h4 className="font-bold text-[#065F46] mb-4 text-xl flex items-center gap-3">
+                      <div className="p-2 bg-white/60 rounded-lg">
+                        🗣️
+                      </div>
+                      Useful Phrases
+                    </h4>
+                    <div className="space-y-3">
                       {itinerary.local_phrases.map((phrase, idx) => (
-                        <div key={idx} className="text-sm">
-                          <span className="font-medium text-gray-800">{phrase.phrase}:</span>
-                          <span className="text-gray-600 ml-1">{phrase.translation}</span>
+                        <div key={idx} className="bg-white/60 p-4 rounded-lg">
+                          <span className="font-bold text-[#0F172A] text-lg">{phrase.phrase}:</span>
+                          <span className="text-[#475569] ml-2 font-medium">{phrase.translation}</span>
                           {phrase.pronunciation && (
-                            <span className="text-gray-400 ml-1 italic">({phrase.pronunciation})</span>
+                            <span className="text-[#6B7280] ml-2 italic text-sm">({phrase.pronunciation})</span>
                           )}
                         </div>
                       ))}
@@ -562,9 +643,9 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                   setStep(1);
                   setSelectedInterests([]);
                 }}
-                className="w-full py-3 border-2 border-purple-200 text-purple-600 rounded-xl font-medium hover:bg-purple-50 transition-colors"
+                className="w-full py-4 border-2 border-[#3AA8C1] text-[#3AA8C1] rounded-xl font-semibold hover:bg-[#3AA8C1] hover:text-white transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
               >
-                Start Over
+                🔄 Start Over - Create New Itinerary
               </button>
             </div>
           )}

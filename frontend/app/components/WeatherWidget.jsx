@@ -28,12 +28,7 @@ export default function WeatherWidget({ destination, coordinates, compact = fals
   const [activeTab, setActiveTab] = useState(initialTab && initialTab === 'forecast' ? 'forecast' : 'current'); // 'current' or 'forecast'
 
   useEffect(() => {
-    if (coordinates && coordinates.lat && coordinates.lon) {
-      fetchWeatherData();
-    } else {
-      // Fallback to city name if coordinates not available
-      fetchWeatherByCity();
-    }
+    fetchWeatherForDestination();
   }, [destination, coordinates]);
 
   useEffect(() => {
@@ -42,38 +37,39 @@ export default function WeatherWidget({ destination, coordinates, compact = fals
     }
   }, [forecast]);
 
-  const fetchWeatherData = async () => {
+  const fetchWeatherForDestination = async () => {
     setLoading(true);
     setError(null);
+    
     try {
-      // Fetch current weather
-      const currentResponse = await weatherAPI.getCurrentByCoords(coordinates.lat, coordinates.lon);
-      setCurrentWeather(currentResponse);
-
-      // Fetch forecast
-      const forecastResponse = await weatherAPI.getForecast(coordinates.lat, coordinates.lon, 7);
-      setForecast(forecastResponse);
-    } catch (err) {
-      console.error('Weather fetch error:', err);
-      setError('Unable to load weather data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchWeatherByCity = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      // Extract city name from destination string
+      let lat, lon;
+      
+      // Extract city name from destination
       const cityName = destination.split(',')[0].trim();
-
-      // Fetch current weather by city
-      const currentResponse = await weatherAPI.getCurrentByCity(cityName);
+      
+      // First try to get coordinates via geocoding
+      try {
+        const geocodeResponse = await weatherAPI.geocodeLocation(cityName);
+        lat = geocodeResponse.lat;
+        lon = geocodeResponse.lon;
+      } catch (geocodeError) {
+        // If geocoding fails, use provided coordinates as fallback
+        if (coordinates && coordinates.lat && coordinates.lon) {
+          lat = coordinates.lat;
+          lon = coordinates.lon;
+        } else {
+          throw new Error('Unable to get location coordinates');
+        }
+      }
+      
+      // Fetch current weather
+      const currentResponse = await weatherAPI.getCurrentByCoords(lat, lon);
       setCurrentWeather(currentResponse);
 
-      // For forecast, we'd need coordinates, so we'll skip forecast for now
-      setForecast(null);
+      // Fetch 7-day forecast
+      const forecastResponse = await weatherAPI.getForecast(lat, lon, 7);
+      setForecast(forecastResponse);
+      
     } catch (err) {
       console.error('Weather fetch error:', err);
       setError('Unable to load weather data');
@@ -180,24 +176,20 @@ export default function WeatherWidget({ destination, coordinates, compact = fals
             <span>7-Day Forecast</span>
           </div>
 
-          <div className="space-y-2">
-            {forecast.forecast.map((day, idx) => (
-              <div key={idx} className="flex items-center justify-between bg-white/10 rounded-lg p-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">{getWeatherIcon(day.icon)}</span>
-                  <div>
-                    <div className="font-medium text-sm">
-                      {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                    </div>
-                    <div className="text-xs opacity-80">{day.description}</div>
+          <div className="space-y-2 overflow-x-auto">
+            <div className="flex gap-3 min-w-max pb-2">
+              {forecast.forecast.map((day, idx) => (
+                <div key={idx} className="flex-shrink-0 bg-white/10 rounded-lg p-3 min-w-[120px] text-center">
+                  <div className="text-lg mb-2">{getWeatherIcon(day.icon)}</div>
+                  <div className="font-medium text-xs mb-1">
+                    {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                   </div>
-                </div>
-                <div className="text-right">
+                  <div className="text-xs opacity-80 mb-2">{day.description}</div>
                   <div className="font-bold text-sm">{Math.round(day.temp_max)}°</div>
                   <div className="text-xs opacity-70">{Math.round(day.temp_min)}°</div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}

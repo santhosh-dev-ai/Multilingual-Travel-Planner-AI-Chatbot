@@ -8,7 +8,7 @@ class GroqService:
     def __init__(self):
         self.api_key = settings.GROQ_API_KEY
         self.api_url = "https://api.groq.com/openai/v1/chat/completions"
-        self.model = "llama-3.1-70b-versatile"
+        self.model = "llama-3.1-8b-instant"
         self.system_prompt = "You are TravelGenie, an expert AI travel assistant powered by advanced AI. You have comprehensive knowledge about travel, destinations, planning, and tips."
 
     def _build_messages(self, messages: List[Dict], language: str = "en-US") -> List[Dict]:
@@ -32,30 +32,47 @@ class GroqService:
         max_tokens: int = 2048,
         temperature: float = 0.7,
     ) -> str:
-        if not self.api_key:
-            return "Groq API key is not configured. Please add GROQ_API_KEY to your .env file."
-        groq_messages = self._build_messages(messages, language)
-        payload = {
-            "model": self.model,
-            "messages": groq_messages,
-            "max_tokens": max_tokens,
-            "temperature": temperature,
-        }
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            try:
+        if not self.api_key or self.api_key.strip() == "":
+            return "❌ Groq API key is not configured. Please add GROQ_API_KEY to your backend/.env file."
+        
+        try:
+            groq_messages = self._build_messages(messages, language)
+            payload = {
+                "model": self.model,
+                "messages": groq_messages,
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+            }
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(self.api_url, json=payload, headers=headers)
+                
+                if response.status_code == 401:
+                    return "❌ Invalid Groq API key. Please check your GROQ_API_KEY in backend/.env file."
+                elif response.status_code == 429:
+                    return "⏳ Rate limit exceeded. Please wait a moment and try again."
+                elif response.status_code == 500:
+                    return "🔧 Groq service is temporarily unavailable. Please try again later."
+                
                 response.raise_for_status()
                 result = response.json()
+                
                 if "choices" in result and len(result["choices"]) > 0:
                     return result["choices"][0]["message"]["content"]
                 return "I apologize, but I couldn't generate a response. Please try again."
-            except Exception as e:
-                print(f"Groq API Error: {e}")
-                return "Sorry, I encountered an error. Please try again later."
+                
+        except httpx.TimeoutException:
+            return "⏰ Request timed out. Please try again."
+        except httpx.RequestError as e:
+            print(f"Groq API Request Error: {e}")
+            return "🌐 Network error occurred. Please check your internet connection and try again."
+        except Exception as e:
+            print(f"Groq API Error: {e}")
+            return "❌ Sorry, I encountered an unexpected error. Please try again later."
 
 # Create singleton instance
 groq_service = GroqService()

@@ -61,14 +61,15 @@ IMPORTANT REQUIREMENTS:
 3. Include exact addresses or well-known location names
 4. Vary the times - not every day should start at 9 AM
 5. Activities should match the traveler's interests: {interests_str}
-6. Budget level: {request.budget} (budget=$20-50/day, moderate=$50-150/day, luxury=$150+/day for activities)
+6. BUDGET CONSTRAINT: Total trip budget is {request.budget}. Plan activities, meals, and experiences that fit within this budget. Break down costs realistically.
 7. Travel pace: {request.travel_style} ({activities_per_day} activities per day)
+8. For students: Focus on budget-friendly options, free activities, student discounts, hostels, street food, and educational experiences.
 
 For {request.destination}, include famous landmarks, hidden gems, local favorites, specific restaurants by name, museums, parks, neighborhoods to explore, etc.
 
 Return ONLY valid JSON (no markdown):
 {{
-    "summary": "Exciting 2-3 sentence overview mentioning specific highlights",
+    "summary": "Exciting 2-3 sentence overview mentioning specific highlights and how it fits the {request.budget} budget",
     "days": [
         {{
             "day": 1,
@@ -80,26 +81,26 @@ Return ONLY valid JSON (no markdown):
                     "description": "Detailed 2-3 sentences about what to do, what to see, why it's special",
                     "location": "Exact place name with neighborhood/area",
                     "duration": "2 hours",
-                    "cost": "$XX or Free",
-                    "tips": "Specific practical tip for this exact place"
+                    "cost": "$XX or Free (be realistic for the total budget)",
+                    "tips": "Specific practical tip for this exact place, including student discounts if available"
                 }}
             ],
             "meals": {{
-                "breakfast": "Specific restaurant name - specialty dish recommendation",
-                "lunch": "Specific restaurant name - what to order",
-                "dinner": "Specific restaurant name - known for what cuisine"
+                "breakfast": "Specific restaurant name - specialty dish recommendation (budget-friendly)",
+                "lunch": "Specific restaurant name - what to order (affordable option)",
+                "dinner": "Specific restaurant name - known for what cuisine (within budget)"
             }},
             "notes": "Specific transportation or timing advice for this day"
         }}
     ],
-    "budget_estimate": "Total $X,XXX - $X,XXX breakdown",
+    "budget_estimate": "Total {request.budget} breakdown: Accommodation $X, Food $X, Activities $X, Transport $X",
     "packing_tips": ["5 specific tips for {request.destination}'s weather/culture"],
     "local_phrases": [
         {{"phrase": "Hello", "translation": "actual local translation", "pronunciation": "phonetic guide"}}
     ]
 }}
 
-Generate exactly {request.duration} unique days with {activities_per_day} activities each. Make it feel like a real, personalized travel guide."""
+Generate exactly {request.duration} unique days with {activities_per_day} activities each. Make it feel like a real, personalized travel guide that respects the {request.budget} budget constraint."""
 
     try:
         response = await groq_service.generate_response(
@@ -293,17 +294,25 @@ def generate_smart_fallback_itinerary(request: ItineraryRequest) -> dict:
         phrases = [{"phrase": "Hello", "translation": "Hello", "pronunciation": "Hello"}, {"phrase": "Thank you", "translation": "Thank you", "pronunciation": "Thank you"}]
     
     budget_estimates = {
-        "budget": f"${request.duration * 80}-${request.duration * 120}",
-        "moderate": f"${request.duration * 150}-${request.duration * 250}",
-        "luxury": f"${request.duration * 300}-${request.duration * 500}"
+        "$150": f"${request.duration * 30}-${request.duration * 50}",
+        "$200": f"${request.duration * 40}-${request.duration * 65}",
+        "$300": f"${request.duration * 60}-${request.duration * 100}",
+        "$500": f"${request.duration * 100}-${request.duration * 165}",
+        "$800": f"${request.duration * 160}-${request.duration * 265}",
+        "$1200": f"${request.duration * 240}-${request.duration * 400}",
+        "$1500": f"${request.duration * 300}-${request.duration * 500}"
     }
+    
+    # Get closest budget estimate
+    budget_key = request.budget if request.budget in budget_estimates else "$500"
+    fallback_budget = budget_estimates.get(budget_key, f"${request.duration * 100}-${request.duration * 200}")
     
     return {
         "destination": request.destination,
         "duration": request.duration,
         "summary": f"Experience {request.duration} amazing days in {request.destination}! From iconic landmarks to hidden local gems, this itinerary balances must-see attractions with authentic experiences tailored to your {request.travel_style} travel style.",
         "days": days,
-        "budget_estimate": budget_estimates.get(request.budget, "$1,000 - $2,500"),
+        "budget_estimate": budget_estimates.get(request.budget, fallback_budget),
         "packing_tips": [
             "Comfortable walking shoes - you'll cover lots of ground",
             "Universal power adapter for your electronics",

@@ -91,8 +91,16 @@ export const weatherAPI = {
     return fetchAPI(endpoint);
   },
   
-  getForecast: async (lat, lon, days = 5) => {
+  getForecast: async (lat, lon, days = 7) => {
     return fetchAPI(`/weather/forecast?lat=${lat}&lon=${lon}&days=${days}`);
+  },
+  
+  geocodeLocation: async (city, country = null) => {
+    let endpoint = `/weather/geocode?city=${encodeURIComponent(city)}`;
+    if (country) {
+      endpoint += `&country=${encodeURIComponent(country)}`;
+    }
+    return fetchAPI(endpoint);
   },
 };
 

@@ -80,7 +80,9 @@ export default function CompareDestinations({
                   <div className="py-3 font-semibold text-(--color-text-secondary)">Price</div>
                   <div className="py-3 font-semibold text-(--color-text-secondary)">Best Time</div>
                   <div className="py-3 font-semibold text-(--color-text-secondary)">Climate</div>
-                  <div className="py-3 font-semibold text-(--color-text-secondary)">Trip Type</div>
+                  <div className="py-3 font-semibold text-(--color-text-secondary)">Highlights</div>
+                  <div className="py-3 font-semibold text-(--color-text-secondary)">Academic Focus</div>
+                  <div className="py-3 font-semibold text-(--color-text-secondary)">Student Benefits</div>
                 </div>
 
                 {/* Destination Columns */}
@@ -138,17 +140,39 @@ export default function CompareDestinations({
                       {destination.climate || 'Varied'}
                     </div>
 
-                    {/* Trip Type */}
+                    {/* Highlights */}
                     <div className="py-3">
-                      <div className="flex flex-wrap gap-1">
-                        {(destination.tags || ['Travel']).slice(0, 2).map((tag, i) => (
-                          <span
-                            key={i}
-                            className="px-2 py-0.5 bg-(--color-primary-50) dark:bg-(--color-primary)/20 text-(--color-primary) text-xs rounded-full"
-                          >
-                            {tag}
-                          </span>
+                      <div className="space-y-1 text-sm text-(--color-text-secondary)">
+                        {(destination.highlights || []).slice(0, 3).map((highlight, i) => (
+                          <div key={i} className="flex items-start gap-1">
+                            <span className="text-(--color-primary) mt-1">•</span>
+                            <span>{highlight}</span>
+                          </div>
                         ))}
+                      </div>
+                    </div>
+
+                    {/* Academic Focus */}
+                    <div className="py-3">
+                      <div className="text-sm text-(--color-text-primary)">
+                        {destination.tags?.includes('Academic') ? '🎓 University Programs' :
+                         destination.tags?.includes('Language Learning') ? '🗣️ Language Immersion' :
+                         destination.tags?.includes('Culture') ? '🏛️ Cultural Studies' :
+                         destination.tags?.includes('History') ? '📚 Historical Research' :
+                         '🌍 General Education'}
+                      </div>
+                    </div>
+
+                    {/* Student Benefits */}
+                    <div className="py-3">
+                      <div className="text-sm text-(--color-text-primary)">
+                        {destination.priceValue < 400 ? '💰 Budget-Friendly' :
+                         destination.priceValue < 500 ? '💵 Moderate Cost' :
+                         '💎 Premium Experience'}
+                        <br />
+                        {destination.tags?.includes('Student Life') ? '👥 Student Community' :
+                         destination.tags?.includes('Safe') ? '🛡️ Safe Environment' :
+                         '🌟 Cultural Experience'}
                       </div>
                     </div>
                   </div>

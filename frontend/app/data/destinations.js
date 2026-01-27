@@ -1,4 +1,4 @@
-export const destinations = [
+import { destinations } from './student-destinations';
   {
     id: 1,
     name: 'Santorini',
@@ -94,7 +94,7 @@ export const destinations = [
     price: '$2,199',
     priceValue: 2199,
     bestTimeToVisit: 'Jun - Sep, Dec - Mar',
-    climate: 'Alpine',
+    coordinates: { lat: 46.8182, lon: 8.2275 },
     highlights: [
       'Matterhorn views',
       'Glacier Express train',
@@ -119,7 +119,7 @@ export const destinations = [
     price: '$899',
     priceValue: 899,
     bestTimeToVisit: 'Mar - May, Sep - Nov',
-    climate: 'Semi-arid',
+    coordinates: { lat: 31.6295, lon: -7.9811 },
     highlights: [
       'Jemaa el-Fnaa square',
       'Bahia Palace',
@@ -145,7 +145,7 @@ export const destinations = [
     priceValue: 1899,
     badge: 'Adventure',
     bestTimeToVisit: 'Jun - Aug, Sep - Mar',
-    climate: 'Subarctic',
+    coordinates: { lat: 64.9631, lon: -19.0208 },
     highlights: [
       'Northern Lights viewing',
       'Blue Lagoon geothermal spa',
@@ -172,6 +172,7 @@ export const destinations = [
     badge: 'Luxury',
     bestTimeToVisit: 'Nov - Apr',
     climate: 'Tropical',
+    coordinates: { lat: 3.2028, lon: 73.2207 },
     highlights: [
       'Overwater villa stays',
       'World-class diving',
@@ -198,6 +199,7 @@ export const destinations = [
     badge: 'Adventure',
     bestTimeToVisit: 'Dec - Feb',
     climate: 'Temperate',
+    coordinates: { lat: -40.9006, lon: 174.8860 },
     highlights: [
       'Milford Sound cruise',
       'Queenstown adventures',
@@ -223,6 +225,7 @@ export const destinations = [
     priceValue: 1099,
     bestTimeToVisit: 'Apr - Jun, Sep - Oct',
     climate: 'Mediterranean',
+    coordinates: { lat: 41.3851, lon: 2.1734 },
     highlights: [
       'Sagrada Familia',
       'Park Güell',
