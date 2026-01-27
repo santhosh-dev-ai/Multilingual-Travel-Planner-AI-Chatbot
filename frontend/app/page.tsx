@@ -125,7 +125,7 @@ export default function Home() {
     try {
       const response = await destinationsAPI.searchDestinations(query, 12);
       // Enhance search results with complete destination data
-      const enhancedResults = (response.destinations || []).map(dest => ({
+      const enhancedResults = (response.destinations || []).map((dest: any) => ({
         ...dest,
         // Ensure all required fields are present
         image: dest.image || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80',
@@ -572,7 +572,7 @@ export default function Home() {
               </div>
               <p className="text-red-600 mb-6 text-lg font-medium">{destinationError}</p>
               <button
-                onClick={fetchDestinations}
+                onClick={() => fetchDestinations()}
                 className="px-8 py-3 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] text-white rounded-xl hover:shadow-lg transition-all transform hover:scale-105 font-medium"
               >
                 🔄 Try Again
