@@ -1,6 +1,5 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-const DATABASE_API_URL = process.env.NEXT_PUBLIC_DATABASE_URL;
-
+const DATABASE_API_URL = process.env.NEXT_PUBLIC_DATABASE_API_URL;
 
 // Generate a structured user ID if not exists
 const getUserId = () => {
