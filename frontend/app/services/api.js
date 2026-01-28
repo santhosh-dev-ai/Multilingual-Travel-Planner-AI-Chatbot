@@ -1,11 +1,6 @@
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  'http://localhost:8000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const DATABASE_API_URL = process.env.NEXT_PUBLIC_DATABASE_URL;
 
-// ⚠️ SAME backend handles wishlist + itinerary
-const DATABASE_API_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  'http://localhost:8000/api';
 
 // Generate a structured user ID if not exists
 const getUserId = () => {
