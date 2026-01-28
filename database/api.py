@@ -21,7 +21,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://multilingual-travel-planner-ai-chat.vercel.app"
+        "https://multilingual-travel-planner-ai-chat.vercel.app",
+        "https://multilingual-travel-planner-ai-chatbot-nhi1l8na6.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
