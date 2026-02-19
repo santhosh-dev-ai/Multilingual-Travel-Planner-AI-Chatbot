@@ -1,8 +1,8 @@
 """CRUD operations for Itineraries."""
 from typing import List, Optional
 from datetime import datetime
-from config import supabase
-from models import ItineraryCreate, Itinerary
+from app.database.config import supabase, SUPABASE_ENABLED
+from app.database.models import ItineraryCreate, Itinerary
 
 
 class ItineraryCRUD:
@@ -11,8 +11,22 @@ class ItineraryCRUD:
     TABLE_NAME = "itineraries"
     
     @staticmethod
+    def _check_db_available() -> Optional[dict]:
+        """Check if database is available."""
+        if not SUPABASE_ENABLED or supabase is None:
+            return {
+                "success": False, 
+                "message": "Database not configured. Please set SUPABASE_URL and SUPABASE_ANON_KEY in .env file.",
+                "data": None
+            }
+        return None
+    
+    @staticmethod
     def create(itinerary: ItineraryCreate) -> dict:
         """Create a new itinerary."""
+        if error := ItineraryCRUD._check_db_available():
+            return error
+        
         try:
             data = itinerary.model_dump()
             # Convert days to JSON-serializable format
@@ -29,6 +43,9 @@ class ItineraryCRUD:
     @staticmethod
     def get_by_user(user_id: str, limit: int = 50) -> dict:
         """Get all itineraries for a user."""
+        if error := ItineraryCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(ItineraryCRUD.TABLE_NAME)\
                 .select("*")\
@@ -44,6 +61,9 @@ class ItineraryCRUD:
     @staticmethod
     def get_by_id(itinerary_id: str) -> dict:
         """Get a specific itinerary by ID."""
+        if error := ItineraryCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(ItineraryCRUD.TABLE_NAME)\
                 .select("*")\
@@ -58,6 +78,9 @@ class ItineraryCRUD:
     @staticmethod
     def get_by_destination(user_id: str, destination: str) -> dict:
         """Get itineraries for a specific destination."""
+        if error := ItineraryCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(ItineraryCRUD.TABLE_NAME)\
                 .select("*")\
@@ -73,6 +96,9 @@ class ItineraryCRUD:
     @staticmethod
     def update(itinerary_id: str, update_data: dict) -> dict:
         """Update an existing itinerary."""
+        if error := ItineraryCRUD._check_db_available():
+            return error
+        
         try:
             # Add updated_at timestamp
             update_data["updated_at"] = datetime.utcnow().isoformat()
@@ -98,6 +124,9 @@ class ItineraryCRUD:
     @staticmethod
     def delete(itinerary_id: str) -> dict:
         """Delete an itinerary by ID."""
+        if error := ItineraryCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(ItineraryCRUD.TABLE_NAME)\
                 .delete()\
@@ -111,6 +140,9 @@ class ItineraryCRUD:
     @staticmethod
     def delete_by_user(user_id: str) -> dict:
         """Delete all itineraries for a user."""
+        if error := ItineraryCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(ItineraryCRUD.TABLE_NAME)\
                 .delete()\
@@ -124,6 +156,9 @@ class ItineraryCRUD:
     @staticmethod
     def count_by_user(user_id: str) -> dict:
         """Count total itineraries for a user."""
+        if error := ItineraryCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(ItineraryCRUD.TABLE_NAME)\
                 .select("id", count="exact")\

@@ -4,6 +4,7 @@ from typing import List, Optional, Dict
 import random
 import asyncio
 import time
+import json
 from app.services.groq_service import groq_service
 
 router = APIRouter()
@@ -93,7 +94,6 @@ Return ONLY valid JSON (no markdown):
             max_tokens=400
         )
         
-        import json
         cleaned = response.strip()
         if cleaned.startswith("```"):
             cleaned = cleaned.split("```")[1]
@@ -230,7 +230,6 @@ For valid destinations, return ONLY valid JSON (no markdown):
             max_tokens=600
         )
         
-        import json
         cleaned = response.strip()
         if cleaned.startswith("```"):
             cleaned = cleaned.split("```")[1]

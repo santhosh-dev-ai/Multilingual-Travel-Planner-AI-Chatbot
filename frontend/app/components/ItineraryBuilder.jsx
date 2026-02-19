@@ -17,7 +17,7 @@ import {
   CheckIcon,
 } from '@heroicons/react/24/outline';
 import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
-import { itineraryAPI, chatAPI, savedItineraryAPI } from '../services/api';
+import { itineraryAPI, chatAPI, savedItineraryAPI, intelligentItineraryAPI } from '../services/api';
 
 const INTERESTS = [
   'Adventure', 'Culture', 'Food', 'Nature', 'Photography',
@@ -38,6 +38,26 @@ const TRAVEL_STYLES = [
   { value: 'packed', label: '🏃 Packed', desc: 'Maximum exploration' },
 ];
 
+const MOODS = [
+  { value: 'relaxed', emoji: '😌', label: 'Relaxed', desc: 'Take it easy, minimal stress' },
+  { value: 'energetic', emoji: '⚡', label: 'Energetic', desc: 'High energy, active adventures' },
+  { value: 'romantic', emoji: '💕', label: 'Romantic', desc: 'Couples and romance' },
+  { value: 'adventurous', emoji: '🏔️', label: 'Adventurous', desc: 'Thrill-seeking excitement' },
+  { value: 'curious', emoji: '🔍', label: 'Curious', desc: 'Explore and discover' },
+  { value: 'contemplative', emoji: '🧘', label: 'Contemplative', desc: 'Peaceful reflection' },
+];
+
+const TRAVEL_TYPES = [
+  { value: 'adventure', emoji: '🏕️', label: 'Adventure', desc: 'Hiking, trekking, outdoor' },
+  { value: 'beach', emoji: '🏖️', label: 'Beach', desc: 'Coastal, water activities' },
+  { value: 'cultural', emoji: '🏛️', label: 'Cultural', desc: 'Museums, heritage sites' },
+  { value: 'nature', emoji: '🌲', label: 'Nature', desc: 'Parks, wildlife, scenery' },
+  { value: 'urban', emoji: '🏙️', label: 'Urban', desc: 'City exploration, modern' },
+  { value: 'historical', emoji: '📜', label: 'Historical', desc: 'Ancient sites, history' },
+  { value: 'food', emoji: '🍜', label: 'Food', desc: 'Culinary experiences' },
+  { value: 'relaxation', emoji: '🧖', label: 'Relaxation', desc: 'Spas, wellness, rest' },
+];
+
 export default function ItineraryBuilder({ destination, onClose, onItineraryBuilt }) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -52,6 +72,9 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [budgetAmount, setBudgetAmount] = useState(500);
   const [travelStyle, setTravelStyle] = useState('balanced');
+  const [groupSize, setGroupSize] = useState(2);
+  const [mood, setMood] = useState('curious');
+  const [travelType, setTravelType] = useState('cultural');
   // ...existing code...
 
   const toggleInterest = (interest) => {
@@ -72,15 +95,44 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
     setError(null);
     
     try {
-      const result = await itineraryAPI.generate(
-        destination?.name || destination,
-        duration,
-        selectedInterests,
-        `$${budgetAmount}`,
-        travelStyle
-      );
-      setItinerary(result);
+      // Get destination coordinates (use placeholder if not available)
+      const latitude = destination?.latitude || destination?.lat || 48.8566; // Default to Paris if missing
+      const longitude = destination?.longitude || destination?.lon || 2.3522;
+      const locationName = destination?.name || destination;
+      
+      // Construct request for intelligent itinerary API
+      const requestData = {
+        location: locationName,
+        latitude: latitude,
+        longitude: longitude,
+        budget: budgetAmount,
+        duration: duration,
+        group_size: groupSize,
+        mood: mood,
+        travel_type: travelType,
+        include_hotels: true,
+        include_restaurants: true,
+        include_enrichment: true,
+        student_friendly: true,
+        max_distance_km: 50,
+      };
+      
+      const result = await intelligentItineraryAPI.generate(requestData);
+      
+      // Transform the response to match the existing itinerary display format
+      const transformedItinerary = {
+        ...result,
+        duration: result.duration_days,
+        summary: result.message || `Your intelligent ${result.duration_days}-day itinerary for ${locationName}`,
+        days: result.optimized_itinerary || [],
+        budget_estimate: result.budget_breakdown?.total_budget_formatted || `$${budgetAmount}`,
+        packing_tips: result.educational_enrichment?.travel_tips || [],
+        local_phrases: [],
+      };
+      
+      setItinerary(transformedItinerary);
       setStep(3);
+      
       // Notify parent that itinerary was built
       if (onItineraryBuilt) {
         onItineraryBuilt(destination?.id || destination);
@@ -231,6 +283,36 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                 </div>
               </div>
 
+              {/* Group Size */}
+              <div className="space-y-4">
+                <label className="block text-lg font-semibold text-[#0F172A] mb-4">
+                  👥 Group Size
+                </label>
+                <div className="flex items-center gap-6">
+                  <input
+                    type="range"
+                    min="1"
+                    max="50"
+                    value={groupSize}
+                    onChange={(e) => setGroupSize(parseInt(e.target.value))}
+                    className="flex-1 h-3 bg-gradient-to-r from-[#DEF1F5] to-[#BCE2EB] rounded-full appearance-none cursor-pointer slider-thumb"
+                    style={{
+                      background: `linear-gradient(to right, #3AA8C1 0%, #3AA8C1 ${((groupSize-1)/(50-1))*100}%, #E2E8F0 ${((groupSize-1)/(50-1))*100}%, #E2E8F0 100%)`
+                    }}
+                  />
+                  <div className="bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] px-6 py-3 rounded-xl min-w-32 text-center shadow-lg">
+                    <span className="text-3xl font-bold text-white">{groupSize}</span>
+                    <span className="text-sm text-white/90 block font-medium">
+                      {groupSize === 1 ? 'person' : 'people'}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-xs text-[#475569] mt-2">
+                  <span>Solo traveler</span>
+                  <span>Large group</span>
+                </div>
+              </div>
+
               {/* Interests */}
               <div className="space-y-4">
                 <label className="block text-lg font-semibold text-[#0F172A] mb-4">
@@ -342,6 +424,54 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                     >
                       <div className="text-xl font-bold text-[#0F172A] mb-1">{s.label}</div>
                       <div className="text-sm text-[#475569] font-medium">{s.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mood Selector */}
+              <div className="space-y-4">
+                <label className="block text-lg font-semibold text-[#0F172A] mb-4">
+                  🎭 Travel Mood
+                </label>
+                <div className="grid grid-cols-3 gap-4">
+                  {MOODS.map(m => (
+                    <button
+                      key={m.value}
+                      onClick={() => setMood(m.value)}
+                      className={`p-4 rounded-xl text-left transition-all duration-200 border-2 ${
+                        mood === m.value
+                          ? 'bg-gradient-to-br from-[#DEF1F5] to-[#BCE2EB] border-[#3AA8C1] shadow-lg scale-105'
+                          : 'bg-white border-[#E2E8F0] hover:border-[#3AA8C1] hover:bg-[#F8FAFB] hover:scale-102'
+                      }`}
+                    >
+                      <div className="text-2xl mb-2">{m.emoji}</div>
+                      <div className="font-bold text-[#0F172A] mb-1">{m.label}</div>
+                      <div className="text-xs text-[#475569] font-medium">{m.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Travel Type Selector */}
+              <div className="space-y-4">
+                <label className="block text-lg font-semibold text-[#0F172A] mb-4">
+                  🌍 Travel Type
+                </label>
+                <div className="grid grid-cols-4 gap-3">
+                  {TRAVEL_TYPES.map(t => (
+                    <button
+                      key={t.value}
+                      onClick={() => setTravelType(t.value)}
+                      className={`p-4 rounded-xl text-center transition-all duration-200 border-2 ${
+                        travelType === t.value
+                          ? 'bg-gradient-to-br from-[#DEF1F5] to-[#BCE2EB] border-[#3AA8C1] shadow-lg scale-105'
+                          : 'bg-white border-[#E2E8F0] hover:border-[#3AA8C1] hover:bg-[#F8FAFB] hover:scale-102'
+                      }`}
+                    >
+                      <div className="text-2xl mb-2">{t.emoji}</div>
+                      <div className="font-bold text-[#0F172A] text-xs mb-1">{t.label}</div>
+                      <div className="text-[10px] text-[#475569] font-medium">{t.desc}</div>
                     </button>
                   ))}
                 </div>
@@ -468,6 +598,264 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                   Print
                 </button>
               </div>
+
+              {/* Budget Breakdown */}
+              {itinerary.budget_breakdown && (
+                <div className="bg-gradient-to-br from-[#C6FFEA] to-[#A7F3D0] rounded-2xl p-6 border border-[#10B981]/20 shadow-lg">
+                  <h3 className="font-bold text-[#065F46] text-xl mb-4 flex items-center gap-3">
+                    <div className="p-2 bg-white/60 rounded-lg">💰</div>
+                    Budget Breakdown
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-white/60 p-4 rounded-xl">
+                      <div className="text-xs text-[#065F46] font-medium mb-1">Accommodation</div>
+                      <div className="text-2xl font-bold text-[#0F172A]">
+                        ${itinerary.budget_breakdown.accommodation || 0}
+                      </div>
+                    </div>
+                    <div className="bg-white/60 p-4 rounded-xl">
+                      <div className="text-xs text-[#065F46] font-medium mb-1">Food & Dining</div>
+                      <div className="text-2xl font-bold text-[#0F172A]">
+                        ${itinerary.budget_breakdown.food || 0}
+                      </div>
+                    </div>
+                    <div className="bg-white/60 p-4 rounded-xl">
+                      <div className="text-xs text-[#065F46] font-medium mb-1">Activities</div>
+                      <div className="text-2xl font-bold text-[#0F172A]">
+                        ${itinerary.budget_breakdown.activities || 0}
+                      </div>
+                    </div>
+                    <div className="bg-white/60 p-4 rounded-xl">
+                      <div className="text-xs text-[#065F46] font-medium mb-1">Transportation</div>
+                      <div className="text-2xl font-bold text-[#0F172A]">
+                        ${itinerary.budget_breakdown.transportation || 0}
+                      </div>
+                    </div>
+                  </div>
+                  {itinerary.budget_breakdown.per_person_per_day && (
+                    <div className="mt-4 text-center text-[#065F46] font-semibold">
+                      ${itinerary.budget_breakdown.per_person_per_day} per person per day
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Ranked Hotels */}
+              {itinerary.ranked_hotels && itinerary.ranked_hotels.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="font-bold text-[#0F172A] text-2xl flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] rounded-lg">🏨</div>
+                    Top Recommended Hotels
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {itinerary.ranked_hotels.slice(0, 6).map((hotel, idx) => (
+                      <div key={idx} className="bg-gradient-to-br from-[#F8FAFB] to-[#DEF1F5] rounded-xl p-5 border border-[#3AA8C1]/20 hover:shadow-lg transition-all duration-200">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] text-white px-3 py-1 rounded-lg text-sm font-bold">
+                                #{hotel.rank}
+                              </span>
+                              {hotel.student_friendly && (
+                                <span className="bg-[#FEF3C7] text-[#92400E] px-2 py-1 rounded text-xs font-bold">
+                                  🎓 Student Friendly
+                                </span>
+                              )}
+                            </div>
+                            <h4 className="font-bold text-[#0F172A] text-lg mb-1">{hotel.name}</h4>
+                            <div className="flex items-center gap-3 text-sm">
+                              <span className="text-[#F59E0B]">{'⭐'.repeat(Math.round(hotel.rating || 0))}</span>
+                              <span className="text-[#475569] font-medium">{hotel.rating?.toFixed(1)}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-[#E2E8F0]">
+                          <span className="text-[#3AA8C1] font-semibold text-sm">
+                            📍 {hotel.distance_km ? `${hotel.distance_km.toFixed(1)}km away` : 'City center'}
+                          </span>
+                          <span className="text-[#00A86B] font-bold">
+                            {'💵'.repeat(hotel.price_level || 2)}
+                          </span>
+                        </div>
+                        <div className="mt-3 bg-white/60 rounded-lg px-3 py-2 text-xs text-[#475569]">
+                          Match Score: <span className="font-bold text-[#3AA8C1]">{(hotel.score * 100).toFixed(0)}%</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Ranked Restaurants */}
+              {itinerary.ranked_restaurants && itinerary.ranked_restaurants.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="font-bold text-[#0F172A] text-2xl flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] rounded-lg">🍽️</div>
+                    Top Recommended Restaurants
+                  </h3>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    {itinerary.ranked_restaurants.slice(0, 9).map((restaurant, idx) => (
+                      <div key={idx} className="bg-white rounded-xl p-4 border-2 border-[#E2E8F0] hover:border-[#3AA8C1] hover:shadow-lg transition-all duration-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="bg-gradient-to-r from-[#F59E0B] to-[#FBBF24] text-white px-2 py-1 rounded text-xs font-bold">
+                            #{restaurant.rank}
+                          </span>
+                          {restaurant.student_friendly && (
+                            <span className="text-xs">🎓</span>
+                          )}
+                        </div>
+                        <h4 className="font-bold text-[#0F172A] mb-2">{restaurant.name}</h4>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-[#F59E0B] text-sm">{'⭐'.repeat(Math.round(restaurant.rating || 0))}</span>
+                          <span className="text-[#475569] text-xs font-medium">{restaurant.rating?.toFixed(1)}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-[#3AA8C1] font-medium">
+                            {restaurant.distance_km ? `${restaurant.distance_km.toFixed(1)}km` : 'Nearby'}
+                          </span>
+                          <span className="text-[#00A86B] font-bold">
+                            {'💵'.repeat(restaurant.price_level || 2)}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Route Optimization */}
+              {itinerary.route_order && itinerary.route_order.ordered_places && (
+                <div className="bg-gradient-to-br from-[#DBEAFE] to-[#BFDBFE] rounded-2xl p-6 border border-[#3B82F6]/20 shadow-lg">
+                  <h3 className="font-bold text-[#1E40AF] text-xl mb-4 flex items-center gap-3">
+                    <div className="p-2 bg-white/60 rounded-lg">🗺️</div>
+                    Optimized Route
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      {itinerary.route_order.ordered_places?.map((place, idx) => (
+                        <div key={idx} className="flex items-center gap-3 bg-white/60 p-3 rounded-lg">
+                          <div className="w-8 h-8 bg-gradient-to-r from-[#3B82F6] to-[#60A5FA] text-white rounded-lg flex items-center justify-center font-bold text-sm">
+                            {idx + 1}
+                          </div>
+                          <span className="font-medium text-[#0F172A]">{place}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex flex-col justify-center items-center bg-white/60 rounded-xl p-6">
+                      <div className="text-5xl mb-3">🚗</div>
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-[#0F172A] mb-1">
+                          {itinerary.route_order.total_distance_km?.toFixed(1)} km
+                        </div>
+                        <div className="text-sm text-[#475569] font-medium">Total Distance</div>
+                        {itinerary.route_order.estimated_travel_time_hours && (
+                          <div className="mt-3 text-[#3B82F6] font-semibold">
+                            ~{itinerary.route_order.estimated_travel_time_hours.toFixed(1)} hours travel time
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Educational Enrichment */}
+              {itinerary.educational_enrichment && (
+                <div className="bg-gradient-to-br from-[#FEF3C7] to-[#FDE68A] rounded-2xl p-6 border border-[#F59E0B]/20 shadow-lg">
+                  <h3 className="font-bold text-[#92400E] text-xl mb-4 flex items-center gap-3">
+                    <div className="p-2 bg-white/60 rounded-lg">📚</div>
+                    Educational Insights
+                  </h3>
+                  <div className="space-y-4">
+                    {itinerary.educational_enrichment.historical_summary && (
+                      <div className="bg-white/60 rounded-xl p-4">
+                        <h4 className="font-bold text-[#0F172A] mb-2 flex items-center gap-2">
+                          🏛️ Historical Context
+                        </h4>
+                        <p className="text-[#475569] leading-relaxed">
+                          {itinerary.educational_enrichment.historical_summary}
+                        </p>
+                      </div>
+                    )}
+                    {itinerary.educational_enrichment.cultural_insights && itinerary.educational_enrichment.cultural_insights.length > 0 && (
+                      <div className="bg-white/60 rounded-xl p-4">
+                        <h4 className="font-bold text-[#0F172A] mb-3 flex items-center gap-2">
+                          🎭 Cultural Insights
+                        </h4>
+                        <ul className="space-y-2">
+                          {itinerary.educational_enrichment.cultural_insights.map((insight, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-[#475569]">
+                              <span className="text-[#F59E0B] mt-1">✦</span>
+                              <span>{insight}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {itinerary.educational_enrichment.travel_tips && itinerary.educational_enrichment.travel_tips.length > 0 && (
+                      <div className="bg-white/60 rounded-xl p-4">
+                        <h4 className="font-bold text-[#0F172A] mb-3 flex items-center gap-2">
+                          💡 Travel Tips
+                        </h4>
+                        <ul className="space-y-2">
+                          {itinerary.educational_enrichment.travel_tips.map((tip, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-[#475569]">
+                              <span className="text-[#10B981] font-bold">✓</span>
+                              <span>{tip}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Recommended Books */}
+              {itinerary.recommended_books && itinerary.recommended_books.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="font-bold text-[#0F172A] text-2xl flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] rounded-lg">📖</div>
+                    Recommended Reading
+                  </h3>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {itinerary.recommended_books.slice(0, 6).map((book, idx) => (
+                      <div key={idx} className="bg-white rounded-xl p-4 border-2 border-[#E2E8F0] hover:border-[#3AA8C1] hover:shadow-lg transition-all duration-200">
+                        <div className="flex gap-3">
+                          <div className="w-16 h-20 bg-gradient-to-br from-[#3AA8C1] to-[#58B8CD] rounded-lg flex items-center justify-center text-white text-2xl flex-shrink-0">
+                            📕
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-bold text-[#0F172A] text-sm mb-1 line-clamp-2">{book.title}</h4>
+                            <p className="text-xs text-[#475569] mb-2">{book.author}</p>
+                            {book.goodreads_rating && (
+                              <div className="flex items-center gap-1 mb-2">
+                                <span className="text-[#F59E0B] text-xs">⭐</span>
+                                <span className="text-xs text-[#475569] font-medium">{book.goodreads_rating}</span>
+                              </div>
+                            )}
+                            {book.isbn_13 && (
+                              <a 
+                                href={`https://www.amazon.com/s?k=${book.isbn_13}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-block text-xs bg-[#3AA8C1] text-white px-3 py-1 rounded-lg hover:bg-[#308CA0] transition-colors"
+                              >
+                                View on Amazon
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {itinerary.educational_enrichment?.why_books_matter && (
+                    <div className="bg-gradient-to-r from-[#F8FAFB] to-[#DEF1F5] rounded-xl p-4 border border-[#3AA8C1]/20 text-sm text-[#475569] italic">
+                      💭 {itinerary.educational_enrichment.why_books_matter}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Customize input removed */}
 

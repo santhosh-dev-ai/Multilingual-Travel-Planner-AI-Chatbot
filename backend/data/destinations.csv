@@ -1,0 +1,11 @@
+id,name,country,region,description,image_url,estimated_budget,best_time_to_visit,popular_activities,climate,rating,views,wishlists,bookings
+1,Tokyo,Japan,asia,"Modern metropolis blending traditional culture with cutting-edge technology",https://example.com/tokyo.jpg,2500,March-May,Temples|Tech|Food|Shopping,temperate,4.8,15234,3421,892
+2,Paris,France,europe,"City of Light known for romance, art, and world-class cuisine",https://example.com/paris.jpg,3000,April-June,Museums|Food|Architecture|Shopping,temperate,4.7,18923,4123,1245
+3,Bali,Indonesia,asia,"Tropical paradise with stunning beaches, temples, and rich culture",https://example.com/bali.jpg,1500,April-October,Beaches|Surfing|Temples|Yoga,tropical,4.9,21456,5234,1876
+4,New York,USA,americas,"The city that never sleeps, iconic skyline and diverse culture",https://example.com/nyc.jpg,3500,September-November,Museums|Broadway|Food|Shopping,temperate,4.6,19234,3892,1534
+5,Barcelona,Spain,europe,"Vibrant coastal city with Gaudí architecture and Mediterranean charm",https://example.com/barcelona.jpg,2200,May-June,Architecture|Beaches|Food|Nightlife,mediterranean,4.8,16789,4012,1289
+6,Dubai,UAE,middle_east,"Ultra-modern desert city with luxury shopping and futuristic architecture",https://example.com/dubai.jpg,4000,November-March,Shopping|Desert|Luxury|Architecture,desert,4.7,14523,2987,934
+7,Sydney,Australia,oceania,"Harbor city with iconic Opera House and stunning beaches",https://example.com/sydney.jpg,3200,September-November,Beaches|Opera|Harbor|Wildlife,temperate,4.7,13456,3245,876
+8,Rome,Italy,europe,"Eternal City packed with ancient ruins and Renaissance art",https://example.com/rome.jpg,2800,April-June,History|Food|Architecture|Art,mediterranean,4.9,17890,4567,1456
+9,Bangkok,Thailand,asia,"Bustling capital with ornate temples and vibrant street life",https://example.com/bangkok.jpg,1200,November-February,Temples|Food|Markets|Nightlife,tropical,4.6,20123,4789,1923
+10,London,UK,europe,"Historic capital blending royal heritage with modern culture",https://example.com/london.jpg,3500,May-September,Museums|History|Theater|Shopping,temperate,4.7,18234,3987,1398

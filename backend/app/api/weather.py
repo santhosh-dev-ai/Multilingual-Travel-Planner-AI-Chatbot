@@ -10,6 +10,10 @@ router = APIRouter()
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY", "")
 WEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5"
 
+# Check if API key is configured (not empty or placeholder)
+def is_weather_api_configured() -> bool:
+    return WEATHER_API_KEY and WEATHER_API_KEY not in ["", "your_weather_api_key_here", "your_openweather_api_key_here"]
+
 class WeatherResponse(BaseModel):
     location: str
     country: str
@@ -44,7 +48,7 @@ class ForecastResponse(BaseModel):
 async def get_current_weather(lat: float, lon: float):
     """Get current weather for a location by coordinates."""
     
-    if not WEATHER_API_KEY:
+    if not is_weather_api_configured():
         # Return mock data if no API key
         return {
             "location": "Location",
@@ -60,7 +64,7 @@ async def get_current_weather(lat: float, lon: float):
             "clouds": 40,
             "sunrise": 1609459200,
             "sunset": 1609498800,
-            "note": "Demo data - Add OPENWEATHER_API_KEY for real weather"
+            "note": "Demo data - Add WEATHER_API_KEY to .env for real weather"
         }
     
     try:
@@ -100,7 +104,7 @@ async def get_current_weather(lat: float, lon: float):
 async def get_weather_forecast(lat: float, lon: float, days: int = 5):
     """Get weather forecast for a location."""
     
-    if not WEATHER_API_KEY:
+    if not is_weather_api_configured():
         # Return mock forecast data
         from datetime import datetime, timedelta
         mock_forecast = []
@@ -120,7 +124,7 @@ async def get_weather_forecast(lat: float, lon: float, days: int = 5):
             "location": "Location",
             "country": "",
             "forecast": mock_forecast,
-            "note": "Demo data - Add OPENWEATHER_API_KEY for real weather"
+            "note": "Demo data - Add WEATHER_API_KEY to .env for real weather"
         }
     
     try:
@@ -183,7 +187,7 @@ async def geocode_location(city: str, country: Optional[str] = None):
     
     query = f"{city},{country}" if country else city
     
-    if not WEATHER_API_KEY:
+    if not is_weather_api_configured():
         # Return mock coordinates for major cities
         mock_coords = {
             "santorini": {"lat": 36.3932, "lon": 25.4615},
@@ -215,7 +219,7 @@ async def geocode_location(city: str, country: Optional[str] = None):
             "country": country or "",
             "lat": coords["lat"],
             "lon": coords["lon"],
-            "note": "Demo coordinates - Add WEATHER_API_KEY for accurate geocoding"
+            "note": "Demo coordinates - Add WEATHER_API_KEY to .env for accurate geocoding"
         }
     
     try:
@@ -271,7 +275,7 @@ async def get_weather_by_city(city: str, country: Optional[str] = None):
     
     query = f"{city},{country}" if country else city
     
-    if not WEATHER_API_KEY:
+    if not is_weather_api_configured():
         return {
             "location": city,
             "country": country or "",
@@ -284,7 +288,7 @@ async def get_weather_by_city(city: str, country: Optional[str] = None):
             "visibility": 10000,
             "pressure": 1013,
             "clouds": 30,
-            "note": "Demo data - Add OPENWEATHER_API_KEY for real weather"
+            "note": "Demo data - Add WEATHER_API_KEY to .env for real weather"
         }
     
     try:

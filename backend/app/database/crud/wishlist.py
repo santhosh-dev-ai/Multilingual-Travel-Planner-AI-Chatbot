@@ -1,7 +1,7 @@
 """CRUD operations for Wishlist."""
 from typing import List, Optional
-from config import supabase
-from models import WishlistItemCreate, WishlistItem
+from app.database.config import supabase, SUPABASE_ENABLED
+from app.database.models import WishlistItemCreate, WishlistItem
 
 
 class WishlistCRUD:
@@ -10,8 +10,22 @@ class WishlistCRUD:
     TABLE_NAME = "wishlists"
     
     @staticmethod
+    def _check_db_available() -> Optional[dict]:
+        """Check if database is available."""
+        if not SUPABASE_ENABLED or supabase is None:
+            return {
+                "success": False, 
+                "message": "Database not configured. Please set SUPABASE_URL and SUPABASE_ANON_KEY in .env file.",
+                "data": None
+            }
+        return None
+    
+    @staticmethod
     def create(item: WishlistItemCreate) -> dict:
         """Add a destination to user's wishlist."""
+        if error := WishlistCRUD._check_db_available():
+            return error
+        
         try:
             data = item.model_dump()
             response = supabase.table(WishlistCRUD.TABLE_NAME).insert(data).execute()
@@ -25,6 +39,9 @@ class WishlistCRUD:
     @staticmethod
     def get_by_user(user_id: str) -> dict:
         """Get all wishlist items for a user."""
+        if error := WishlistCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(WishlistCRUD.TABLE_NAME)\
                 .select("*")\
@@ -39,6 +56,9 @@ class WishlistCRUD:
     @staticmethod
     def get_by_id(wishlist_id: str) -> dict:
         """Get a specific wishlist item by ID."""
+        if error := WishlistCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(WishlistCRUD.TABLE_NAME)\
                 .select("*")\
@@ -53,6 +73,9 @@ class WishlistCRUD:
     @staticmethod
     def check_exists(user_id: str, destination_id: int) -> dict:
         """Check if a destination is already in user's wishlist."""
+        if error := WishlistCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(WishlistCRUD.TABLE_NAME)\
                 .select("id")\
@@ -72,6 +95,9 @@ class WishlistCRUD:
     @staticmethod
     def delete(wishlist_id: str) -> dict:
         """Remove an item from wishlist by ID."""
+        if error := WishlistCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(WishlistCRUD.TABLE_NAME)\
                 .delete()\
@@ -85,6 +111,9 @@ class WishlistCRUD:
     @staticmethod
     def delete_by_destination(user_id: str, destination_id: int) -> dict:
         """Remove a destination from user's wishlist."""
+        if error := WishlistCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(WishlistCRUD.TABLE_NAME)\
                 .delete()\
@@ -99,6 +128,9 @@ class WishlistCRUD:
     @staticmethod
     def clear_user_wishlist(user_id: str) -> dict:
         """Clear all wishlist items for a user."""
+        if error := WishlistCRUD._check_db_available():
+            return error
+        
         try:
             response = supabase.table(WishlistCRUD.TABLE_NAME)\
                 .delete()\

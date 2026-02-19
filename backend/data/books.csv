@@ -1,0 +1,26 @@
+id,title,author,destination,country,region,genre,rating,year_published,pages,description,isbn,cover_url,student_friendly,educational_value
+1,A Year in Provence,Peter Mayle,Paris,France,europe,Travel Memoir,4.2,1989,224,"Delightful account of life in southern France, filled with food and culture",0375705996,https://example.com/provence.jpg,true,high
+2,In a Sunburned Country,Bill Bryson,Sydney,Australia,oceania,Travel Humor,4.3,2000,335,"Hilarious journey through the Land Down Under",0767903862,https://example.com/sunburned.jpg,true,high
+3,Eat Pray Love,Elizabeth Gilbert,Bali,Indonesia,asia,Memoir,3.6,2006,352,"Transformative journey through Italy, India, and Indonesia",0143038419,https://example.com/epl.jpg,true,medium
+4,The Caliph's House,Tahir Shah,Dubai,UAE,middle_east,Travel Memoir,3.8,2006,349,"Moving into a haunted mansion in Morocco",0553384457,https://example.com/caliph.jpg,true,medium
+5,Tokyo Vice,Jake Adelstein,Tokyo,Japan,asia,True Crime,4.1,2009,352,"American journalist's descent into Tokyo's criminal underworld",0307475298,https://example.com/tokyo-vice.jpg,false,high
+6,The Beach,Alex Garland,Bangkok,Thailand,asia,Fiction,3.8,1996,436,"Backpacker discovers secret beach community in Thailand",1573226521,https://example.com/beach.jpg,true,medium
+7,City of Djinns,William Dalrymple,Barcelona,Spain,europe,History,4.2,1993,368,"Exploration of Delhi's layered history",0006388035,https://example.com/djinns.jpg,true,high
+8,Italian Days,Barbara Grizzuti Harrison,Rome,Italy,europe,Travel Memoir,4.0,1989,368,"Lyrical journey through Italy's art and culture",0802136907,https://example.com/italian-days.jpg,true,high
+9,The Great Railway Bazaar,Paul Theroux,London,UK,europe,Travel Literature,4.0,1975,342,"Epic train journey from London to Asia and back",0618658947,https://example.com/railway.jpg,true,high
+10,Midnight in the Garden of Good and Evil,John Berendt,New York,USA,americas,True Crime,4.2,1994,388,"Murder mystery in Savannah's high society",0679751521,https://example.com/midnight.jpg,false,medium
+11,The Old Patagonian Express,Paul Theroux,Barcelona,Spain,europe,Travel Literature,3.9,1979,404,"Train journey from Massachusetts to Patagonia",0618658971,https://example.com/patagonian.jpg,true,high
+12,Lost Japan,Alex Kerr,Tokyo,Japan,asia,Cultural Commentary,4.3,1996,224,"Meditation on Japanese culture and tradition",0140282629,https://example.com/lost-japan.jpg,true,high
+13,Bangkok 8,John Burdett,Bangkok,Thailand,asia,Mystery Fiction,3.8,2003,368,"Buddhist detective in Bangkok's underworld",0375709452,https://example.com/bangkok8.jpg,false,medium
+14,Mediterranean Winter,Robert D. Kaplan,Rome,Italy,europe,Travel Literature,3.7,2004,208,"Journey through history and culture of Mediterranean",0375705937,https://example.com/med-winter.jpg,true,high
+15,The Geography of Bliss,Eric Weiner,Dubai,UAE,middle_east,Travel Humor,3.9,2008,336,"Search for the world's happiest places",0446698903,https://example.com/bliss.jpg,true,high
+16,Shantaram,Gregory David Roberts,Bangkok,Thailand,asia,Fiction,4.3,2003,933,"Epic tale of Australian fugitive in Mumbai",0312330537,https://example.com/shantaram.jpg,false,high
+17,Paris to the Moon,Adam Gopnik,Paris,France,europe,Memoir,3.9,2000,338,"Family life in Paris in the 1990s",0375758232,https://example.com/paris-moon.jpg,true,high
+18,The Sun Also Rises,Ernest Hemingway,Barcelona,Spain,europe,Classic Fiction,3.8,1926,251,"Lost Generation expatriates in 1920s Europe",0743297334,https://example.com/sun-rises.jpg,true,high
+19,La Belle Sauvage,Philip Pullman,London,UK,europe,Fantasy,4.1,2017,546,"Fantasy adventure through an alternate Oxford",0385744420,https://example.com/belle.jpg,true,medium
+20,The Lady and the Monk,Pico Iyer,Tokyo,Japan,asia,Travel Memoir,3.7,1991,337,"Love story in Kyoto's monasteries",0679735208,https://example.com/lady-monk.jpg,true,medium
+21,Lonely Planet Australia,Various,Sydney,Australia,oceania,Travel Guide,4.5,2023,864,"Comprehensive travel guide to Australia",1788686020,https://example.com/lp-australia.jpg,true,high
+22,Bali & Lombok,Lonely Planet,Bali,Indonesia,asia,Travel Guide,4.4,2023,320,"Essential guide to Indonesian paradise islands",1788686044,https://example.com/lp-bali.jpg,true,high
+23,Rick Steves Paris,Rick Steves,Paris,France,europe,Travel Guide,4.6,2024,680,"Student-friendly budget guide to Paris",1641714360,https://example.com/rs-paris.jpg,true,high
+24,The Emerald Mile,Kevin Fedarko,New York,USA,americas,Adventure,4.7,2013,432,"Epic story of the fastest ride through Grand Canyon",1439159866,https://example.com/emerald.jpg,true,high
+25,Arabian Sands,Wilfred Thesiger,Dubai,UAE,middle_east,Travel Classic,4.2,1959,326,"Classic account of life with Bedouin in Empty Quarter",0140095144,https://example.com/arabian-sands.jpg,true,high

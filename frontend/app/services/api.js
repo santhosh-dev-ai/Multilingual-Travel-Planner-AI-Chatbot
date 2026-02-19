@@ -1,5 +1,6 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-const DATABASE_API_URL = process.env.NEXT_PUBLIC_DATABASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
+// Database API is now integrated into the main API
+const DATABASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL || 'http://localhost:8000/api';
 
 // Generate a structured user ID if not exists
 const getUserId = () => {
@@ -34,16 +35,18 @@ async function fetchAPI(endpoint, options = {}) {
   };
 
   try {
+    console.log(`[API] Calling: ${url}`);
     const response = await fetch(url, config);
     
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
+      console.error(`[API Error] ${url}:`, error);
       throw new Error(error.detail || error.error || `HTTP error! status: ${response.status}`);
     }
     
     return await response.json();
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('[API Error]', url, error);
     throw error;
   }
 }
@@ -122,6 +125,32 @@ export const itineraryAPI = {
   
 };
 
+// Intelligent Itinerary API (Unified endpoint with AI ranking, route optimization, enrichment)
+export const intelligentItineraryAPI = {
+  generate: async (request) => {
+    return fetchAPI('/generate/intelligent-itinerary', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  },
+  
+  getSupportedMoods: async () => {
+    return fetchAPI('/generate/intelligent-itinerary/supported-moods');
+  },
+  
+  getSupportedTravelTypes: async () => {
+    return fetchAPI('/generate/intelligent-itinerary/supported-travel-types');
+  },
+  
+  getFeatures: async () => {
+    return fetchAPI('/generate/intelligent-itinerary/features');
+  },
+  
+  healthCheck: async () => {
+    return fetchAPI('/generate/intelligent-itinerary/health');
+  },
+};
+
 // ============== DATABASE-BASED WISHLIST & ITINERARY APIs ==============
 
 async function fetchDatabaseAPI(endpoint, options = {}) {
@@ -140,16 +169,18 @@ async function fetchDatabaseAPI(endpoint, options = {}) {
   };
 
   try {
+    console.log(`[Database API] Calling: ${url}`);
     const response = await fetch(url, config);
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
+      console.error(`[Database API Error] ${url}:`, error);
       throw new Error(error.detail || error.error || `HTTP error! status: ${response.status}`);
     }
 
     return await response.json();
   } catch (error) {
-    console.error('Database API Error:', error);
+    console.error('[Database API Error]', url, error);
     throw error;
   }
 }

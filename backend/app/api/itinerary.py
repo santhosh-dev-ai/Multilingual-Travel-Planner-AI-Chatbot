@@ -294,18 +294,13 @@ def generate_smart_fallback_itinerary(request: ItineraryRequest) -> dict:
         phrases = [{"phrase": "Hello", "translation": "Hello", "pronunciation": "Hello"}, {"phrase": "Thank you", "translation": "Thank you", "pronunciation": "Thank you"}]
     
     budget_estimates = {
-        "$150": f"${request.duration * 30}-${request.duration * 50}",
-        "$200": f"${request.duration * 40}-${request.duration * 65}",
-        "$300": f"${request.duration * 60}-${request.duration * 100}",
-        "$500": f"${request.duration * 100}-${request.duration * 165}",
-        "$800": f"${request.duration * 160}-${request.duration * 265}",
-        "$1200": f"${request.duration * 240}-${request.duration * 400}",
-        "$1500": f"${request.duration * 300}-${request.duration * 500}"
+        "budget": f"${request.duration * 30}-${request.duration * 50}",
+        "moderate": f"${request.duration * 100}-${request.duration * 165}",
+        "luxury": f"${request.duration * 300}-${request.duration * 500}"
     }
     
-    # Get closest budget estimate
-    budget_key = request.budget if request.budget in budget_estimates else "$500"
-    fallback_budget = budget_estimates.get(budget_key, f"${request.duration * 100}-${request.duration * 200}")
+    # Get budget estimate based on budget level
+    fallback_budget = budget_estimates.get(request.budget, f"${request.duration * 100}-${request.duration * 165}")
     
     return {
         "destination": request.destination,
