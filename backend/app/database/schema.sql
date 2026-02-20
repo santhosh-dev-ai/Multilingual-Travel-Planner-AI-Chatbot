@@ -90,6 +90,40 @@ CREATE POLICY "Users can delete itineraries" ON itineraries
 
 
 -- =============================================
+-- USER PROFILES TABLE (AUTH)
+-- =============================================
+
+CREATE TABLE IF NOT EXISTS user_profiles (
+    id SERIAL PRIMARY KEY,
+    user_id UUID UNIQUE NOT NULL,
+    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    phone_number TEXT NOT NULL,
+    is_email_verified BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_login_at TIMESTAMP WITH TIME ZONE
+);
+
+-- Create indexes for faster queries
+CREATE INDEX IF NOT EXISTS idx_user_profiles_user_id ON user_profiles(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_profiles_username ON user_profiles(username);
+CREATE INDEX IF NOT EXISTS idx_user_profiles_email ON user_profiles(email);
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
+
+-- Policies (open for current app architecture)
+CREATE POLICY "Users can view profiles" ON user_profiles
+    FOR SELECT USING (true);
+
+CREATE POLICY "Users can insert profiles" ON user_profiles
+    FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Users can update profiles" ON user_profiles
+    FOR UPDATE USING (true);
+
+
+-- =============================================
 -- HELPFUL VIEWS (Optional)
 -- =============================================
 

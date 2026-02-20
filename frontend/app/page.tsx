@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import HamburgerMenu from './components/HamburgerMenu';
 import ChatInterface from './components/ChatInterface';
 import LanguageSelector from './components/LanguageSelector';
@@ -15,7 +16,7 @@ import WishlistModal from './components/WishlistModal';
 import SavedItineraries from './components/SavedItineraries';
 import { useWishlist } from './hooks/useWishlist';
 import { translations, destinations } from './data/destinations-new';
-import { savedItineraryAPI, destinationsAPI } from './services/api';
+import { savedItineraryAPI, destinationsAPI, authAPI } from './services/api';
 import {
   SparklesIcon,
   GlobeAltIcon,
@@ -33,6 +34,8 @@ import {
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 
 export default function Home() {
+  const router = useRouter();
+  const [authChecked, setAuthChecked] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('en-US');
   
   const [showAllDestinations, setShowAllDestinations] = useState(false);
@@ -67,6 +70,14 @@ export default function Home() {
   useEffect(() => {
     fetchSavedItinerariesCount();
   }, []);
+
+  useEffect(() => {
+    if (!authAPI.isAuthenticated()) {
+      router.replace('/auth');
+      return;
+    }
+    setAuthChecked(true);
+  }, [router]);
   
   // Wishlist modal state
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
@@ -361,6 +372,15 @@ export default function Home() {
     }
   };
 
+  const handleLogout = () => {
+    authAPI.logout();
+    router.replace('/auth');
+  };
+
+  if (!authChecked) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0F172A] to-[#1E293B]">
       {/* Header */}
@@ -384,6 +404,7 @@ export default function Home() {
               <HamburgerMenu
                 onWishlistClick={() => setIsWishlistOpen(true)}
                 onItinerariesClick={() => setIsItinerariesOpen(true)}
+                onLogout={handleLogout}
                 wishlistCount={wishlist.length}
                 savedItinerariesCount={savedItinerariesCount}
                 translations={t}

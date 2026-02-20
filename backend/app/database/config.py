@@ -1,10 +1,23 @@
 """Supabase configuration and client initialization."""
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 from typing import Optional
 
-# Load environment variables
-load_dotenv()
+# Load environment variables from common project locations
+CURRENT_FILE = Path(__file__).resolve()
+ENV_CANDIDATES = [
+    CURRENT_FILE.parents[4] / "database" / ".env",  # <repo>/database/.env
+    CURRENT_FILE.parents[3] / ".env",                # <repo>/backend/.env
+    CURRENT_FILE.parents[4] / ".env",                # <repo>/.env
+]
+
+for env_path in ENV_CANDIDATES:
+    if env_path.exists():
+        load_dotenv(env_path, override=False)
+
+# Fallback to default behavior
+load_dotenv(override=False)
 
 # Supabase credentials
 SUPABASE_URL = os.getenv("SUPABASE_URL")

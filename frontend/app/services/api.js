@@ -2,6 +2,8 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8
 // Database API is now integrated into the main API
 const DATABASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL || 'http://localhost:8000/api';
 
+const AUTH_STORAGE_KEY = 'travelgenie-auth-user';
+
 // Generate a structured user ID if not exists
 const getUserId = () => {
   if (typeof window === 'undefined') return 'guest_anonymous';
@@ -275,6 +277,56 @@ export const savedItineraryAPI = {
   getCount: async () => {
     const userId = getUserId();
     return fetchDatabaseAPI(`/itinerary/${userId}/count`);
+  },
+};
+
+// Authentication API
+export const authAPI = {
+  register: async ({ username, password, email, phone_number }) => {
+    return fetchAPI('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        username,
+        password,
+        email,
+        phone_number,
+      }),
+    });
+  },
+
+  login: async ({ username, password }) => {
+    const response = await fetchAPI('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (typeof window !== 'undefined' && response?.data?.user_id) {
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(response.data));
+      localStorage.setItem('travelgenie-user-id', response.data.user_id);
+    }
+
+    return response;
+  },
+
+  logout: () => {
+    if (typeof window === 'undefined') return;
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    localStorage.removeItem('travelgenie-user-id');
+  },
+
+  getCurrentUser: () => {
+    if (typeof window === 'undefined') return null;
+    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  },
+
+  isAuthenticated: () => {
+    return !!authAPI.getCurrentUser();
   },
 };
 

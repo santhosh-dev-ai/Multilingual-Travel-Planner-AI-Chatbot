@@ -408,3 +408,36 @@ popularity_score
   Input should be less than or equal to 100 [type=less_than_equal, input_value=850, input_type=int]
     For further information visit https://errors.pydantic.dev/2.12/v/less_than_equal
 2026-02-19 10:24:32,634 - app.middleware.production - INFO - Response: POST /api/generate/intelligent-itinerary - 400 - 0.583s
+2026-02-20 23:34:12,026 - app.middleware.production - INFO - Request: GET /api/itinerary/tg_user_20260217_681939/count from 127.0.0.1
+2026-02-20 23:34:12,041 - app.middleware.production - INFO - Request: GET /api/wishlist/tg_user_20260217_681939 from 127.0.0.1
+2026-02-20 23:34:12,042 - app.middleware.production - INFO - Request: GET /api/destinations/random from 127.0.0.1
+2026-02-20 23:34:22,763 - app.middleware.production - INFO - Response: GET /api/itinerary/tg_user_20260217_681939/count - 200 - 10.737s
+2026-02-20 23:34:22,778 - app.middleware.production - INFO - Response: GET /api/wishlist/tg_user_20260217_681939 - 200 - 10.737s
+2026-02-20 23:34:23,347 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,352 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,358 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,363 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,382 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,385 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,389 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,402 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,418 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,551 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,554 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,557 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,562 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,566 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,653 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-20 23:34:23,658 - app.middleware.production - INFO - Response: GET /api/destinations/random - 200 - 11.616s
+2026-02-20 23:38:47,206 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-20 23:38:47,224 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.021s
+2026-02-20 23:38:58,320 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-20 23:38:58,323 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.003s
+2026-02-20 23:46:26,052 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-20 23:46:26,061 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.009s
+2026-02-20 23:53:02,566 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-20 23:53:02,620 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.054s
+2026-02-20 23:53:40,753 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-20 23:53:40,763 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 0.010s
+2026-02-20 23:53:41,811 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-20 23:53:41,814 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 0.003s

@@ -90,3 +90,26 @@ class ItineraryResponse(BaseModel):
     success: bool
     message: str
     data: Optional[Any] = None
+
+
+# ============== Auth Models ==============
+
+class RegisterUserCreate(BaseModel):
+    """Model for creating a new user account."""
+    username: str = Field(..., min_length=3, max_length=30, description="Unique username")
+    password: str = Field(..., min_length=6, max_length=100, description="User password")
+    email: str = Field(..., description="User email address")
+    phone_number: str = Field(..., min_length=7, max_length=20, description="User phone number")
+
+
+class LoginUserRequest(BaseModel):
+    """Model for username/password login."""
+    username: str = Field(..., min_length=3, max_length=30, description="Username")
+    password: str = Field(..., min_length=6, max_length=100, description="Password")
+
+
+class AuthResponse(BaseModel):
+    """Response model for auth operations."""
+    success: bool
+    message: str
+    data: Optional[Any] = None

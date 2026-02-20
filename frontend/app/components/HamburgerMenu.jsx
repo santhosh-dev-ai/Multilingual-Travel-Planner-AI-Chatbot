@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Bars3Icon, XMarkIcon, HeartIcon, CalendarDaysIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon, HeartIcon, CalendarDaysIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 
 export default function HamburgerMenu({
   onWishlistClick,
   onItinerariesClick,
+  onLogout,
   wishlistCount = 0,
   savedItinerariesCount = 0,
   translations,
@@ -54,6 +55,17 @@ export default function HamburgerMenu({
                 )}
               </button>
             </li>
+            {onLogout && (
+              <li>
+                <button
+                  className="flex items-center w-full px-4 py-3 gap-3 hover:bg-[#334155] text-white border-t border-[#334155]"
+                  onClick={() => { setOpen(false); onLogout(); }}
+                >
+                  <ArrowRightOnRectangleIcon className="w-5 h-5 text-[#F87171]" />
+                  {translations?.menu?.logout || 'Logout'}
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       )}

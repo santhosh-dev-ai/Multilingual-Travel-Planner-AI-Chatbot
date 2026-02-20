@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import chat, destinations, weather, itinerary, intelligence, ranking, recommendation, enrichment, budget, intelligent_itinerary
+from app.api import chat, destinations, weather, itinerary, intelligence, ranking, recommendation, enrichment, budget, intelligent_itinerary, auth
 from app.database import api as database_api
 from app.core.config import settings
 from app.middleware.production import (
@@ -42,6 +42,7 @@ app.include_router(destinations.router, prefix="/api/destinations", tags=["Desti
 app.include_router(weather.router, prefix="/api/weather", tags=["Weather"])
 app.include_router(itinerary.router, prefix="/api/itinerary", tags=["Itinerary"])
 app.include_router(intelligence.router, prefix="/api/intelligence", tags=["Intelligence"])
+app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(ranking.router, prefix="/api/recommend", tags=["Ranking"])
 app.include_router(recommendation.router, prefix="/api/recommend", tags=["Recommendations"])
 app.include_router(enrichment.router, prefix="/api/destination", tags=["Educational Enrichment"])
