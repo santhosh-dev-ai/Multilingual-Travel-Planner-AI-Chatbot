@@ -1,12 +1,11 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import HamburgerMenu from './components/HamburgerMenu';
 import ChatInterface from './components/ChatInterface';
 import LanguageSelector from './components/LanguageSelector';
 import DestinationCard from './components/DestinationCard';
-import FeatureCard from './components/FeatureCard';
 import DestinationModal from './components/DestinationModal';
 import DestinationFilters, { priceRanges } from './components/DestinationFilters';
 import CompareDestinations from './components/CompareDestinations';
@@ -28,14 +27,18 @@ import {
   CameraIcon,
   ScaleIcon,
   ArrowPathIcon,
-  CalendarDaysIcon,
   MagnifyingGlassIcon,
+  PaperAirplaneIcon,
+  TruckIcon,
+  BuildingOffice2Icon,
+  HomeModernIcon,
+  BriefcaseIcon,
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 
 export default function Home() {
-  const router = useRouter();
-  const [authChecked, setAuthChecked] = useState(false);
+  const [authChecked, setAuthChecked] = useState(true);
+  const [currentUsername, setCurrentUsername] = useState('Traveler');
   const [selectedLanguage, setSelectedLanguage] = useState<string>('en-US');
   
   const [showAllDestinations, setShowAllDestinations] = useState(false);
@@ -72,12 +75,15 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!authAPI.isAuthenticated()) {
-      router.replace('/auth');
-      return;
-    }
+    const user = authAPI.getCurrentUser();
+    const resolvedUsername =
+      user?.display_name ||
+      user?.username ||
+      (user?.email ? String(user.email).split('@')[0] : null) ||
+      'Traveler';
+    setCurrentUsername(resolvedUsername);
     setAuthChecked(true);
-  }, [router]);
+  }, []);
   
   // Wishlist modal state
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
@@ -199,15 +205,63 @@ export default function Home() {
 
   const t = (translations as Record<string, typeof translations['en-US']>)[selectedLanguage] || translations['en-US'];
 
-  const featureIcons = [
-    SparklesIcon,
-    GlobeAltIcon,
-    MapPinIcon,
-    ChatBubbleBottomCenterTextIcon,
-    HeartIcon,
-    CurrencyDollarIcon,
-    UserGroupIcon,
-    CameraIcon,
+  const serviceCards = [
+    {
+      title: 'Flights',
+      description: 'Search real-time flight options and compare student-friendly fares.',
+      href: '/flights',
+      cta: 'Explore Flights',
+      icon: PaperAirplaneIcon,
+    },
+    {
+      title: 'Trains',
+      description: 'Browse train routes and plan rail journeys for your trip.',
+      href: '/trains',
+      cta: 'Explore Trains',
+      icon: GlobeAltIcon,
+    },
+    {
+      title: 'Bus',
+      description: 'Find bus travel options for affordable intercity mobility.',
+      href: '/bus',
+      cta: 'Explore Bus',
+      icon: TruckIcon,
+    },
+    {
+      title: 'Hotels',
+      description: 'Discover hotel stays that fit your destination and budget.',
+      href: '/hotels',
+      cta: 'Explore Hotels',
+      icon: BuildingOffice2Icon,
+    },
+    {
+      title: 'Rooms',
+      description: 'Check private room listings for short and long stays.',
+      href: '/rooms',
+      cta: 'Explore Rooms',
+      icon: HomeModernIcon,
+    },
+    {
+      title: 'Airbnb',
+      description: 'Compare homestay-style accommodations for flexible travel.',
+      href: '/airbnb',
+      cta: 'Explore Airbnb',
+      icon: HomeModernIcon,
+    },
+    {
+      title: 'Lounges',
+      description: 'Find airport and transit lounges for comfortable stopovers.',
+      href: '/lounges',
+      cta: 'Explore Lounges',
+      icon: BriefcaseIcon,
+    },
+    {
+      title: 'Services',
+      description: 'Access additional travel support tools and assistance.',
+      href: '/services',
+      cta: 'Explore Services',
+      icon: SparklesIcon,
+    },
   ];
 
   // Filter and sort destinations
@@ -374,8 +428,9 @@ export default function Home() {
 
   const handleLogout = () => {
     authAPI.logout();
-    router.replace('/auth');
+    setCurrentUsername('Traveler');
   };
+
 
   if (!authChecked) {
     return null;
@@ -397,6 +452,10 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0F172A]/40 border border-[#3AA8C1]/20">
+                <span className="text-sm text-[#CBD5E1]">Hi,</span>
+                <span className="text-sm font-semibold text-white">{currentUsername}</span>
+              </div>
               <LanguageSelector
                 selectedLanguage={selectedLanguage}
                 onLanguageChange={setSelectedLanguage}
@@ -652,23 +711,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section - Why Choose TravelGenie */}
+      {/* Services Section */}
       <section className="py-20 bg-gradient-to-br from-[#334155] to-[#1E293B]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-white">
-              {t.features.title}
+              Explore Travel Services
             </h2>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {t.features.items.map((feature, index) => (
-              <FeatureCard
-                key={index}
-                icon={featureIcons[index]}
-                title={feature.title}
-                description={feature.description}
-              />
+            {serviceCards.map((service) => (
+              <div
+                key={service.href}
+                className="bg-[#1E293B] rounded-xl border border-[#334155] shadow-sm hover:shadow-lg transition-all duration-300 p-6"
+              >
+                <div className="w-14 h-14 bg-gradient-to-br from-[#3AA8C1]/20 to-[#58B8CD]/20 rounded-xl flex items-center justify-center mb-4">
+                  <service.icon className="w-7 h-7 text-[#3AA8C1]" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">{service.title}</h3>
+                <p className="text-sm text-[#CBD5E1] leading-relaxed mb-4">{service.description}</p>
+                <Link
+                  href={service.href}
+                  className="inline-flex items-center text-sm font-semibold text-[#58B8CD] hover:text-[#7ED1E2] transition-colors"
+                >
+                  {service.cta}
+                </Link>
+              </div>
             ))}
           </div>
         </div>
