@@ -1,5 +1,5 @@
 """Pydantic models for database entities."""
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AliasChoices
 from typing import Optional, List, Any
 from datetime import datetime
 
@@ -99,7 +99,13 @@ class RegisterUserCreate(BaseModel):
     username: str = Field(..., min_length=3, max_length=30, description="Unique username")
     password: str = Field(..., min_length=6, max_length=100, description="User password")
     email: str = Field(..., description="User email address")
-    phone_number: str = Field(..., min_length=7, max_length=20, description="User phone number")
+    phone_number: str = Field(
+        ...,
+        min_length=7,
+        max_length=20,
+        description="User phone number",
+        validation_alias=AliasChoices("phone_number", "phone"),
+    )
 
 
 class LoginUserRequest(BaseModel):

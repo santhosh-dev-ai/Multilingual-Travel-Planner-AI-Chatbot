@@ -7,17 +7,17 @@ from typing import Optional
 # Load environment variables from common project locations
 CURRENT_FILE = Path(__file__).resolve()
 ENV_CANDIDATES = [
-    CURRENT_FILE.parents[4] / "database" / ".env",  # <repo>/database/.env
-    CURRENT_FILE.parents[3] / ".env",                # <repo>/backend/.env
-    CURRENT_FILE.parents[4] / ".env",                # <repo>/.env
+    CURRENT_FILE.parents[3] / "database" / ".env",  # <repo>/database/.env
+    CURRENT_FILE.parents[2] / ".env",                # <repo>/backend/.env
+    CURRENT_FILE.parents[3] / ".env",                # <repo>/.env
 ]
 
 for env_path in ENV_CANDIDATES:
     if env_path.exists():
-        load_dotenv(env_path, override=False)
+        load_dotenv(env_path, override=True)
 
 # Fallback to default behavior
-load_dotenv(override=False)
+load_dotenv(override=True)
 
 # Supabase credentials
 SUPABASE_URL = os.getenv("SUPABASE_URL")

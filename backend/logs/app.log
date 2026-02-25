@@ -441,3 +441,777 @@ popularity_score
 2026-02-20 23:53:40,763 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 0.010s
 2026-02-20 23:53:41,811 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
 2026-02-20 23:53:41,814 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 0.003s
+2026-02-20 23:55:32,754 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-20 23:55:32,774 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 0.021s
+2026-02-20 23:55:36,507 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-20 23:55:36,522 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.015s
+2026-02-21 17:14:54,429 - app.middleware.production - INFO - Request: GET /api/itinerary/tg_user_20260217_681939/count from 127.0.0.1
+2026-02-21 17:14:54,440 - app.middleware.production - INFO - Request: GET /api/destinations/random from 127.0.0.1
+2026-02-21 17:15:10,761 - app.middleware.production - INFO - Request: GET /api/wishlist/tg_user_20260217_681939 from 127.0.0.1
+2026-02-21 17:15:10,796 - app.middleware.production - INFO - Response: GET /api/itinerary/tg_user_20260217_681939/count - 200 - 16.367s
+2026-02-21 17:15:10,805 - app.middleware.production - INFO - Response: GET /api/wishlist/tg_user_20260217_681939 - 200 - 0.044s
+2026-02-21 17:15:11,443 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,448 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,451 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,455 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,459 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,474 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,484 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,492 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,496 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,505 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,509 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,517 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,527 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,540 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,603 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 17:15:11,612 - app.middleware.production - INFO - Response: GET /api/destinations/random - 200 - 17.173s
+2026-02-21 17:15:13,192 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 17:15:13,195 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.003s
+2026-02-21 17:50:46,207 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 17:50:46,216 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.009s
+2026-02-21 17:51:47,923 - app.middleware.production - INFO - Request: GET /health from 127.0.0.1
+2026-02-21 17:51:47,924 - app.middleware.production - INFO - Response: GET /health - 200 - 0.001s
+2026-02-21 17:54:37,378 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 17:54:37,380 - app.middleware.production - INFO - Response: POST /api/auth/register - 422 - 0.003s
+2026-02-21 17:55:20,104 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 17:55:20,105 - app.middleware.production - INFO - Response: POST /api/auth/register - 422 - 0.001s
+2026-02-21 17:57:08,950 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 17:57:08,966 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.015s
+2026-02-21 18:04:52,216 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:04:53,510 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:04:53,519 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 1.303s
+2026-02-21 18:05:11,737 - app.middleware.production - INFO - Request: GET /docs from 127.0.0.1
+2026-02-21 18:05:11,737 - app.middleware.production - INFO - Response: GET /docs - 200 - 0.001s
+2026-02-21 18:05:49,667 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:05:49,760 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:05:49,761 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.094s
+2026-02-21 18:09:04,420 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:09:04,745 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_b&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:09:04,746 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.327s
+2026-02-21 18:09:04,749 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-21 18:09:04,802 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_b&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:09:04,803 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 0.054s
+2026-02-21 18:13:47,240 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:13:48,271 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_c&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:13:49,159 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/2 200 OK"
+2026-02-21 18:13:49,812 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 400 Bad Request"
+2026-02-21 18:13:49,813 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 2.573s
+2026-02-21 18:13:49,816 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-21 18:13:49,871 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_c&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:13:50,392 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/2 200 OK"
+2026-02-21 18:13:50,394 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 0.578s
+2026-02-21 18:17:06,263 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:17:06,792 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_d&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:17:07,330 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/2 200 OK"
+2026-02-21 18:17:10,401 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 200 OK"
+2026-02-21 18:17:10,492 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles "HTTP/2 404 Not Found"
+2026-02-21 18:17:10,493 - app.middleware.production - INFO - Response: POST /api/auth/register - 200 - 4.230s
+2026-02-21 18:17:10,496 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-21 18:17:10,561 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_d&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:17:11,027 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/2 200 OK"
+2026-02-21 18:17:11,029 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 0.532s
+2026-02-21 18:19:33,794 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-21 18:19:34,755 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_d&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:19:35,341 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:19:35,507 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/token?grant_type=password "HTTP/2 400 Bad Request"
+2026-02-21 18:19:35,509 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 1.716s
+2026-02-21 18:19:35,512 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:19:35,568 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_e&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:19:36,039 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:19:36,089 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:19:36,228 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 429 Too Many Requests"
+2026-02-21 18:19:36,229 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.717s
+2026-02-21 18:19:36,232 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-21 18:19:36,289 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_e&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:19:36,768 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:19:36,815 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:19:36,817 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 0.586s
+2026-02-21 18:20:50,246 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:20:50,787 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_f&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:20:51,376 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:20:51,426 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:20:51,576 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 429 Too Many Requests"
+2026-02-21 18:20:51,579 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 1.333s
+2026-02-21 18:20:51,583 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-21 18:20:51,649 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_d&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:20:52,125 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:20:52,259 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/token?grant_type=password "HTTP/2 400 Bad Request"
+2026-02-21 18:20:52,261 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 0.678s
+2026-02-21 18:22:07,532 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:22:07,542 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.011s
+2026-02-21 18:23:53,963 - app.middleware.production - INFO - Request: GET /health from 127.0.0.1
+2026-02-21 18:23:53,965 - app.middleware.production - INFO - Response: GET /health - 200 - 0.002s
+2026-02-21 18:24:06,405 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:24:06,723 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.admin&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:24:07,250 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:24:07,305 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:24:07,493 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 429 Too Many Requests"
+2026-02-21 18:24:07,494 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 1.089s
+2026-02-21 18:24:53,397 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:24:53,401 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.003s
+2026-02-21 18:26:20,515 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:26:20,526 - app.middleware.production - INFO - Response: POST /api/auth/register - 422 - 0.011s
+2026-02-21 18:26:22,618 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:26:23,245 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.probeuser2&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:26:23,814 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:26:23,870 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:26:24,042 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 429 Too Many Requests"
+2026-02-21 18:26:24,043 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 1.425s
+2026-02-21 18:27:11,029 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:27:11,030 - app.middleware.production - INFO - Response: POST /api/auth/register - 422 - 0.001s
+2026-02-21 18:27:13,184 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:27:13,294 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.probeuser2&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:27:13,759 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:27:13,811 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:27:13,987 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 429 Too Many Requests"
+2026-02-21 18:27:13,989 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.805s
+2026-02-21 18:29:21,663 - app.middleware.production - INFO - Request: GET /health from 127.0.0.1
+2026-02-21 18:29:21,664 - app.middleware.production - INFO - Response: GET /health - 200 - 0.001s
+2026-02-21 18:30:47,420 - app.middleware.production - INFO - Request: GET /api/itinerary/tg_user_20260217_681939/count from 127.0.0.1
+2026-02-21 18:30:47,485 - app.middleware.production - INFO - Request: GET /api/destinations/random from 127.0.0.1
+2026-02-21 18:30:48,089 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.tg_user_20260217_681939 "HTTP/2 200 OK"
+2026-02-21 18:30:56,192 - app.middleware.production - INFO - Request: GET /api/wishlist/tg_user_20260217_681939 from 127.0.0.1
+2026-02-21 18:30:56,208 - app.middleware.production - INFO - Response: GET /api/itinerary/tg_user_20260217_681939/count - 200 - 8.788s
+2026-02-21 18:30:56,424 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.tg_user_20260217_681939&order=created_at.desc "HTTP/2 200 OK"
+2026-02-21 18:30:56,430 - app.middleware.production - INFO - Response: GET /api/wishlist/tg_user_20260217_681939 - 200 - 0.238s
+2026-02-21 18:30:56,758 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,778 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,781 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,784 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,844 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,862 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,865 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,867 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,880 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,883 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,888 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,897 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,915 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,963 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:56,997 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 18:30:57,003 - app.middleware.production - INFO - Response: GET /api/destinations/random - 200 - 9.517s
+2026-02-21 18:31:08,368 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:31:08,467 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.Drake&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:31:09,085 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:31:09,147 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:31:09,321 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 429 Too Many Requests"
+2026-02-21 18:31:09,322 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.954s
+2026-02-21 18:31:54,445 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:31:54,547 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.ratecheckuser&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:31:55,018 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:31:55,078 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:31:55,256 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 429 Too Many Requests"
+2026-02-21 18:31:55,257 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 0.812s
+2026-02-21 18:33:09,270 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:33:10,144 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.ratecheckuser2&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:33:10,647 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:10,698 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:11,197 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:11,252 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:11,405 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 429 Too Many Requests"
+2026-02-21 18:33:11,408 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 2.138s
+2026-02-21 18:33:37,426 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:33:37,523 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.Drake&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:33:38,190 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:38,245 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:38,898 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:38,946 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:39,099 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 429 Too Many Requests"
+2026-02-21 18:33:39,101 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 1.675s
+2026-02-21 18:33:49,523 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 18:33:49,649 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.admin&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:33:50,339 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:50,393 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:51,014 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:51,064 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:51,226 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 429 Too Many Requests"
+2026-02-21 18:33:51,229 - app.middleware.production - INFO - Response: POST /api/auth/register - 400 - 1.706s
+2026-02-21 18:33:57,010 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-21 18:33:57,099 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.admin&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 18:33:57,827 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:57,876 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 18:33:57,877 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 0.867s
+2026-02-21 19:17:25,572 - app.middleware.production - INFO - Request: POST /api/auth/register from 127.0.0.1
+2026-02-21 19:17:26,689 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.admin&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 19:17:29,040 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 19:17:29,140 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 19:17:31,162 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 19:17:31,254 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=2&per_page=200 "HTTP/2 200 OK"
+2026-02-21 19:17:34,367 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/signup "HTTP/2 200 OK"
+2026-02-21 19:17:34,568 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles "HTTP/2 404 Not Found"
+2026-02-21 19:17:34,572 - app.middleware.production - INFO - Response: POST /api/auth/register - 200 - 9.001s
+2026-02-21 19:18:05,906 - app.middleware.production - INFO - Request: GET /api/itinerary/tg_user_20260217_681939/count from 127.0.0.1
+2026-02-21 19:18:05,921 - app.middleware.production - INFO - Request: GET /api/wishlist/tg_user_20260217_681939 from 127.0.0.1
+2026-02-21 19:18:05,929 - app.middleware.production - INFO - Request: GET /api/destinations/random from 127.0.0.1
+2026-02-21 19:18:06,275 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.tg_user_20260217_681939 "HTTP/2 200 OK"
+2026-02-21 19:18:06,276 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.tg_user_20260217_681939&order=created_at.desc "HTTP/2 200 OK"
+2026-02-21 19:18:34,582 - app.middleware.production - INFO - Response: GET /api/wishlist/tg_user_20260217_681939 - 200 - 28.661s
+2026-02-21 19:18:34,584 - app.middleware.production - INFO - Response: GET /api/itinerary/tg_user_20260217_681939/count - 200 - 28.678s
+2026-02-21 19:18:34,599 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-21 19:18:35,287 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,309 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,314 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,334 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,345 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,372 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,384 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,398 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,412 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,427 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,449 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,459 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,467 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,513 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,519 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 19:18:35,549 - app.middleware.production - INFO - Response: GET /api/destinations/random - 200 - 29.620s
+2026-02-21 19:18:35,815 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.admin&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 19:18:37,444 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 19:18:37,628 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/token?grant_type=password "HTTP/2 200 OK"
+2026-02-21 19:18:39,873 - httpx - INFO - HTTP Request: PATCH https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 404 Not Found"
+2026-02-21 19:18:39,881 - app.middleware.production - INFO - Response: POST /api/auth/login - 200 - 5.282s
+2026-02-21 19:18:40,122 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-21 19:18:40,226 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-21 19:18:40,238 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 0.118s
+2026-02-21 19:18:40,242 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-21 19:18:40,312 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df&order=created_at.desc "HTTP/2 200 OK"
+2026-02-21 19:18:40,319 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 200 - 0.077s
+2026-02-21 19:18:40,322 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-21 19:18:40,379 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-21 19:18:40,380 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-21 19:18:40,386 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 0.064s
+2026-02-21 19:18:40,441 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df&order=created_at.desc "HTTP/2 200 OK"
+2026-02-21 19:18:40,447 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 200 - 0.067s
+2026-02-21 19:19:02,873 - app.middleware.production - INFO - Request: GET /api/weather/geocode from 127.0.0.1
+2026-02-21 19:19:03,024 - app.middleware.production - INFO - Response: GET /api/weather/geocode - 200 - 0.151s
+2026-02-21 19:19:03,072 - app.middleware.production - INFO - Request: GET /api/weather/current from 127.0.0.1
+2026-02-21 19:19:03,075 - app.middleware.production - INFO - Response: GET /api/weather/current - 200 - 0.003s
+2026-02-21 19:19:03,086 - app.middleware.production - INFO - Request: GET /api/weather/forecast from 127.0.0.1
+2026-02-21 19:19:03,090 - app.middleware.production - INFO - Response: GET /api/weather/forecast - 200 - 0.004s
+2026-02-21 19:19:28,916 - app.middleware.production - INFO - Request: GET /api/weather/geocode from 127.0.0.1
+2026-02-21 19:19:28,918 - app.middleware.production - INFO - Response: GET /api/weather/geocode - 200 - 0.002s
+2026-02-21 19:19:28,935 - app.middleware.production - INFO - Request: GET /api/weather/current from 127.0.0.1
+2026-02-21 19:19:28,939 - app.middleware.production - INFO - Response: GET /api/weather/current - 200 - 0.004s
+2026-02-21 19:19:28,968 - app.middleware.production - INFO - Request: GET /api/weather/forecast from 127.0.0.1
+2026-02-21 19:19:28,978 - app.middleware.production - INFO - Response: GET /api/weather/forecast - 200 - 0.010s
+2026-02-21 19:29:48,650 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-21 19:29:49,704 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_d&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 19:29:50,421 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 19:29:50,624 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/token?grant_type=password "HTTP/2 400 Bad Request"
+2026-02-21 19:29:50,627 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 1.977s
+2026-02-21 19:56:10,603 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-21 19:56:13,171 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/user_profiles?select=%2A&username=eq.authfix_user_20260221_d&limit=1 "HTTP/2 404 Not Found"
+2026-02-21 19:56:14,039 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/admin/users?page=1&per_page=200 "HTTP/2 200 OK"
+2026-02-21 19:56:14,348 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/auth/v1/token?grant_type=password "HTTP/2 400 Bad Request"
+2026-02-21 19:56:14,352 - app.middleware.production - INFO - Response: POST /api/auth/login - 401 - 3.748s
+2026-02-21 20:06:39,747 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-21 20:06:39,944 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-21 20:06:40,050 - app.middleware.production - INFO - Request: GET /api/destinations/random from 127.0.0.1
+2026-02-21 20:06:42,781 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-21 20:06:42,782 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df&order=created_at.desc "HTTP/2 200 OK"
+2026-02-21 20:06:56,683 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 16.940s
+2026-02-21 20:06:56,685 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 200 - 16.740s
+2026-02-21 20:06:57,525 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,535 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,543 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,551 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,562 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,569 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,573 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,579 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,626 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,639 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,649 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,655 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,686 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,774 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,777 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-21 20:06:57,791 - app.middleware.production - INFO - Response: GET /api/destinations/random - 200 - 17.741s
+2026-02-21 20:07:26,629 - app.middleware.production - INFO - Request: GET /api/weather/geocode from 127.0.0.1
+2026-02-21 20:07:26,637 - app.middleware.production - INFO - Response: GET /api/weather/geocode - 200 - 0.008s
+2026-02-21 20:07:26,654 - app.middleware.production - INFO - Request: GET /api/weather/current from 127.0.0.1
+2026-02-21 20:07:26,658 - app.middleware.production - INFO - Response: GET /api/weather/current - 200 - 0.005s
+2026-02-21 20:07:26,690 - app.middleware.production - INFO - Request: GET /api/weather/forecast from 127.0.0.1
+2026-02-21 20:07:26,705 - app.middleware.production - INFO - Response: GET /api/weather/forecast - 200 - 0.015s
+2026-02-21 20:07:54,258 - app.middleware.production - INFO - Request: GET /api/weather/geocode from 127.0.0.1
+2026-02-21 20:07:54,260 - app.middleware.production - INFO - Response: GET /api/weather/geocode - 200 - 0.002s
+2026-02-21 20:07:54,314 - app.middleware.production - INFO - Request: GET /api/weather/current from 127.0.0.1
+2026-02-21 20:07:54,314 - app.middleware.production - INFO - Response: GET /api/weather/current - 200 - 0.001s
+2026-02-21 20:07:54,517 - app.middleware.production - INFO - Request: GET /api/weather/forecast from 127.0.0.1
+2026-02-21 20:07:54,521 - app.middleware.production - INFO - Response: GET /api/weather/forecast - 200 - 0.005s
+2026-02-21 20:08:07,378 - app.middleware.production - INFO - Request: POST /api/generate/intelligent-itinerary from 127.0.0.1
+2026-02-21 20:08:07,395 - app.api.intelligent_itinerary - INFO - [Itinerary API] Request - Barcelona, $500.0, 5d, 2p
+2026-02-21 20:08:07,588 - app.services.enrichment - INFO - Loaded 25 books from C:\Users\ble98\Documents\Multilingual-Travel-Planner-AI-Chatbot\backend\data\books.csv
+2026-02-21 20:08:07,589 - app.services.intelligent_itinerary - INFO - [Itinerary] Generating for Barcelona, 5 days, $500.0
+2026-02-21 20:08:07,589 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 1/6: Optimizing budget allocation
+2026-02-21 20:08:07,590 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 2/6: Finding alternative destinations
+2026-02-21 20:08:07,601 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 3/6: Ranking hotels, restaurants, attractions
+2026-02-21 20:08:07,606 - app.api.intelligent_itinerary - ERROR - [Itinerary API] Validation error: 5 validation errors for Place
+id
+  Field required [type=missing, input_value={'name': 'Barcelona Grand...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+price_range
+  Field required [type=missing, input_value={'name': 'Barcelona Grand...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+average_price
+  Field required [type=missing, input_value={'name': 'Barcelona Grand...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+city
+  Field required [type=missing, input_value={'name': 'Barcelona Grand...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+popularity_score
+  Input should be less than or equal to 100 [type=less_than_equal, input_value=850, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.12/v/less_than_equal
+2026-02-21 20:08:07,607 - app.middleware.production - INFO - Response: POST /api/generate/intelligent-itinerary - 400 - 0.229s
+2026-02-24 10:31:33,451 - app.middleware.production - INFO - Request: GET /health from 127.0.0.1
+2026-02-24 10:31:33,453 - app.middleware.production - INFO - Response: GET /health - 200 - 0.002s
+2026-02-24 10:32:47,532 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 10:32:49,819 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 10:32:56,572 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=LHR&departureDate=2026-03-20&adults=1&currencyCode=USD&max=50&returnDate=2026-03-27 "HTTP/1.1 200 OK"
+2026-02-24 10:32:56,595 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 9.063s
+2026-02-24 10:35:40,419 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 10:35:42,445 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 10:35:49,321 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=LHR&departureDate=2026-03-20&adults=1&currencyCode=USD&max=50&returnDate=2026-03-27 "HTTP/1.1 200 OK"
+2026-02-24 10:35:49,336 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 8.916s
+2026-02-24 10:37:36,213 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 10:37:38,275 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 10:37:45,138 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=LHR&departureDate=2026-03-20&adults=1&currencyCode=USD&max=50&returnDate=2026-03-27 "HTTP/1.1 200 OK"
+2026-02-24 10:37:45,154 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 8.941s
+2026-02-24 10:42:16,836 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-24 10:42:16,841 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-24 10:42:16,849 - app.middleware.production - INFO - Request: GET /api/destinations/random from 127.0.0.1
+2026-02-24 10:42:32,893 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 16.058s
+2026-02-24 10:42:32,897 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 500 - 16.056s
+2026-02-24 10:42:32,969 - app.middleware.production - INFO - Response: GET /api/destinations/random - 200 - 16.120s
+2026-02-24 10:44:14,013 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 10:44:16,714 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 10:44:23,268 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=LHR&departureDate=2026-02-24&adults=1&currencyCode=USD&max=50&returnDate=2026-02-27 "HTTP/1.1 200 OK"
+2026-02-24 10:44:23,289 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 9.276s
+2026-02-24 10:51:01,228 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 10:51:03,674 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 10:51:11,538 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=LHR&departureDate=2026-03-20&adults=1&currencyCode=USD&max=50&returnDate=2026-03-27 "HTTP/1.1 200 OK"
+2026-02-24 10:51:11,570 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 10.343s
+2026-02-24 11:01:43,816 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 11:01:46,319 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 11:01:53,998 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=LHR&departureDate=2026-03-20&adults=1&currencyCode=USD&max=50&returnDate=2026-03-27 "HTTP/1.1 200 OK"
+2026-02-24 11:01:54,022 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 10.206s
+2026-02-24 11:04:49,843 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 11:04:52,508 - httpx - INFO - HTTP Request: POST https://api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 401 Unauthorized"
+2026-02-24 11:04:52,513 - app.middleware.production - INFO - Response: POST /search/flights - 502 - 2.670s
+2026-02-24 11:09:48,592 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 11:09:50,417 - httpx - INFO - HTTP Request: POST https://api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 401 Unauthorized"
+2026-02-24 11:09:50,422 - app.middleware.production - INFO - Response: POST /search/flights - 502 - 1.831s
+2026-02-24 11:50:52,930 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-24 11:50:53,039 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-24 11:50:53,064 - app.middleware.production - INFO - Request: GET /api/destinations/random from 127.0.0.1
+2026-02-24 11:50:55,473 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-24 11:51:01,100 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 8.179s
+2026-02-24 11:51:01,261 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df&order=created_at.desc "HTTP/2 200 OK"
+2026-02-24 11:51:01,266 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 200 - 8.228s
+2026-02-24 11:51:01,896 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:01,918 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:01,936 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:01,959 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:01,971 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:01,992 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:02,021 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:02,029 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:02,032 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:02,038 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:02,082 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:02,133 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:02,137 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:02,159 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:02,345 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 11:51:02,352 - app.middleware.production - INFO - Response: GET /api/destinations/random - 200 - 9.289s
+2026-02-24 11:53:24,865 - app.middleware.production - INFO - Request: GET /api/weather/geocode from 127.0.0.1
+2026-02-24 11:53:24,927 - app.middleware.production - INFO - Response: GET /api/weather/geocode - 200 - 0.062s
+2026-02-24 11:53:24,936 - app.middleware.production - INFO - Request: GET /api/weather/current from 127.0.0.1
+2026-02-24 11:53:24,940 - app.middleware.production - INFO - Response: GET /api/weather/current - 200 - 0.004s
+2026-02-24 11:53:24,951 - app.middleware.production - INFO - Request: GET /api/weather/forecast from 127.0.0.1
+2026-02-24 11:53:24,955 - app.middleware.production - INFO - Response: GET /api/weather/forecast - 200 - 0.004s
+2026-02-24 11:53:34,793 - app.middleware.production - INFO - Request: POST /api/generate/intelligent-itinerary from 127.0.0.1
+2026-02-24 11:53:34,852 - app.api.intelligent_itinerary - INFO - [Itinerary API] Request - Cape Town, $500.0, 5d, 2p
+2026-02-24 11:53:35,068 - app.services.enrichment - INFO - Loaded 25 books from C:\Users\ble98\Documents\Multilingual-Travel-Planner-AI-Chatbot\backend\data\books.csv
+2026-02-24 11:53:35,068 - app.services.intelligent_itinerary - INFO - [Itinerary] Generating for Cape Town, 5 days, $500.0
+2026-02-24 11:53:35,069 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 1/6: Optimizing budget allocation
+2026-02-24 11:53:35,071 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 2/6: Finding alternative destinations
+2026-02-24 11:53:35,082 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 3/6: Ranking hotels, restaurants, attractions
+2026-02-24 11:53:35,090 - app.api.intelligent_itinerary - ERROR - [Itinerary API] Validation error: 5 validation errors for Place
+id
+  Field required [type=missing, input_value={'name': 'Cape Town Grand...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+price_range
+  Field required [type=missing, input_value={'name': 'Cape Town Grand...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+average_price
+  Field required [type=missing, input_value={'name': 'Cape Town Grand...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+city
+  Field required [type=missing, input_value={'name': 'Cape Town Grand...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+popularity_score
+  Input should be less than or equal to 100 [type=less_than_equal, input_value=850, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.12/v/less_than_equal
+2026-02-24 11:53:35,097 - app.middleware.production - INFO - Response: POST /api/generate/intelligent-itinerary - 400 - 0.304s
+2026-02-24 11:53:58,834 - app.middleware.production - INFO - Request: POST /api/wishlist from 127.0.0.1
+2026-02-24 11:53:59,447 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists "HTTP/2 201 Created"
+2026-02-24 11:53:59,455 - app.middleware.production - INFO - Response: POST /api/wishlist - 200 - 0.621s
+2026-02-24 11:57:35,768 - app.middleware.production - INFO - Request: POST /api/generate/intelligent-itinerary from 127.0.0.1
+2026-02-24 11:57:35,798 - app.api.intelligent_itinerary - INFO - [Itinerary API] Request - Paris, $1200.0, 4d, 2p
+2026-02-24 11:57:35,799 - app.services.intelligent_itinerary - INFO - [Itinerary] Generating for Paris, 4 days, $1200.0
+2026-02-24 11:57:35,799 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 1/6: Optimizing budget allocation
+2026-02-24 11:57:35,802 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 2/6: Finding alternative destinations
+2026-02-24 11:57:35,892 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 3/6: Ranking hotels, restaurants, attractions
+2026-02-24 11:57:35,895 - app.api.intelligent_itinerary - ERROR - [Itinerary API] Validation error: 5 validation errors for Place
+id
+  Field required [type=missing, input_value={'name': 'Paris Grand Hot...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+price_range
+  Field required [type=missing, input_value={'name': 'Paris Grand Hot...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+average_price
+  Field required [type=missing, input_value={'name': 'Paris Grand Hot...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+city
+  Field required [type=missing, input_value={'name': 'Paris Grand Hot...student_friendly': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+popularity_score
+  Input should be less than or equal to 100 [type=less_than_equal, input_value=850, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.12/v/less_than_equal
+2026-02-24 11:57:35,898 - app.middleware.production - INFO - Response: POST /api/generate/intelligent-itinerary - 400 - 0.134s
+2026-02-24 12:39:27,480 - app.middleware.production - INFO - Request: POST /api/generate/intelligent-itinerary from 127.0.0.1
+2026-02-24 12:39:27,485 - app.api.intelligent_itinerary - INFO - [Itinerary API] Request - Paris, $1200.0, 4d, 2p
+2026-02-24 12:39:27,514 - app.services.enrichment - INFO - Loaded 25 books from C:\Users\ble98\Documents\Multilingual-Travel-Planner-AI-Chatbot\backend\data\books.csv
+2026-02-24 12:39:27,514 - app.services.intelligent_itinerary - INFO - [Itinerary] Generating for Paris, 4 days, $1200.0
+2026-02-24 12:39:27,515 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 1/6: Optimizing budget allocation
+2026-02-24 12:39:27,516 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 2/6: Finding alternative destinations
+2026-02-24 12:39:27,520 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 3/6: Ranking hotels, restaurants, attractions
+2026-02-24 12:39:27,521 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 4/6: Optimizing route
+2026-02-24 12:39:27,521 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 5/6: Generating educational enrichment
+2026-02-24 12:39:28,444 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-02-24 12:39:28,446 - app.services.enrichment - ERROR - Error generating enrichment: Invalid API key
+2026-02-24 12:39:28,446 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 6/6: Building day-by-day itinerary
+2026-02-24 12:39:28,446 - app.services.intelligent_itinerary - INFO - [Itinerary] Complete! Generated in 0.93s
+2026-02-24 12:39:28,449 - app.api.intelligent_itinerary - INFO - [Itinerary API] Success - Generated in 0.93s, 7 features
+2026-02-24 12:39:28,451 - app.middleware.production - INFO - Response: POST /api/generate/intelligent-itinerary - 200 - 0.971s
+2026-02-24 14:47:32,564 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-24 14:47:32,749 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-24 14:47:32,759 - app.middleware.production - INFO - Request: GET /api/destinations/random from 127.0.0.1
+2026-02-24 14:47:35,638 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-24 14:47:35,639 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df&order=created_at.desc "HTTP/2 200 OK"
+2026-02-24 14:47:44,243 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 200 - 11.494s
+2026-02-24 14:47:44,246 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 11.693s
+2026-02-24 14:47:44,942 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:44,946 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:44,948 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:44,953 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:44,955 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:44,956 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:44,958 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:44,969 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:44,990 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:44,993 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:44,995 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:45,032 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:45,216 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:45,222 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:45,226 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 14:47:45,239 - app.middleware.production - INFO - Response: GET /api/destinations/random - 200 - 12.480s
+2026-02-24 14:48:20,526 - app.middleware.production - INFO - Request: GET /api/weather/geocode from 127.0.0.1
+2026-02-24 14:48:20,541 - app.middleware.production - INFO - Response: GET /api/weather/geocode - 200 - 0.015s
+2026-02-24 14:48:20,573 - app.middleware.production - INFO - Request: GET /api/weather/current from 127.0.0.1
+2026-02-24 14:48:20,578 - app.middleware.production - INFO - Response: GET /api/weather/current - 200 - 0.005s
+2026-02-24 14:48:20,597 - app.middleware.production - INFO - Request: GET /api/weather/forecast from 127.0.0.1
+2026-02-24 14:48:20,601 - app.middleware.production - INFO - Response: GET /api/weather/forecast - 200 - 0.004s
+2026-02-24 14:48:31,455 - app.middleware.production - INFO - Request: POST /api/generate/intelligent-itinerary from 127.0.0.1
+2026-02-24 14:48:31,472 - app.api.intelligent_itinerary - INFO - [Itinerary API] Request - Bali, $500.0, 5d, 2p
+2026-02-24 14:48:31,475 - app.services.intelligent_itinerary - INFO - [Itinerary] Generating for Bali, 5 days, $500.0
+2026-02-24 14:48:31,476 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 1/6: Optimizing budget allocation
+2026-02-24 14:48:31,482 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 2/6: Finding alternative destinations
+2026-02-24 14:48:31,599 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 3/6: Ranking hotels, restaurants, attractions
+2026-02-24 14:48:31,603 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 4/6: Optimizing route
+2026-02-24 14:48:31,604 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 5/6: Generating educational enrichment
+2026-02-24 14:48:33,069 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-02-24 14:48:33,075 - app.services.enrichment - ERROR - Error generating enrichment: Invalid API key
+2026-02-24 14:48:33,076 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 6/6: Building day-by-day itinerary
+2026-02-24 14:48:33,078 - app.services.intelligent_itinerary - INFO - [Itinerary] Complete! Generated in 1.60s
+2026-02-24 14:48:33,080 - app.api.intelligent_itinerary - INFO - [Itinerary API] Success - Generated in 1.6s, 7 features
+2026-02-24 14:48:33,083 - app.middleware.production - INFO - Response: POST /api/generate/intelligent-itinerary - 200 - 1.629s
+2026-02-24 14:48:33,099 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-24 14:48:33,273 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-24 14:48:33,288 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 0.189s
+2026-02-24 14:49:06,379 - app.middleware.production - INFO - Request: POST /api/itinerary from 127.0.0.1
+2026-02-24 14:49:06,658 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries "HTTP/2 400 Bad Request"
+2026-02-24 14:49:06,669 - app.middleware.production - INFO - Response: POST /api/itinerary - 200 - 0.290s
+2026-02-24 15:12:53,161 - app.middleware.production - INFO - Request: POST /api/generate/intelligent-itinerary from 127.0.0.1
+2026-02-24 15:12:53,171 - app.api.intelligent_itinerary - INFO - [Itinerary API] Request - Paris, $1200.0, 4d, 2p
+2026-02-24 15:12:53,204 - app.services.enrichment - INFO - Loaded 25 books from C:\Users\ble98\Documents\Multilingual-Travel-Planner-AI-Chatbot\backend\data\books.csv
+2026-02-24 15:12:53,205 - app.services.intelligent_itinerary - INFO - [Itinerary] Generating for Paris, 4 days, $1200.0
+2026-02-24 15:12:53,205 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 1/6: Optimizing budget allocation
+2026-02-24 15:12:53,206 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 2/6: Finding alternative destinations
+2026-02-24 15:12:53,211 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 3/6: Ranking hotels, restaurants, attractions
+2026-02-24 15:12:53,213 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 4/6: Optimizing route
+2026-02-24 15:12:53,213 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 5/6: Generating educational enrichment
+2026-02-24 15:12:54,043 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-02-24 15:12:54,050 - app.services.enrichment - ERROR - Error generating enrichment: Invalid API key
+2026-02-24 15:12:54,053 - app.services.intelligent_itinerary - INFO - [Itinerary] Step 6/6: Building day-by-day itinerary
+2026-02-24 15:12:54,054 - app.services.intelligent_itinerary - INFO - [Itinerary] Complete! Generated in 0.85s
+2026-02-24 15:12:54,059 - app.api.intelligent_itinerary - INFO - [Itinerary API] Success - Generated in 0.85s, 7 features
+2026-02-24 15:12:54,069 - app.middleware.production - INFO - Response: POST /api/generate/intelligent-itinerary - 200 - 0.908s
+2026-02-24 15:12:54,127 - app.middleware.production - INFO - Request: POST /api/itinerary from 127.0.0.1
+2026-02-24 15:12:55,853 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries "HTTP/2 201 Created"
+2026-02-24 15:12:55,864 - app.middleware.production - INFO - Response: POST /api/itinerary - 200 - 1.738s
+2026-02-24 15:37:18,470 - app.middleware.production - INFO - Request: POST /api/itinerary from 127.0.0.1
+2026-02-24 15:37:19,408 - httpx - INFO - HTTP Request: POST https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries "HTTP/2 201 Created"
+2026-02-24 15:37:19,464 - app.middleware.production - INFO - Response: POST /api/itinerary - 200 - 0.996s
+2026-02-24 15:37:19,479 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-24 15:37:19,565 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-24 15:37:19,570 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 0.091s
+2026-02-24 15:47:11,350 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-24 15:47:11,361 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-24 15:47:11,366 - app.middleware.production - INFO - Request: GET /api/destinations/random from 127.0.0.1
+2026-02-24 15:47:12,141 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-24 15:47:25,255 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 13.905s
+2026-02-24 15:47:25,262 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-24 15:47:25,417 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-24 15:47:25,464 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 0.202s
+2026-02-24 15:47:25,471 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df&order=created_at.desc "HTTP/2 200 OK"
+2026-02-24 15:47:25,506 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 200 - 14.145s
+2026-02-24 15:47:25,513 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-24 15:47:25,603 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df&order=created_at.desc "HTTP/2 200 OK"
+2026-02-24 15:47:25,611 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 200 - 0.098s
+2026-02-24 15:47:25,926 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:25,948 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:25,954 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:25,967 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,010 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,015 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,056 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,073 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,088 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,092 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,101 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,108 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,128 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,135 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,143 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:47:26,158 - app.middleware.production - INFO - Response: GET /api/destinations/random - 200 - 14.793s
+2026-02-24 15:47:44,359 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 15:47:47,080 - httpx - INFO - HTTP Request: POST https://api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 401 Unauthorized"
+2026-02-24 15:47:47,098 - app.middleware.production - INFO - Response: POST /search/flights - 502 - 2.739s
+2026-02-24 15:48:18,633 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-24 15:48:18,852 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df&order=created_at.desc "HTTP/2 200 OK"
+2026-02-24 15:48:18,869 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 200 - 0.237s
+2026-02-24 15:48:18,879 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-24 15:48:18,885 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-24 15:48:18,980 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df&order=created_at.desc "HTTP/2 200 OK"
+2026-02-24 15:48:18,986 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 200 - 0.101s
+2026-02-24 15:48:19,131 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-24 15:48:19,154 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 0.275s
+2026-02-24 15:48:19,161 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-24 15:48:19,280 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-24 15:48:19,292 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 0.131s
+2026-02-24 15:54:28,601 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-24 15:54:28,661 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-24 15:54:28,674 - app.middleware.production - INFO - Request: GET /api/destinations/random from 127.0.0.1
+2026-02-24 15:54:29,544 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-24 15:54:29,547 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df&order=created_at.desc "HTTP/2 200 OK"
+2026-02-24 15:55:01,176 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 32.515s
+2026-02-24 15:55:01,187 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 200 - 32.589s
+2026-02-24 15:55:01,194 - app.middleware.production - INFO - Request: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count from 127.0.0.1
+2026-02-24 15:55:01,206 - app.middleware.production - INFO - Request: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df from 127.0.0.1
+2026-02-24 15:55:01,208 - app.middleware.production - INFO - Request: GET /api/destinations/random from 127.0.0.1
+2026-02-24 15:55:01,352 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/wishlists?select=%2A&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df&order=created_at.desc "HTTP/2 200 OK"
+2026-02-24 15:55:01,367 - httpx - INFO - HTTP Request: GET https://rutxumsvenlvovjvkjzz.supabase.co/rest/v1/itineraries?select=id&user_id=eq.3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df "HTTP/2 200 OK"
+2026-02-24 15:55:08,980 - app.middleware.production - INFO - Response: GET /api/wishlist/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df - 200 - 7.774s
+2026-02-24 15:55:08,981 - app.middleware.production - INFO - Response: GET /api/itinerary/3cf0e5fe-86ec-49af-9b5b-5a03ccdae2df/count - 200 - 7.788s
+2026-02-24 15:55:09,693 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,735 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,755 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,758 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,770 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,787 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,794 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,804 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,807 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,812 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,835 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,844 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,848 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,852 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,857 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,869 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,872 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,873 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,908 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,929 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,933 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,939 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,942 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,961 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,965 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,988 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:09,994 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:10,002 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:10,052 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:10,058 - app.middleware.production - INFO - Response: GET /api/destinations/random - 200 - 41.385s
+2026-02-24 15:55:12,727 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-24 15:55:12,733 - app.middleware.production - INFO - Response: GET /api/destinations/random - 200 - 11.525s
+2026-02-24 16:03:12,696 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 16:03:14,932 - httpx - INFO - HTTP Request: POST https://api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 401 Unauthorized"
+2026-02-24 16:03:14,938 - app.middleware.production - INFO - Response: POST /search/flights - 502 - 2.242s
+2026-02-24 16:04:03,498 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 16:04:03,499 - app.middleware.production - INFO - Response: POST /search/flights - 400 - 0.001s
+2026-02-24 16:07:18,587 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 16:07:23,663 - httpx - INFO - HTTP Request: POST https://api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 401 Unauthorized"
+2026-02-24 16:07:23,672 - app.middleware.production - INFO - Response: POST /search/flights - 502 - 5.086s
+2026-02-24 16:42:58,432 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 16:43:00,865 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 16:43:03,215 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=5 "HTTP/1.1 200 OK"
+2026-02-24 16:43:05,243 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Bangalore&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=5 "HTTP/1.1 200 OK"
+2026-02-24 16:43:05,250 - app.middleware.production - INFO - Response: POST /search/flights - 400 - 6.818s
+2026-02-24 16:50:37,498 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 16:50:39,718 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 16:50:41,969 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 16:50:44,222 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Bangalore&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 16:50:46,580 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=bengaluru&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 16:50:53,338 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=MAA&destinationLocationCode=BLR&departureDate=2026-03-20&adults=1&currencyCode=USD&max=50&returnDate=2026-03-27&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 16:50:53,360 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 15.863s
+2026-02-24 17:26:03,430 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 17:26:05,550 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 17:26:07,709 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 17:26:09,748 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Banglore&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 17:26:13,126 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=bengaluru&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 17:26:20,091 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=MAA&destinationLocationCode=BLR&departureDate=2026-03-20&adults=1&currencyCode=USD&max=50&returnDate=2026-03-27&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 17:26:20,102 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 16.672s
+2026-02-24 18:24:10,832 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:24:13,406 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:24:16,066 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:24:18,542 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:24:25,590 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=1&currencyCode=USD&max=50&returnDate=2026-02-27&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:24:25,601 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 14.771s
+2026-02-24 18:30:30,396 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:30:32,709 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:30:34,846 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:30:36,995 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:30:42,323 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-03-20&adults=1&currencyCode=USD&max=50&returnDate=2026-03-27&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:30:42,361 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 11.966s
+2026-02-24 18:38:39,523 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:38:41,420 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:38:43,185 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:38:44,894 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:38:50,132 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-03-20&adults=1&currencyCode=INR&max=50&returnDate=2026-03-27&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:38:50,151 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 10.628s
+2026-02-24 18:40:10,666 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:40:12,396 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:40:14,092 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:40:15,714 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:40:21,888 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=3&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:40:21,893 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 11.227s
+2026-02-24 18:40:39,354 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:40:41,014 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:40:42,678 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:40:44,409 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:40:50,371 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=2&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:40:50,383 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 11.029s
+2026-02-24 18:40:54,208 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:40:55,935 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:40:57,902 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:40:59,552 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:41:06,033 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=2&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:41:06,047 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 11.839s
+2026-02-24 18:45:56,407 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:45:58,314 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:46:00,167 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:46:01,926 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:46:07,913 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=2&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:46:07,928 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 11.522s
+2026-02-24 18:46:23,004 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:46:25,727 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:46:27,430 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:46:29,684 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:46:35,874 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=2&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:46:35,881 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 12.876s
+2026-02-24 18:49:18,243 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:49:20,305 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:49:22,270 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:49:24,283 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:49:30,548 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=2&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:49:30,563 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 12.320s
+2026-02-24 18:50:02,891 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:50:04,621 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:50:06,437 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:50:08,064 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:50:14,292 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=2&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:50:14,296 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 11.406s
+2026-02-24 18:50:24,837 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:50:26,598 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:50:28,252 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:50:29,945 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:50:36,070 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=2&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:50:36,076 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 11.240s
+2026-02-24 18:50:43,735 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:50:45,645 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:50:47,534 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:50:49,415 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:50:55,928 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=2&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:50:55,931 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 12.196s
+2026-02-24 18:51:04,597 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:51:06,306 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:51:08,027 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:51:09,815 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:51:12,161 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=2&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=true "HTTP/1.1 200 OK"
+2026-02-24 18:51:12,167 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 7.570s
+2026-02-24 18:51:19,202 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:51:21,031 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:51:22,678 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:51:24,498 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:51:30,442 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=2&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:51:30,448 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 11.246s
+2026-02-24 18:51:40,751 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:51:42,387 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:51:44,014 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Delhi&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:51:45,749 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:51:51,918 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=DEL&destinationLocationCode=MAA&departureDate=2026-02-24&adults=2&currencyCode=INR&max=50&returnDate=2026-02-28&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:51:51,923 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 11.172s
+2026-02-24 18:52:25,394 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:52:27,234 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:52:28,993 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Mumbai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:52:30,697 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Kolkata&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:52:32,766 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=BOM&destinationLocationCode=CCU&departureDate=2026-02-24&adults=1&currencyCode=INR&max=50&returnDate=2026-02-25&travelClass=ECONOMY&nonStop=true "HTTP/1.1 200 OK"
+2026-02-24 18:52:32,770 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 7.376s
+2026-02-24 18:52:48,361 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 18:52:50,173 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 18:52:52,218 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Mumbai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:52:54,072 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Kolkata&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 18:53:00,012 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=BOM&destinationLocationCode=CCU&departureDate=2026-02-24&adults=1&currencyCode=INR&max=50&returnDate=2026-02-25&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 18:53:00,037 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 11.676s
+2026-02-24 19:00:35,716 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 19:00:37,559 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 19:00:39,213 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Kolkata&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 19:00:41,392 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 19:00:47,149 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=CCU&destinationLocationCode=MAA&departureDate=2026-02-24&adults=1&currencyCode=INR&max=50&returnDate=2026-02-27&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 19:00:47,186 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 11.475s
+2026-02-24 19:00:53,880 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 19:00:55,703 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 19:00:57,414 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Kolkata&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 19:00:59,107 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 19:01:03,807 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=CCU&destinationLocationCode=MAA&departureDate=2026-02-24&adults=1&currencyCode=INR&max=50&returnDate=2026-02-27&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 19:01:03,820 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 9.940s
+2026-02-24 19:01:10,432 - app.middleware.production - INFO - Request: POST /search/flights from 127.0.0.1
+2026-02-24 19:01:12,077 - httpx - INFO - HTTP Request: POST https://test.api.amadeus.com/v1/security/oauth2/token "HTTP/1.1 200 OK"
+2026-02-24 19:01:13,812 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Kolkata&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 19:01:15,576 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v1/reference-data/locations?keyword=Chennai&subType=CITY%2CAIRPORT&view=LIGHT&page%5Blimit%5D=8 "HTTP/1.1 200 OK"
+2026-02-24 19:01:19,759 - httpx - INFO - HTTP Request: GET https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=CCU&destinationLocationCode=MAA&departureDate=2026-02-24&adults=1&currencyCode=INR&max=50&returnDate=2026-02-27&travelClass=ECONOMY&nonStop=false "HTTP/1.1 200 OK"
+2026-02-24 19:01:19,775 - app.middleware.production - INFO - Response: POST /search/flights - 200 - 9.342s
+2026-02-24 19:15:38,577 - app.middleware.production - INFO - Request: POST /search/buses from 127.0.0.1
+2026-02-24 19:15:38,590 - app.middleware.production - INFO - Response: POST /search/buses - 404 - 0.014s
+2026-02-24 20:53:35,091 - app.middleware.production - INFO - Request: GET /health from 127.0.0.1
+2026-02-24 20:53:35,135 - app.middleware.production - INFO - Response: GET /health - 200 - 0.046s
+2026-02-24 20:54:07,517 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-24 20:54:07,573 - app.middleware.production - INFO - Response: POST /api/auth/login - 422 - 0.056s
+2026-02-24 20:55:40,103 - app.middleware.production - INFO - Request: GET /health from 127.0.0.1
+2026-02-24 20:55:40,104 - app.middleware.production - INFO - Response: GET /health - 200 - 0.001s
+2026-02-24 20:55:42,800 - app.middleware.production - INFO - Request: POST /api/auth/login from 127.0.0.1
+2026-02-24 20:55:42,801 - app.middleware.production - INFO - Response: POST /api/auth/login - 404 - 0.001s

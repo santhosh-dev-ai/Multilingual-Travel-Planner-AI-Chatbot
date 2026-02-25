@@ -20,9 +20,21 @@ import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
 import { itineraryAPI, chatAPI, savedItineraryAPI, intelligentItineraryAPI } from '../services/api';
 
 const INTERESTS = [
-  'Adventure', 'Culture', 'Food', 'Nature', 'Photography',
-  'Relaxation', 'History', 'Nightlife', 'Shopping', 'Art',
-  'Architecture', 'Wildlife', 'Beach', 'Mountains', 'Spiritual'
+  { value: 'adventure', emoji: '🏕️', label: 'Adventure', desc: 'Hiking, trekking, outdoor' },
+  { value: 'culture', emoji: '🏛️', label: 'Culture', desc: 'Museums, heritage sites' },
+  { value: 'food', emoji: '🍜', label: 'Food', desc: 'Culinary experiences' },
+  { value: 'nature', emoji: '🌲', label: 'Nature', desc: 'Parks, wildlife, scenery' },
+  { value: 'photography', emoji: '📸', label: 'Photography', desc: 'Scenic spots, visuals' },
+  { value: 'relaxation', emoji: '🧖', label: 'Relaxation', desc: 'Spas, wellness, rest' },
+  { value: 'history', emoji: '📜', label: 'History', desc: 'Ancient sites, stories' },
+  { value: 'nightlife', emoji: '🌃', label: 'Nightlife', desc: 'Evening experiences' },
+  { value: 'shopping', emoji: '🛍️', label: 'Shopping', desc: 'Markets and districts' },
+  { value: 'art', emoji: '🎨', label: 'Art', desc: 'Galleries, creative spaces' },
+  { value: 'architecture', emoji: '🏗️', label: 'Architecture', desc: 'Design and landmarks' },
+  { value: 'wildlife', emoji: '🦁', label: 'Wildlife', desc: 'Animals and safaris' },
+  { value: 'beach', emoji: '🏖️', label: 'Beach', desc: 'Coastal relaxation' },
+  { value: 'mountains', emoji: '⛰️', label: 'Mountains', desc: 'Peaks and trails' },
+  { value: 'spiritual', emoji: '🧘', label: 'Spiritual', desc: 'Mindful reflection' },
 ];
 
 const getBudgetLabel = (amount) => {
@@ -30,6 +42,12 @@ const getBudgetLabel = (amount) => {
   if (amount <= 600) return { emoji: '💵', label: 'Budget', desc: 'Budget hotels, local restaurants' };
   if (amount <= 1200) return { emoji: '💳', label: 'Moderate', desc: 'Mid-range hotels, nice restaurants' };
   return { emoji: '💎', label: 'Luxury', desc: 'Premium hotels, fine dining' };
+};
+
+const getBudgetTier = (amount) => {
+  if (amount <= 600) return 'budget';
+  if (amount <= 1200) return 'moderate';
+  return 'luxury';
 };
 
 const TRAVEL_STYLES = [
@@ -47,16 +65,72 @@ const MOODS = [
   { value: 'contemplative', emoji: '🧘', label: 'Contemplative', desc: 'Peaceful reflection' },
 ];
 
-const TRAVEL_TYPES = [
-  { value: 'adventure', emoji: '🏕️', label: 'Adventure', desc: 'Hiking, trekking, outdoor' },
-  { value: 'beach', emoji: '🏖️', label: 'Beach', desc: 'Coastal, water activities' },
-  { value: 'cultural', emoji: '🏛️', label: 'Cultural', desc: 'Museums, heritage sites' },
-  { value: 'nature', emoji: '🌲', label: 'Nature', desc: 'Parks, wildlife, scenery' },
-  { value: 'urban', emoji: '🏙️', label: 'Urban', desc: 'City exploration, modern' },
-  { value: 'historical', emoji: '📜', label: 'Historical', desc: 'Ancient sites, history' },
-  { value: 'food', emoji: '🍜', label: 'Food', desc: 'Culinary experiences' },
-  { value: 'relaxation', emoji: '🧖', label: 'Relaxation', desc: 'Spas, wellness, rest' },
-];
+const INTEREST_TO_TRAVEL_TYPE = {
+  adventure: 'adventure',
+  mountains: 'adventure',
+  beach: 'beach',
+  culture: 'cultural',
+  history: 'historical',
+  architecture: 'cultural',
+  art: 'cultural',
+  nature: 'nature',
+  wildlife: 'nature',
+  food: 'food',
+  relaxation: 'relaxation',
+  nightlife: 'urban',
+  shopping: 'urban',
+  photography: 'urban',
+  spiritual: 'cultural',
+};
+
+const getPriceLevelCount = (priceLevel) => {
+  if (typeof priceLevel === 'number' && Number.isFinite(priceLevel)) {
+    return Math.min(Math.max(priceLevel, 1), 4);
+  }
+
+  const map = {
+    free: 1,
+    budget: 1,
+    moderate: 2,
+    expensive: 3,
+    luxury: 4,
+  };
+
+  return map[String(priceLevel || '').toLowerCase()] || 2;
+};
+
+const buildDayActivities = (day, locationName) => {
+  const slots = [
+    { time: '09:00 AM', title: day.morning_activity },
+    { time: '01:00 PM', title: day.afternoon_activity },
+    { time: '06:00 PM', title: day.evening_activity },
+  ].filter((slot) => slot.title);
+
+  return slots.map((slot) => ({
+    time: slot.time,
+    title: slot.title,
+    description: `Experience ${slot.title} in ${locationName}.`,
+    location: locationName,
+    duration: '2-3 hours',
+    cost: 'Varies',
+    tips: day.notes || '',
+  }));
+};
+
+const normalizeBudgetBreakdown = (budgetBreakdown, budgetAmount) => {
+  if (!budgetBreakdown) return null;
+
+  return {
+    ...budgetBreakdown,
+    accommodation: budgetBreakdown.accommodation ?? budgetBreakdown.stay_budget ?? 0,
+    food: budgetBreakdown.food ?? budgetBreakdown.food_budget ?? 0,
+    activities: budgetBreakdown.activities ?? budgetBreakdown.activity_budget ?? 0,
+    transportation: budgetBreakdown.transportation ?? budgetBreakdown.travel_budget ?? 0,
+    total_budget_formatted:
+      budgetBreakdown.total_budget_formatted ||
+      `$${Math.round(budgetBreakdown.total_budget ?? budgetAmount)}`,
+  };
+};
 
 export default function ItineraryBuilder({ destination, onClose, onItineraryBuilt }) {
   const [step, setStep] = useState(1);
@@ -74,7 +148,6 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
   const [travelStyle, setTravelStyle] = useState('balanced');
   const [groupSize, setGroupSize] = useState(2);
   const [mood, setMood] = useState('curious');
-  const [travelType, setTravelType] = useState('cultural');
   // ...existing code...
 
   const toggleInterest = (interest) => {
@@ -99,6 +172,8 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
       const latitude = destination?.latitude || destination?.lat || 48.8566; // Default to Paris if missing
       const longitude = destination?.longitude || destination?.lon || 2.3522;
       const locationName = destination?.name || destination;
+      const primaryInterest = selectedInterests[0] || 'culture';
+      const travelType = INTEREST_TO_TRAVEL_TYPE[primaryInterest] || 'cultural';
       
       // Construct request for intelligent itinerary API
       const requestData = {
@@ -119,13 +194,23 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
       
       const result = await intelligentItineraryAPI.generate(requestData);
       
+      const normalizedDays = (result.optimized_itinerary || []).map((day, index) => ({
+        ...day,
+        day: day.day ?? index + 1,
+        title: day.title || `Day ${day.day ?? index + 1}`,
+        activities: buildDayActivities(day, locationName),
+      }));
+
+      const normalizedBudgetBreakdown = normalizeBudgetBreakdown(result.budget_breakdown, budgetAmount);
+
       // Transform the response to match the existing itinerary display format
       const transformedItinerary = {
         ...result,
         duration: result.duration_days,
         summary: result.message || `Your intelligent ${result.duration_days}-day itinerary for ${locationName}`,
-        days: result.optimized_itinerary || [],
-        budget_estimate: result.budget_breakdown?.total_budget_formatted || `$${budgetAmount}`,
+        days: normalizedDays,
+        budget_breakdown: normalizedBudgetBreakdown,
+        budget_estimate: normalizedBudgetBreakdown?.total_budget_formatted || `$${budgetAmount}`,
         packing_tips: result.educational_enrichment?.travel_tips || [],
         local_phrases: [],
       };
@@ -139,7 +224,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
       }
     } catch (err) {
       console.error('Itinerary generation error:', err);
-      setError('Failed to generate itinerary. Please try again.');
+      setError(err?.message || 'Failed to generate itinerary. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -181,7 +266,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
         destination_country: destination?.country || 'Unknown',
         duration: itinerary.duration,
         travel_style: travelStyle,
-        budget: `$${budgetAmount}`,
+        budget: getBudgetTier(budgetAmount),
         summary: itinerary.summary,
         days: itinerary.days,
         budget_estimate: itinerary.budget_estimate,
@@ -318,22 +403,24 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                 <label className="block text-lg font-semibold text-[#0F172A] mb-4">
                   🎯 Your Interests (select up to 5)
                 </label>
-                <div className="flex flex-wrap gap-3">
-                  {INTERESTS.map(interest => (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {INTERESTS.map((interest) => (
                     <button
-                      key={interest}
-                      onClick={() => toggleInterest(interest)}
-                      className={`px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                        selectedInterests.includes(interest)
-                          ? 'bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] text-white shadow-lg scale-105 border-2 border-[#3AA8C1]'
-                          : 'bg-white text-[#475569] hover:bg-[#F8FAFB] border-2 border-[#E2E8F0] hover:border-[#3AA8C1] hover:scale-102'
+                      key={interest.value}
+                      onClick={() => toggleInterest(interest.value)}
+                      className={`p-4 rounded-2xl text-left transition-all duration-200 border-2 ${
+                        selectedInterests.includes(interest.value)
+                          ? 'bg-gradient-to-br from-[#DEF1F5] to-[#BCE2EB] border-[#3AA8C1] shadow-lg scale-105'
+                          : 'bg-white border-[#E2E8F0] hover:border-[#3AA8C1] hover:bg-[#F8FAFB] hover:scale-102'
                       } ${
-                        selectedInterests.length >= 5 && !selectedInterests.includes(interest)
+                        selectedInterests.length >= 5 && !selectedInterests.includes(interest.value)
                           ? 'opacity-50 cursor-not-allowed'
                           : ''
                       }`}
                     >
-                      {interest}
+                      <div className="text-2xl mb-2">{interest.emoji}</div>
+                      <div className="font-bold text-[#0F172A] text-base mb-1">{interest.label}</div>
+                      <div className="text-xs text-[#475569] font-medium">{interest.desc}</div>
                     </button>
                   ))}
                 </div>
@@ -448,30 +535,6 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                       <div className="text-2xl mb-2">{m.emoji}</div>
                       <div className="font-bold text-[#0F172A] mb-1">{m.label}</div>
                       <div className="text-xs text-[#475569] font-medium">{m.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Travel Type Selector */}
-              <div className="space-y-4">
-                <label className="block text-lg font-semibold text-[#0F172A] mb-4">
-                  🌍 Travel Type
-                </label>
-                <div className="grid grid-cols-4 gap-3">
-                  {TRAVEL_TYPES.map(t => (
-                    <button
-                      key={t.value}
-                      onClick={() => setTravelType(t.value)}
-                      className={`p-4 rounded-xl text-center transition-all duration-200 border-2 ${
-                        travelType === t.value
-                          ? 'bg-gradient-to-br from-[#DEF1F5] to-[#BCE2EB] border-[#3AA8C1] shadow-lg scale-105'
-                          : 'bg-white border-[#E2E8F0] hover:border-[#3AA8C1] hover:bg-[#F8FAFB] hover:scale-102'
-                      }`}
-                    >
-                      <div className="text-2xl mb-2">{t.emoji}</div>
-                      <div className="font-bold text-[#0F172A] text-xs mb-1">{t.label}</div>
-                      <div className="text-[10px] text-[#475569] font-medium">{t.desc}</div>
                     </button>
                   ))}
                 </div>
@@ -674,7 +737,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                             📍 {hotel.distance_km ? `${hotel.distance_km.toFixed(1)}km away` : 'City center'}
                           </span>
                           <span className="text-[#00A86B] font-bold">
-                            {'💵'.repeat(hotel.price_level || 2)}
+                            {'💵'.repeat(getPriceLevelCount(hotel.price_level))}
                           </span>
                         </div>
                         <div className="mt-3 bg-white/60 rounded-lg px-3 py-2 text-xs text-[#475569]">
@@ -714,7 +777,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                             {restaurant.distance_km ? `${restaurant.distance_km.toFixed(1)}km` : 'Nearby'}
                           </span>
                           <span className="text-[#00A86B] font-bold">
-                            {'💵'.repeat(restaurant.price_level || 2)}
+                            {'💵'.repeat(getPriceLevelCount(restaurant.price_level))}
                           </span>
                         </div>
                       </div>

@@ -254,3 +254,14 @@
   box-shadow: 0 4px 12px rgba(58, 168, 193, 0.3);
   transition: all 0.2s ease;
 }
+
+/* Keep autofilled auth inputs consistent with dark theme */
+input.input-field:-webkit-autofill,
+input.input-field:-webkit-autofill:hover,
+input.input-field:-webkit-autofill:focus,
+input.input-field:-webkit-autofill:active {
+  -webkit-text-fill-color: #FFFFFF;
+  box-shadow: 0 0 0px 1000px #1E293B inset;
+  transition: background-color 5000s ease-in-out 0s;
+  caret-color: #FFFFFF;
+}

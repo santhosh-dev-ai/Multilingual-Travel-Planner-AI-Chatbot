@@ -1,6 +1,7 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8001/api';
 // Database API is now integrated into the main API
-const DATABASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL || 'http://localhost:8000/api';
+const DATABASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL || 'http://localhost:8001/api';
+const ROOT_API_URL = API_BASE_URL.endsWith('/api') ? API_BASE_URL.slice(0, -4) : API_BASE_URL;
 
 const AUTH_STORAGE_KEY = 'travelgenie-auth-user';
 
@@ -49,6 +50,38 @@ async function fetchAPI(endpoint, options = {}) {
     return await response.json();
   } catch (error) {
     console.error('[API Error]', url, error);
+    throw error;
+  }
+}
+
+async function fetchRootAPI(endpoint, options = {}) {
+  const url = `${ROOT_API_URL}${endpoint}`;
+
+  const defaultHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const config = {
+    ...options,
+    headers: {
+      ...defaultHeaders,
+      ...options.headers,
+    },
+  };
+
+  try {
+    console.log(`[Root API] Calling: ${url}`);
+    const response = await fetch(url, config);
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
+      console.error(`[Root API Error] ${url}:`, error);
+      throw new Error(error.detail || error.error || `HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('[Root API Error]', url, error);
     throw error;
   }
 }
@@ -150,6 +183,90 @@ export const intelligentItineraryAPI = {
   
   healthCheck: async () => {
     return fetchAPI('/generate/intelligent-itinerary/health');
+  },
+};
+
+// Flight Search API (Amadeus integration)
+export const flightsAPI = {
+  searchFlights: async ({
+    origin,
+    destination,
+    departure_date,
+    return_date,
+    adults = 1,
+    budget,
+    cabin_class = 'ECONOMY',
+    max_stops = 2,
+    baggage_required = false,
+    ranking_preference = 'balanced',
+    non_stop_only = false,
+  }) => {
+    return fetchRootAPI('/search/flights', {
+      method: 'POST',
+      body: JSON.stringify({
+        origin,
+        destination,
+        departure_date,
+        return_date,
+        adults,
+        budget,
+        cabin_class,
+        max_stops,
+        baggage_required,
+        ranking_preference,
+        non_stop_only,
+      }),
+    });
+  },
+};
+
+export const trainsAPI = {
+  searchTrains: async ({
+    origin,
+    destination,
+    travel_date,
+    passengers = 1,
+    budget,
+    max_transfers = 1,
+    ranking_preference = 'balanced',
+  }) => {
+    return fetchRootAPI('/search/trains', {
+      method: 'POST',
+      body: JSON.stringify({
+        origin,
+        destination,
+        travel_date,
+        passengers,
+        budget,
+        max_transfers,
+        ranking_preference,
+      }),
+    });
+  },
+};
+
+export const busesAPI = {
+  searchBuses: async ({
+    origin,
+    destination,
+    travel_date,
+    passengers = 1,
+    budget,
+    max_stops = 2,
+    ranking_preference = 'balanced',
+  }) => {
+    return fetchRootAPI('/search/buses', {
+      method: 'POST',
+      body: JSON.stringify({
+        origin,
+        destination,
+        travel_date,
+        passengers,
+        budget,
+        max_stops,
+        ranking_preference,
+      }),
+    });
   },
 };
 

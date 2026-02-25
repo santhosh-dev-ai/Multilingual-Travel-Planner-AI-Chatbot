@@ -23,7 +23,7 @@ from app.services.budget import optimize_budget
 from app.services.recommendation import ContentBasedRecommender, get_recommender
 from app.services.enrichment import EnrichmentEngine, get_enrichment_engine
 from app.services.ranking_service import rank_places
-from app.models.ranking import Place, RankingRequest
+from app.models.ranking import Place, RankingRequest, Coordinates
 from app.models.intelligent_itinerary import (
     IntelligentItineraryRequest,
     RankedPlace,
@@ -153,33 +153,34 @@ def generate_daily_itinerary(
         List of DayItinerary objects
     """
     itinerary = []
-    
-    # Distribute attractions across days
-    attractions_per_day = max(1, len(attractions) // duration)
-    
+    if duration <= 0:
+        return itinerary
+
+    attraction_names = [a.get("name") for a in attractions if a.get("name")]
+    if not attraction_names:
+        attraction_names = ["City Highlights"]
+
+    day_buckets: List[List[str]] = [[] for _ in range(duration)]
+    for idx, attraction_name in enumerate(attraction_names):
+        day_buckets[idx % duration].append(attraction_name)
+
     for day in range(1, duration + 1):
-        # Get attractions for this day
-        start_idx = (day - 1) * attractions_per_day
-        end_idx = start_idx + attractions_per_day
-        day_attractions = attractions[start_idx:end_idx]
-        
-        # Assign time slots
-        morning = day_attractions[0]['name'] if len(day_attractions) > 0 else None
-        afternoon = day_attractions[1]['name'] if len(day_attractions) > 1 else None
-        evening = day_attractions[2]['name'] if len(day_attractions) > 2 else None
-        
-        # Recommend restaurant (cycle through top restaurants)
-        restaurant = restaurants[(day - 1) % len(restaurants)]['name'] if restaurants else None
-        
-        # Generate title based on attractions
-        if day_attractions:
-            title = f"Day {day}: {', '.join([a['name'] for a in day_attractions[:2]])}"
-        else:
-            title = f"Day {day}: Explore & Discover"
-        
+        day_items = day_buckets[day - 1]
+        if not day_items:
+            day_items = [attraction_names[(day - 1) % len(attraction_names)]]
+
+        morning = day_items[0] if len(day_items) > 0 else None
+        afternoon = day_items[1] if len(day_items) > 1 else None
+        evening = day_items[2] if len(day_items) > 2 else None
+
+        restaurant = restaurants[(day - 1) % len(restaurants)]["name"] if restaurants else None
+
+        title_items = [item for item in [morning, afternoon] if item]
+        title = f"Day {day}: {', '.join(title_items)}" if title_items else f"Day {day}: Explore & Discover"
+
         itinerary.append(DayItinerary(
             day=day,
-            title=title[:80],  # Limit title length
+            title=title[:80],
             morning_activity=morning,
             afternoon_activity=afternoon,
             evening_activity=evening,
@@ -187,7 +188,7 @@ def generate_daily_itinerary(
             budget_estimate=round(budget_per_day, 2),
             notes=f"Budget: ${budget_per_day:.0f} for the day"
         ))
-    
+
     return itinerary
 
 
@@ -292,19 +293,23 @@ class IntelligentItineraryOrchestrator:
             request.latitude,
             request.longitude
         )
+        sample_attractions = self._generate_sample_attractions(
+            request.location,
+            request.latitude,
+            request.longitude
+        )
         
         if request.include_hotels and request.latitude and request.longitude:
             try:
                 ranking_request = RankingRequest(
-                    user_lat=request.latitude,
-                    user_lon=request.longitude,
+                    user_budget=max(budget_per_day, 1.0),
+                    user_location=Coordinates(
+                        latitude=request.latitude,
+                        longitude=request.longitude,
+                    ),
                     place_types=["hotel"],
                     min_rating=3.5,
                     max_distance_km=request.max_distance_km,
-                    budget_weight=0.3,
-                    rating_weight=0.3,
-                    distance_weight=0.2,
-                    popularity_weight=0.2,
                     student_friendly_only=request.student_friendly,
                     limit=10
                 )
@@ -314,16 +319,21 @@ class IntelligentItineraryOrchestrator:
                 
                 ranked_hotels = [
                     {
-                        "name": h.name,
-                        "place_type": h.place_type,
-                        "rating": h.rating,
-                        "score": h.final_score,
+                        "name": h.place.name,
+                        "place_type": h.place.place_type.value,
+                        "rating": h.place.rating,
+                        "score": round(h.score / 100, 4),
                         "rank": h.rank,
                         "distance_km": h.distance_km,
-                        "price_level": h.price_level,
-                        "student_friendly": h.student_friendly,
-                        "latitude": h.latitude,
-                        "longitude": h.longitude
+                        "price_level": h.place.price_range.value,
+                        "student_friendly": (
+                            h.place.student_discount
+                            or h.place.wifi_available
+                            or h.place.study_friendly
+                            or h.place.wallet_friendly
+                        ),
+                        "latitude": h.place.latitude,
+                        "longitude": h.place.longitude
                     }
                     for h in ranked_hotel_objects[:5]
                 ]
@@ -334,15 +344,14 @@ class IntelligentItineraryOrchestrator:
         if request.include_restaurants and request.latitude and request.longitude:
             try:
                 ranking_request = RankingRequest(
-                    user_lat=request.latitude,
-                    user_lon=request.longitude,
+                    user_budget=max(budget_per_day, 1.0),
+                    user_location=Coordinates(
+                        latitude=request.latitude,
+                        longitude=request.longitude,
+                    ),
                     place_types=["restaurant"],
                     min_rating=4.0,
                     max_distance_km=request.max_distance_km,
-                    budget_weight=0.25,
-                    rating_weight=0.35,
-                    distance_weight=0.2,
-                    popularity_weight=0.2,
                     student_friendly_only=request.student_friendly,
                     limit=15
                 )
@@ -352,16 +361,21 @@ class IntelligentItineraryOrchestrator:
                 
                 ranked_restaurants = [
                     {
-                        "name": r.name,
-                        "place_type": r.place_type,
-                        "rating": r.rating,
-                        "score": r.final_score,
+                        "name": r.place.name,
+                        "place_type": r.place.place_type.value,
+                        "rating": r.place.rating,
+                        "score": round(r.score / 100, 4),
                         "rank": r.rank,
                         "distance_km": r.distance_km,
-                        "price_level": r.price_level,
-                        "student_friendly": r.student_friendly,
-                        "latitude": r.latitude,
-                        "longitude": r.longitude
+                        "price_level": r.place.price_range.value,
+                        "student_friendly": (
+                            r.place.student_discount
+                            or r.place.wifi_available
+                            or r.place.study_friendly
+                            or r.place.wallet_friendly
+                        ),
+                        "latitude": r.place.latitude,
+                        "longitude": r.place.longitude
                     }
                     for r in ranked_restaurant_objects[:10]
                 ]
@@ -369,38 +383,25 @@ class IntelligentItineraryOrchestrator:
             except Exception as e:
                 logger.warning(f"[Itinerary] Restaurant ranking failed: {e}")
         
-        # Always rank attractions
+        # Always rank attractions (fallback ranking)
         try:
-            ranking_request = RankingRequest(
-                user_lat=request.latitude or 0.0,
-                user_lon=request.longitude or 0.0,
-                place_types=["attraction"],
-                min_rating=4.0,
-                max_distance_km=request.max_distance_km,
-                budget_weight=0.2,
-                rating_weight=0.4,
-                distance_weight=0.2,
-                popularity_weight=0.2,
-                student_friendly_only=request.student_friendly,
-                limit=20
-            )
-            
-            attraction_places = [p for p in sample_places if p.place_type == "attraction"]
-            ranked_attraction_objects = rank_places(attraction_places, ranking_request)
-            
+            ranked_attractions = sorted(
+                sample_attractions,
+                key=lambda a: (
+                    a.get("rating", 0),
+                    1 if a.get("student_friendly") else 0,
+                    -a.get("distance_km", 0),
+                ),
+                reverse=True,
+            )[: request.duration * 3]
+
             ranked_attractions = [
                 {
-                    "name": a.name,
-                    "place_type": a.place_type,
-                    "rating": a.rating,
-                    "score": a.final_score,
-                    "rank": a.rank,
-                    "distance_km": a.distance_km,
-                    "student_friendly": a.student_friendly,
-                    "latitude": a.latitude,
-                    "longitude": a.longitude
+                    **a,
+                    "rank": idx + 1,
+                    "score": round(0.6 * (a.get("rating", 0) / 5) + (0.4 if a.get("student_friendly") else 0.2), 4),
                 }
-                for a in ranked_attraction_objects[:request.duration * 3]  # ~3 per day
+                for idx, a in enumerate(ranked_attractions)
             ]
             included_features.append("attraction_ranking")
         except Exception as e:
@@ -483,6 +484,10 @@ class IntelligentItineraryOrchestrator:
         # STEP 6: Generate Day-by-Day Itinerary
         # ========================================================================
         logger.info("[Itinerary] Step 6/6: Building day-by-day itinerary")
+
+        if route_optimization and route_optimization.ordered_places:
+            route_rank = {name: idx for idx, name in enumerate(route_optimization.ordered_places)}
+            ranked_attractions.sort(key=lambda a: route_rank.get(a.get("name"), len(route_rank)))
         
         optimized_itinerary = generate_daily_itinerary(
             duration=request.duration,
@@ -545,122 +550,149 @@ class IntelligentItineraryOrchestrator:
         sample_places = [
             # Hotels
             Place(
+                id=f"hotel_{location.lower().replace(' ', '_')}_grand",
                 name=f"{location} Grand Hotel",
                 place_type="hotel",
                 latitude=lat + 0.01,
                 longitude=lon + 0.01,
                 rating=4.5,
-                price_level="moderate",
-                popularity_score=850,
-                student_friendly=True
+                price_range="moderate",
+                average_price=95,
+                city=location,
+                review_count=420,
+                popularity_score=85,
+                student_discount=True,
+                wifi_available=True,
+                study_friendly=True,
+                wallet_friendly=False,
+                amenities=["WiFi", "Breakfast", "Study Area"],
             ),
             Place(
+                id=f"hotel_{location.lower().replace(' ', '_')}_budget",
                 name=f"{location} Budget Inn",
                 place_type="hotel",
                 latitude=lat + 0.02,
                 longitude=lon - 0.01,
                 rating=3.8,
-                price_level="budget",
-                popularity_score=620,
-                student_friendly=True
+                price_range="budget",
+                average_price=45,
+                city=location,
+                review_count=280,
+                popularity_score=62,
+                student_discount=True,
+                wifi_available=True,
+                study_friendly=False,
+                wallet_friendly=True,
+                amenities=["WiFi", "Budget Rooms"],
             ),
             Place(
+                id=f"hotel_{location.lower().replace(' ', '_')}_luxury",
                 name=f"{location} Luxury Resort",
                 place_type="hotel",
                 latitude=lat - 0.01,
                 longitude=lon + 0.02,
                 rating=4.8,
-                price_level="luxury",
-                popularity_score=950,
-                student_friendly=False
+                price_range="luxury",
+                average_price=220,
+                city=location,
+                review_count=510,
+                popularity_score=95,
+                student_discount=False,
+                wifi_available=True,
+                study_friendly=False,
+                wallet_friendly=False,
+                amenities=["Pool", "Spa", "Gym"],
             ),
             
             # Restaurants
             Place(
+                id=f"restaurant_{location.lower().replace(' ', '_')}_bistro",
                 name=f"{location} Local Bistro",
                 place_type="restaurant",
                 latitude=lat + 0.005,
                 longitude=lon + 0.005,
                 rating=4.6,
-                price_level="moderate",
-                popularity_score=720,
-                student_friendly=True
+                price_range="moderate",
+                average_price=22,
+                city=location,
+                review_count=360,
+                popularity_score=72,
+                student_discount=True,
+                wifi_available=True,
+                study_friendly=False,
+                wallet_friendly=True,
+                cuisine_type="Local",
+                amenities=["Student Menu", "WiFi"],
             ),
             Place(
+                id=f"restaurant_{location.lower().replace(' ', '_')}_street_food",
                 name=f"{location} Street Food Market",
                 place_type="restaurant",
                 latitude=lat + 0.008,
                 longitude=lon - 0.003,
                 rating=4.3,
-                price_level="budget",
-                popularity_score=880,
-                student_friendly=True
+                price_range="budget",
+                average_price=12,
+                city=location,
+                review_count=640,
+                popularity_score=88,
+                student_discount=True,
+                wifi_available=False,
+                study_friendly=False,
+                wallet_friendly=True,
+                cuisine_type="Street Food",
+                amenities=["Budget Meals"],
             ),
             Place(
+                id=f"restaurant_{location.lower().replace(' ', '_')}_fine_dining",
                 name=f"{location} Fine Dining",
                 place_type="restaurant",
                 latitude=lat - 0.005,
                 longitude=lon + 0.008,
                 rating=4.9,
-                price_level="luxury",
-                popularity_score=650,
-                student_friendly=False
-            ),
-            
-            # Attractions
-            Place(
-                name=f"{location} Museum",
-                place_type="attraction",
-                latitude=lat + 0.003,
-                longitude=lon + 0.004,
-                rating=4.7,
-                price_level="moderate",
-                popularity_score=920,
-                student_friendly=True
-            ),
-            Place(
-                name=f"{location} Historic Center",
-                place_type="attraction",
-                latitude=lat,
-                longitude=lon,
-                rating=4.8,
-                price_level="free",
-                popularity_score=980,
-                student_friendly=True
-            ),
-            Place(
-                name=f"{location} Botanical Garden",
-                place_type="attraction",
-                latitude=lat + 0.015,
-                longitude=lon - 0.01,
-                rating=4.5,
-                price_level="budget",
-                popularity_score=750,
-                student_friendly=True
-            ),
-            Place(
-                name=f"{location} Art Gallery",
-                place_type="attraction",
-                latitude=lat - 0.008,
-                longitude=lon + 0.012,
-                rating=4.6,
-                price_level="moderate",
-                popularity_score=680,
-                student_friendly=True
-            ),
-            Place(
-                name=f"{location} Observation Deck",
-                place_type="attraction",
-                latitude=lat + 0.02,
-                longitude=lon + 0.015,
-                rating=4.7,
-                price_level="moderate",
-                popularity_score=850,
-                student_friendly=False
+                price_range="luxury",
+                average_price=55,
+                city=location,
+                review_count=220,
+                popularity_score=65,
+                student_discount=False,
+                wifi_available=True,
+                study_friendly=False,
+                wallet_friendly=False,
+                cuisine_type="Fine Dining",
+                amenities=["Reservation"],
             ),
         ]
         
         return sample_places
+
+    def _generate_sample_attractions(
+        self,
+        location: str,
+        lat: Optional[float],
+        lon: Optional[float]
+    ) -> List[Dict[str, Any]]:
+        if not lat or not lon:
+            lat, lon = 40.7128, -74.0060
+
+        base = [
+            {"name": f"{location} Museum", "rating": 4.7, "latitude": lat + 0.003, "longitude": lon + 0.004, "student_friendly": True},
+            {"name": f"{location} Historic Center", "rating": 4.8, "latitude": lat, "longitude": lon, "student_friendly": True},
+            {"name": f"{location} Botanical Garden", "rating": 4.5, "latitude": lat + 0.015, "longitude": lon - 0.01, "student_friendly": True},
+            {"name": f"{location} Art Gallery", "rating": 4.6, "latitude": lat - 0.008, "longitude": lon + 0.012, "student_friendly": True},
+            {"name": f"{location} Observation Deck", "rating": 4.7, "latitude": lat + 0.02, "longitude": lon + 0.015, "student_friendly": False},
+        ]
+
+        results = []
+        for attraction in base:
+            distance = haversine_distance(lat, lon, attraction["latitude"], attraction["longitude"])
+            results.append({
+                **attraction,
+                "place_type": "attraction",
+                "distance_km": round(distance, 2),
+            })
+
+        return results
 
 
 # ============================================================================

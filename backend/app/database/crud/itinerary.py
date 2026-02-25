@@ -9,6 +9,59 @@ class ItineraryCRUD:
     """CRUD operations for itineraries."""
     
     TABLE_NAME = "itineraries"
+
+    @staticmethod
+    def _normalize_budget(value: str) -> str:
+        """Normalize budget input to DB-accepted values."""
+        if value is None:
+            return "moderate"
+
+        normalized = str(value).strip().lower()
+        if normalized in {"budget", "moderate", "luxury"}:
+            return normalized
+
+        if normalized in {"ultra budget", "low", "cheap", "economy"}:
+            return "budget"
+        if normalized in {"mid", "mid-range", "standard", "medium"}:
+            return "moderate"
+        if normalized in {"premium", "high", "expensive"}:
+            return "luxury"
+
+        if "$" in normalized or normalized.replace(".", "", 1).isdigit():
+            digits = "".join(ch for ch in normalized if ch.isdigit() or ch == ".")
+            try:
+                amount = float(digits)
+                if amount <= 600:
+                    return "budget"
+                if amount <= 1200:
+                    return "moderate"
+                return "luxury"
+            except Exception:
+                return "moderate"
+
+        return "moderate"
+
+    @staticmethod
+    def _normalize_travel_style(value: str) -> str:
+        """Normalize travel style to DB-accepted values."""
+        if value is None:
+            return "balanced"
+
+        normalized = str(value).strip().lower()
+        if normalized in {"relaxed", "balanced", "packed"}:
+            return normalized
+
+        alias_map = {
+            "slow": "relaxed",
+            "chill": "relaxed",
+            "easy": "relaxed",
+            "normal": "balanced",
+            "moderate": "balanced",
+            "fast": "packed",
+            "intense": "packed",
+            "busy": "packed",
+        }
+        return alias_map.get(normalized, "balanced")
     
     @staticmethod
     def _check_db_available() -> Optional[dict]:
@@ -29,6 +82,8 @@ class ItineraryCRUD:
         
         try:
             data = itinerary.model_dump()
+            data["budget"] = ItineraryCRUD._normalize_budget(data.get("budget"))
+            data["travel_style"] = ItineraryCRUD._normalize_travel_style(data.get("travel_style"))
             # Convert days to JSON-serializable format
             data["days"] = [day.model_dump() if hasattr(day, 'model_dump') else day for day in data["days"]]
             
@@ -102,6 +157,10 @@ class ItineraryCRUD:
         try:
             # Add updated_at timestamp
             update_data["updated_at"] = datetime.utcnow().isoformat()
+            if "budget" in update_data:
+                update_data["budget"] = ItineraryCRUD._normalize_budget(update_data.get("budget"))
+            if "travel_style" in update_data:
+                update_data["travel_style"] = ItineraryCRUD._normalize_travel_style(update_data.get("travel_style"))
             
             # Convert days if present
             if "days" in update_data:
