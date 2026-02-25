@@ -1,7 +1,17 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8001/api';
+const normalizeApiBaseUrl = (url) => {
+  const normalized = (url || '').trim().replace(/\/+$/, '');
+  if (!normalized) return 'http://localhost:8001/api';
+  return normalized.endsWith('/api') ? normalized : `${normalized}/api`;
+};
+
+const toRootApiUrl = (apiUrl) => apiUrl.replace(/\/api$/, '');
+
+const API_BASE_URL = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8001/api');
 // Database API is now integrated into the main API
-const DATABASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL || 'http://localhost:8001/api';
-const ROOT_API_URL = API_BASE_URL.endsWith('/api') ? API_BASE_URL.slice(0, -4) : API_BASE_URL;
+const DATABASE_API_URL = normalizeApiBaseUrl(
+  process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL || 'http://localhost:8001/api'
+);
+const ROOT_API_URL = toRootApiUrl(API_BASE_URL);
 
 const AUTH_STORAGE_KEY = 'travelgenie-auth-user';
 
