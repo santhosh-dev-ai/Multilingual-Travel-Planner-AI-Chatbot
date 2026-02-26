@@ -71,7 +71,7 @@ async def get_personalized_recommendations(
 
 @router.get("/trending", response_model=SuccessResponse[List[DestinationTrend]])
 async def get_trending_destinations(
-    time_period: str = Query("week", regex="^(day|week|month)$"),
+    time_period: str = Query("week", pattern="^(day|week|month)$"),
     limit: int = Query(10, ge=1, le=50)
 ):
     """
@@ -149,7 +149,7 @@ async def track_user_event(
 
 @router.get("/popular-searches", response_model=SuccessResponse[List[dict]])
 async def get_popular_searches(
-    time_period: str = Query("week", regex="^(day|week|month)$"),
+    time_period: str = Query("week", pattern="^(day|week|month)$"),
     limit: int = Query(20, ge=1, le=100)
 ):
     """

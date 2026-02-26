@@ -23,6 +23,7 @@ from app.services.budget import optimize_budget
 from app.services.recommendation import ContentBasedRecommender, get_recommender
 from app.services.enrichment import EnrichmentEngine, get_enrichment_engine
 from app.services.ranking_service import rank_places
+from app.services.maps_service import get_nearby_attractions, get_travel_metrics_matrix
 from app.models.ranking import Place, RankingRequest, Coordinates
 from app.models.intelligent_itinerary import (
     IntelligentItineraryRequest,
@@ -35,6 +36,18 @@ from app.models.intelligent_itinerary import (
 )
 
 logger = logging.getLogger(__name__)
+
+try:
+    from ortools.constraint_solver import pywrapcp, routing_enums_pb2
+    ORTOOLS_AVAILABLE = True
+except Exception:
+    ORTOOLS_AVAILABLE = False
+
+try:
+    from sklearn.cluster import KMeans
+    KMEANS_AVAILABLE = True
+except Exception:
+    KMEANS_AVAILABLE = False
 
 
 # ============================================================================
@@ -128,6 +141,88 @@ def optimize_route_greedy(
     return route, total_distance
 
 
+def _budget_match_score(budget_per_day: float, price_level: int) -> float:
+    """Budget-fit score based on per-person-per-day budget and attraction price level (0-4)."""
+    level = max(0, min(4, int(price_level if price_level is not None else 2)))
+
+    if budget_per_day < 40:
+        # Strongly prefer low-cost attractions
+        return {0: 1.0, 1: 0.95, 2: 0.55, 3: 0.25, 4: 0.1}.get(level, 0.55)
+    if budget_per_day < 100:
+        # Balanced preference around moderate pricing
+        return {0: 0.7, 1: 0.85, 2: 1.0, 3: 0.7, 4: 0.45}.get(level, 0.7)
+
+    # Higher budget can absorb premium attractions
+    return {0: 0.55, 1: 0.7, 2: 0.85, 3: 1.0, 4: 0.95}.get(level, 0.8)
+
+
+def solve_tsp(cost_matrix: List[List[float]], start_index: int = 0) -> List[int]:
+    """
+    Solve TSP path ordering using OR-Tools.
+
+    Production behavior:
+    - Uses OR-Tools when available.
+    - Falls back to greedy nearest-neighbor if OR-Tools is unavailable
+      or no solution is found.
+    """
+    node_count = len(cost_matrix)
+    if node_count == 0:
+        return []
+    if node_count == 1:
+        return [0]
+
+    if ORTOOLS_AVAILABLE:
+        try:
+            manager = pywrapcp.RoutingIndexManager(node_count, 1, start_index)
+            routing = pywrapcp.RoutingModel(manager)
+
+            def transit_callback(from_index: int, to_index: int) -> int:
+                from_node = manager.IndexToNode(from_index)
+                to_node = manager.IndexToNode(to_index)
+                value = max(cost_matrix[from_node][to_node], 0.0)
+                return int(value * 1000)
+
+            transit_callback_index = routing.RegisterTransitCallback(transit_callback)
+            routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+
+            search_parameters = pywrapcp.DefaultRoutingSearchParameters()
+            search_parameters.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
+            search_parameters.local_search_metaheuristic = routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
+            search_parameters.time_limit.seconds = 3
+
+            solution = routing.SolveWithParameters(search_parameters)
+            if solution:
+                route: List[int] = []
+                index = routing.Start(0)
+                while not routing.IsEnd(index):
+                    route.append(manager.IndexToNode(index))
+                    index = solution.Value(routing.NextVar(index))
+
+                seen = set()
+                deduped_route = []
+                for node in route:
+                    if node not in seen:
+                        deduped_route.append(node)
+                        seen.add(node)
+                return deduped_route
+        except Exception as exc:
+            logger.warning(f"[Itinerary] OR-Tools TSP failed, falling back to greedy: {exc}")
+
+    # Fallback: greedy nearest-neighbor on cost matrix
+    unvisited = set(range(node_count))
+    route = [start_index]
+    unvisited.remove(start_index)
+    current = start_index
+
+    while unvisited:
+        next_node = min(unvisited, key=lambda node: cost_matrix[current][node])
+        route.append(next_node)
+        unvisited.remove(next_node)
+        current = next_node
+
+    return route
+
+
 # ============================================================================
 # ITINERARY GENERATION
 # ============================================================================
@@ -164,10 +259,18 @@ def generate_daily_itinerary(
     for idx, attraction_name in enumerate(attraction_names):
         day_buckets[idx % duration].append(attraction_name)
 
+    if budget_per_day < 40:
+        max_activities = 2
+    elif budget_per_day < 100:
+        max_activities = 3
+    else:
+        max_activities = 4
+
     for day in range(1, duration + 1):
         day_items = day_buckets[day - 1]
         if not day_items:
             day_items = [attraction_names[(day - 1) % len(attraction_names)]]
+        day_items = day_items[:max_activities]
 
         morning = day_items[0] if len(day_items) > 0 else None
         afternoon = day_items[1] if len(day_items) > 1 else None
@@ -218,6 +321,156 @@ class IntelligentItineraryOrchestrator:
         """Initialize with service singletons"""
         self.recommender = get_recommender()
         self.enrichment_engine = get_enrichment_engine()
+
+    def _cluster_attractions_for_days(
+        self,
+        attractions: List[Dict[str, Any]],
+        duration: int
+    ) -> List[List[Dict[str, Any]]]:
+        """Cluster attractions by proximity for multi-day itinerary planning."""
+        if duration <= 1 or len(attractions) <= 1:
+            return [attractions]
+
+        cluster_count = min(duration, len(attractions))
+        if not KMEANS_AVAILABLE or cluster_count <= 1:
+            buckets: List[List[Dict[str, Any]]] = [[] for _ in range(cluster_count)]
+            for idx, attraction in enumerate(attractions):
+                buckets[idx % cluster_count].append(attraction)
+            return [bucket for bucket in buckets if bucket]
+
+        coordinates = [
+            [float(a.get("latitude", 0.0)), float(a.get("longitude", 0.0))]
+            for a in attractions
+        ]
+
+        try:
+            model = KMeans(n_clusters=cluster_count, random_state=42, n_init=10)
+            labels = model.fit_predict(coordinates)
+            clusters: List[List[Dict[str, Any]]] = [[] for _ in range(cluster_count)]
+            for attraction, label in zip(attractions, labels):
+                clusters[int(label)].append(attraction)
+            return [cluster for cluster in clusters if cluster]
+        except Exception as exc:
+            logger.warning(f"[Itinerary] KMeans clustering failed, falling back to balanced buckets: {exc}")
+            buckets = [[] for _ in range(cluster_count)]
+            for idx, attraction in enumerate(attractions):
+                buckets[idx % cluster_count].append(attraction)
+            return [bucket for bucket in buckets if bucket]
+
+    def _score_attractions_ml(
+        self,
+        attractions: List[Dict[str, Any]],
+        budget_per_day: float
+    ) -> List[Dict[str, Any]]:
+        """Apply ML-style weighted attraction scoring with normalized features."""
+        if not attractions:
+            return []
+
+        max_reviews_log = max(
+            [math.log1p(max(int(a.get("user_ratings_total", 0) or 0), 0)) for a in attractions] + [1.0]
+        )
+
+        def attraction_score(attraction: Dict[str, Any]) -> float:
+            normalized_rating = max(0.0, min(1.0, float(attraction.get("rating", 0.0) or 0.0) / 5.0))
+            reviews = max(int(attraction.get("user_ratings_total", 0) or 0), 0)
+            normalized_reviews = math.log1p(reviews) / max_reviews_log if max_reviews_log > 0 else 0.0
+
+            budget_score = _budget_match_score(
+                budget_per_day=budget_per_day,
+                price_level=int(attraction.get("price_level", 2) or 2),
+            )
+            distance_score = 1 / (1 + float(attraction.get("distance_km", 1.0) or 1.0))
+
+            return (
+                0.35 * normalized_rating
+                + 0.25 * normalized_reviews
+                + 0.20 * budget_score
+                + 0.20 * distance_score
+            )
+
+        ranked = sorted(attractions, key=attraction_score, reverse=True)
+        return [
+            {
+                **attraction,
+                "rank": index + 1,
+                "score": round(attraction_score(attraction), 4),
+            }
+            for index, attraction in enumerate(ranked)
+        ]
+
+    async def _optimize_route_with_tsp(
+        self,
+        attractions: List[Dict[str, Any]],
+        start_lat: float,
+        start_lon: float
+    ) -> Tuple[List[str], float, float]:
+        """Optimize route order with time-first weighted TSP objective and safety factor."""
+        if not attractions:
+            return [], 0.0, 0.0
+
+        start_point = (start_lat, start_lon)
+        attraction_points = [
+            (float(a.get("latitude", 0.0)), float(a.get("longitude", 0.0)))
+            for a in attractions
+        ]
+        all_points = [start_point] + attraction_points
+
+        distance_matrix, duration_matrix = await get_travel_metrics_matrix(all_points)
+        if not distance_matrix or not duration_matrix:
+            names, total_distance = optimize_route_greedy(attractions, start_lat, start_lon)
+            return names, total_distance, (total_distance / 30.0) * 60.0
+
+        node_metadata = [
+            {"rating": 5.0, "safety_score": 0.1},
+            *[
+                {
+                    "rating": float(a.get("rating", 4.0) or 4.0),
+                    "safety_score": float(a.get("safety_score", 0.5) or 0.5),
+                }
+                for a in attractions
+            ],
+        ]
+
+        cost_matrix: List[List[float]] = []
+        for i in range(len(all_points)):
+            row: List[float] = []
+            for j in range(len(all_points)):
+                if i == j:
+                    row.append(0.0)
+                    continue
+
+                time_cost = float(duration_matrix[i][j])
+                distance_cost = float(distance_matrix[i][j])
+                rating = max(node_metadata[j].get("rating", 4.0), 0.1)
+                inverse_rating = 1.0 / rating
+                safety_score = float(node_metadata[j].get("safety_score", 0.5))
+
+                final_weight = (
+                    0.4 * time_cost
+                    + 0.3 * distance_cost
+                    + 0.2 * inverse_rating
+                    + 0.1 * safety_score
+                )
+                row.append(final_weight)
+            cost_matrix.append(row)
+
+        route_nodes = solve_tsp(cost_matrix=cost_matrix, start_index=0)
+        route_nodes = [node for node in route_nodes if node != 0]
+
+        ordered_places: List[str] = []
+        total_distance_km = 0.0
+        total_duration_minutes = 0.0
+        prev_node = 0
+
+        for node in route_nodes:
+            attraction_index = node - 1
+            if 0 <= attraction_index < len(attractions):
+                ordered_places.append(attractions[attraction_index].get("name", "Unknown"))
+                total_distance_km += float(distance_matrix[prev_node][node])
+                total_duration_minutes += float(duration_matrix[prev_node][node])
+                prev_node = node
+
+        return ordered_places, round(total_distance_km, 2), round(total_duration_minutes, 2)
     
     async def generate_intelligent_itinerary(
         self,
@@ -293,11 +546,45 @@ class IntelligentItineraryOrchestrator:
             request.latitude,
             request.longitude
         )
-        sample_attractions = self._generate_sample_attractions(
-            request.location,
-            request.latitude,
-            request.longitude
-        )
+        if request.latitude and request.longitude:
+            google_attractions = await get_nearby_attractions(
+                location_name=request.location,
+                lat=request.latitude,
+                lon=request.longitude,
+                radius_km=request.max_distance_km,
+                travel_type=request.travel_type.value,
+            )
+
+            sample_attractions = []
+            for attraction in google_attractions:
+                distance = haversine_distance(
+                    request.latitude,
+                    request.longitude,
+                    float(attraction.get("latitude", 0.0)),
+                    float(attraction.get("longitude", 0.0)),
+                )
+                sample_attractions.append(
+                    {
+                        **attraction,
+                        "distance_km": round(distance, 2),
+                        "student_friendly": int(attraction.get("price_level", 2) or 2) <= 2,
+                    }
+                )
+
+            if sample_attractions:
+                included_features.append("google_places_attractions")
+            else:
+                sample_attractions = self._generate_sample_attractions(
+                    request.location,
+                    request.latitude,
+                    request.longitude,
+                )
+        else:
+            sample_attractions = self._generate_sample_attractions(
+                request.location,
+                request.latitude,
+                request.longitude,
+            )
         
         if request.include_hotels and request.latitude and request.longitude:
             try:
@@ -383,26 +670,12 @@ class IntelligentItineraryOrchestrator:
             except Exception as e:
                 logger.warning(f"[Itinerary] Restaurant ranking failed: {e}")
         
-        # Always rank attractions (fallback ranking)
+        # Always rank attractions (ML-style weighted scoring)
         try:
-            ranked_attractions = sorted(
-                sample_attractions,
-                key=lambda a: (
-                    a.get("rating", 0),
-                    1 if a.get("student_friendly") else 0,
-                    -a.get("distance_km", 0),
-                ),
-                reverse=True,
+            ranked_attractions = self._score_attractions_ml(
+                attractions=sample_attractions,
+                budget_per_day=budget_per_day,
             )[: request.duration * 3]
-
-            ranked_attractions = [
-                {
-                    **a,
-                    "rank": idx + 1,
-                    "score": round(0.6 * (a.get("rating", 0) / 5) + (0.4 if a.get("student_friendly") else 0.2), 4),
-                }
-                for idx, a in enumerate(ranked_attractions)
-            ]
             included_features.append("attraction_ranking")
         except Exception as e:
             logger.warning(f"[Itinerary] Attraction ranking failed: {e}")
@@ -413,18 +686,38 @@ class IntelligentItineraryOrchestrator:
         logger.info("[Itinerary] Step 4/6: Optimizing route")
         
         if request.latitude and request.longitude:
-            route_places = ranked_attractions[:min(10, len(ranked_attractions))]
-            ordered_places, total_distance = optimize_route_greedy(
-                route_places,
-                request.latitude,
-                request.longitude
-            )
+            route_places = ranked_attractions[:min(12, len(ranked_attractions))]
+
+            if request.duration > 1 and len(route_places) > request.duration:
+                clusters = self._cluster_attractions_for_days(route_places, request.duration)
+                ordered_places = []
+                total_distance = 0.0
+                total_minutes = 0.0
+
+                for cluster in clusters:
+                    cluster_order, cluster_distance, cluster_minutes = await self._optimize_route_with_tsp(
+                        attractions=cluster,
+                        start_lat=request.latitude,
+                        start_lon=request.longitude,
+                    )
+                    ordered_places.extend(cluster_order)
+                    total_distance += cluster_distance
+                    total_minutes += cluster_minutes
+
+                optimization_method = "kmeans_tsp_time_weighted"
+            else:
+                ordered_places, total_distance, total_minutes = await self._optimize_route_with_tsp(
+                    attractions=route_places,
+                    start_lat=request.latitude,
+                    start_lon=request.longitude,
+                )
+                optimization_method = "tsp_time_weighted"
             
             route_optimization = RouteOptimization(
                 ordered_places=ordered_places,
                 total_distance_km=round(total_distance, 2),
-                estimated_travel_time_hours=round(total_distance / 30, 2),  # Assume 30 km/h avg
-                optimization_method="greedy_nearest_neighbor"
+                estimated_travel_time_hours=round(total_minutes / 60, 2),
+                optimization_method=optimization_method
             )
             included_features.append("route_optimization")
         else:

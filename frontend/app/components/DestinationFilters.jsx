@@ -44,6 +44,9 @@ const sortOptions = [
 export default function DestinationFilters({
   searchQuery,
   onSearchChange,
+  searchSuggestions = [],
+  onSuggestionSelect,
+  showSuggestions = false,
   selectedRegion,
   onRegionChange,
   selectedPriceRange,
@@ -88,6 +91,21 @@ export default function DestinationFilters({
             >
               <XMarkIcon className="w-5 h-5" />
             </button>
+          )}
+
+          {showSuggestions && searchSuggestions.length > 0 && (
+            <div className="absolute z-20 mt-2 w-full bg-(--color-surface) dark:bg-(--color-dark-surface) border border-(--color-border) rounded-xl shadow-lg max-h-64 overflow-y-auto">
+              {searchSuggestions.map((item, idx) => (
+                <button
+                  key={`${item.city}-${item.state}-${idx}`}
+                  onClick={() => onSuggestionSelect && onSuggestionSelect(item)}
+                  className="w-full text-left px-4 py-3 hover:bg-(--color-background-secondary) dark:hover:bg-(--color-dark-background-secondary) border-b border-(--color-border-light) last:border-b-0"
+                >
+                  <div className="text-sm font-semibold text-(--color-text-primary)">{item.city}</div>
+                  <div className="text-xs text-(--color-text-secondary)">{item.state}, India</div>
+                </button>
+              ))}
+            </div>
           )}
         </div>
 

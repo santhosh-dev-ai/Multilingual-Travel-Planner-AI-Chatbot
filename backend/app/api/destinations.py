@@ -71,6 +71,24 @@ _cache_expiry: Dict[str, float] = {}
 CACHE_TTL = 300  # 5 minutes cache
 
 
+def _to_float(value, default):
+    try:
+        if value is None:
+            return float(default)
+        return float(value)
+    except (TypeError, ValueError):
+        return float(default)
+
+
+def _to_int(value, default):
+    try:
+        if value is None:
+            return int(default)
+        return int(float(value))
+    except (TypeError, ValueError):
+        return int(default)
+
+
 async def generate_single_destination(dest_info: dict, dest_id: int) -> dict:
     """Generate AI content for a single destination in real-time."""
     cache_key = dest_info["name"]
@@ -109,7 +127,9 @@ Return ONLY valid JSON (no markdown):
         
         data = json.loads(cleaned)
         
-        price_value = data.get("priceValue", random.randint(800, 2500))
+        price_value = _to_int(data.get("priceValue"), random.randint(800, 2500))
+        rating = _to_float(data.get("rating"), random.uniform(4.5, 5.0))
+        reviews = _to_int(data.get("reviews"), random.randint(1000, 5000))
         
         result = {
             "id": dest_id,
@@ -119,8 +139,8 @@ Return ONLY valid JSON (no markdown):
             "description": data.get("description", f"Discover the beauty of {dest_info['name']}"),
             "fullDescription": data.get("fullDescription", f"Experience {dest_info['name']}, a destination offering unforgettable adventures."),
             "image": dest_info["image"],
-            "rating": round(data.get("rating", random.uniform(4.5, 5.0)), 1),
-            "reviews": data.get("reviews", random.randint(1000, 5000)),
+            "rating": round(rating, 1),
+            "reviews": reviews,
             "duration": random.choice(DURATIONS),
             "price": f"${price_value:,}",
             "priceValue": price_value,

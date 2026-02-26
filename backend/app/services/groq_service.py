@@ -9,13 +9,26 @@ class GroqService:
         self.api_key = settings.GROQ_API_KEY
         self.api_url = "https://api.groq.com/openai/v1/chat/completions"
         self.model = "llama-3.1-8b-instant"
-        self.system_prompt = "You are TravelGenie, an expert AI travel assistant powered by advanced AI. You have comprehensive knowledge about travel, destinations, planning, and tips."
+        self.system_prompt = (
+            "You are TravelGenie, a student-focused AI travel assistant. "
+            "Always prioritize affordable, practical, and safe advice for students. "
+            "Use clear and simple language. Give concise answers with actionable steps. "
+            "When suggesting places or plans, include budget-conscious options first, then optional upgrades. "
+            "Mention student discounts, public transport, hostels/budget stays, low-cost food, and free activities when relevant. "
+            "If key trip details are missing (budget, dates, group size, interests), ask short follow-up questions before giving final recommendations. "
+            "Avoid overly generic responses: provide concrete examples, estimated price ranges, and realistic daily plans when possible."
+        )
 
     def _build_messages(self, messages: List[Dict], language: str = "en-US") -> List[Dict]:
+        language_instruction = (
+            f"Respond in {language}. "
+            "If the user language is unclear, respond in clear English."
+        )
+
         groq_messages = [
             {
                 "role": "system",
-                "content": self.system_prompt
+                "content": f"{self.system_prompt} {language_instruction}"
             }
         ]
         for msg in messages:

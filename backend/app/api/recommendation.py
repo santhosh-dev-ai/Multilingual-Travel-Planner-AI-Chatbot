@@ -102,12 +102,17 @@ logger = logging.getLogger(__name__)
 async def recommend_destinations(
     request: RecommendationRequest = Body(
         ...,
-        example={
-            "budget": "moderate",
-            "duration": 7,
-            "travel_type": "beach",
-            "mood": "relaxed",
-            "top_n": 5
+        examples={
+            "default": {
+                "summary": "Sample destination recommendation request",
+                "value": {
+                    "budget": "moderate",
+                    "duration": 7,
+                    "travel_type": "beach",
+                    "mood": "relaxed",
+                    "top_n": 5
+                }
+            }
         }
     )
 ):

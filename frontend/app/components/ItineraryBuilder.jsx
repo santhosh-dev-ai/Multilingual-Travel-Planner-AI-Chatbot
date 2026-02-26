@@ -148,14 +148,27 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
   const [travelStyle, setTravelStyle] = useState('balanced');
   const [groupSize, setGroupSize] = useState(2);
   const [mood, setMood] = useState('curious');
+  const [customMood, setCustomMood] = useState('');
   // ...existing code...
 
   const toggleInterest = (interest) => {
     if (selectedInterests.includes(interest)) {
       setSelectedInterests(selectedInterests.filter(i => i !== interest));
-    } else if (selectedInterests.length < 5) {
+    } else {
       setSelectedInterests([...selectedInterests, interest]);
     }
+  };
+
+  const clampDuration = (value) => {
+    const parsed = Number.parseInt(value, 10);
+    if (Number.isNaN(parsed)) return duration;
+    return Math.max(1, Math.min(365, parsed));
+  };
+
+  const clampBudget = (value) => {
+    const parsed = Number.parseInt(value, 10);
+    if (Number.isNaN(parsed)) return budgetAmount;
+    return Math.max(100, Math.min(100000, parsed));
   };
 
   const generateItinerary = async () => {
@@ -174,8 +187,28 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
       const locationName = destination?.name || destination;
       const primaryInterest = selectedInterests[0] || 'culture';
       const travelType = INTEREST_TO_TRAVEL_TYPE[primaryInterest] || 'cultural';
+      const resolvedMood = customMood.trim() || mood;
+
+      const detailedResult = await itineraryAPI.generate(
+        locationName,
+        duration,
+        selectedInterests,
+        getBudgetTier(budgetAmount),
+        travelStyle,
+        'en-US'
+      );
       
-      // Construct request for intelligent itinerary API
+      let transformedItinerary = {
+        destination: detailedResult.destination || locationName,
+        duration: detailedResult.duration || duration,
+        summary: detailedResult.summary || `Personalized student itinerary for ${locationName}`,
+        days: detailedResult.days || [],
+        budget_estimate: detailedResult.budget_estimate || `$${budgetAmount}`,
+        packing_tips: detailedResult.packing_tips || [],
+        local_phrases: detailedResult.local_phrases || [],
+      };
+
+      // Add intelligent optimization layers (non-blocking)
       const requestData = {
         location: locationName,
         latitude: latitude,
@@ -183,7 +216,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
         budget: budgetAmount,
         duration: duration,
         group_size: groupSize,
-        mood: mood,
+        mood: resolvedMood,
         travel_type: travelType,
         include_hotels: true,
         include_restaurants: true,
@@ -191,29 +224,24 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
         student_friendly: true,
         max_distance_km: 50,
       };
-      
-      const result = await intelligentItineraryAPI.generate(requestData);
-      
-      const normalizedDays = (result.optimized_itinerary || []).map((day, index) => ({
-        ...day,
-        day: day.day ?? index + 1,
-        title: day.title || `Day ${day.day ?? index + 1}`,
-        activities: buildDayActivities(day, locationName),
-      }));
 
-      const normalizedBudgetBreakdown = normalizeBudgetBreakdown(result.budget_breakdown, budgetAmount);
+      try {
+        const intelligentResult = await intelligentItineraryAPI.generate(requestData);
+        const normalizedBudgetBreakdown = normalizeBudgetBreakdown(intelligentResult.budget_breakdown, budgetAmount);
 
-      // Transform the response to match the existing itinerary display format
-      const transformedItinerary = {
-        ...result,
-        duration: result.duration_days,
-        summary: result.message || `Your intelligent ${result.duration_days}-day itinerary for ${locationName}`,
-        days: normalizedDays,
-        budget_breakdown: normalizedBudgetBreakdown,
-        budget_estimate: normalizedBudgetBreakdown?.total_budget_formatted || `$${budgetAmount}`,
-        packing_tips: result.educational_enrichment?.travel_tips || [],
-        local_phrases: [],
-      };
+        transformedItinerary = {
+          ...transformedItinerary,
+          budget_breakdown: normalizedBudgetBreakdown,
+          budget_estimate: normalizedBudgetBreakdown?.total_budget_formatted || transformedItinerary.budget_estimate,
+          ranked_hotels: intelligentResult.ranked_hotels || [],
+          ranked_restaurants: intelligentResult.ranked_restaurants || [],
+          route_order: intelligentResult.route_order,
+          educational_enrichment: intelligentResult.educational_enrichment,
+          recommended_books: intelligentResult.recommended_books,
+        };
+      } catch (intelligentError) {
+        console.warn('Intelligent optimization unavailable, using detailed itinerary output only:', intelligentError);
+      }
       
       setItinerary(transformedItinerary);
       setStep(3);
@@ -352,14 +380,22 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                 <div className="flex items-center gap-6">
                   <input
                     type="range"
-                    min="2"
-                    max="14"
+                    min="1"
+                    max="60"
                     value={duration}
-                    onChange={(e) => setDuration(parseInt(e.target.value))}
+                    onChange={(e) => setDuration(clampDuration(e.target.value))}
                     className="flex-1 h-3 bg-gradient-to-r from-[#DEF1F5] to-[#BCE2EB] rounded-full appearance-none cursor-pointer slider-thumb"
                     style={{
-                      background: `linear-gradient(to right, #3AA8C1 0%, #3AA8C1 ${((duration-2)/(14-2))*100}%, #E2E8F0 ${((duration-2)/(14-2))*100}%, #E2E8F0 100%)`
+                      background: `linear-gradient(to right, #3AA8C1 0%, #3AA8C1 ${((duration-1)/(60-1))*100}%, #E2E8F0 ${((duration-1)/(60-1))*100}%, #E2E8F0 100%)`
                     }}
+                  />
+                  <input
+                    type="number"
+                    min="1"
+                    max="365"
+                    value={duration}
+                    onChange={(e) => setDuration(clampDuration(e.target.value))}
+                    className="w-24 px-3 py-2 border-2 border-[#BCE2EB] rounded-lg text-[#0F172A] font-semibold"
                   />
                   <div className="bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] px-6 py-3 rounded-xl min-w-28 text-center shadow-lg">
                     <span className="text-3xl font-bold text-white">{duration}</span>
@@ -401,7 +437,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
               {/* Interests */}
               <div className="space-y-4">
                 <label className="block text-lg font-semibold text-[#0F172A] mb-4">
-                  🎯 Your Interests (select up to 5)
+                  🎯 Your Interests (select as many as you want)
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {INTERESTS.map((interest) => (
@@ -412,10 +448,6 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                         selectedInterests.includes(interest.value)
                           ? 'bg-gradient-to-br from-[#DEF1F5] to-[#BCE2EB] border-[#3AA8C1] shadow-lg scale-105'
                           : 'bg-white border-[#E2E8F0] hover:border-[#3AA8C1] hover:bg-[#F8FAFB] hover:scale-102'
-                      } ${
-                        selectedInterests.length >= 5 && !selectedInterests.includes(interest.value)
-                          ? 'opacity-50 cursor-not-allowed'
-                          : ''
                       }`}
                     >
                       <div className="text-2xl mb-2">{interest.emoji}</div>
@@ -429,7 +461,7 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                     selectedInterests.length > 0 ? 'bg-[#10B981]' : 'bg-[#E2E8F0]'
                   }`} />
                   <p className="text-sm text-[#475569] font-medium">
-                    {selectedInterests.length}/5 interests selected
+                    {selectedInterests.length} interests selected
                   </p>
                 </div>
               </div>
@@ -456,15 +488,22 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                   <div className="flex items-center gap-6">
                     <input
                       type="range"
-                      min="150"
-                      max="2000"
+                      min="100"
+                      max="10000"
                       step="50"
                       value={budgetAmount}
-                      onChange={(e) => setBudgetAmount(parseInt(e.target.value))}
+                      onChange={(e) => setBudgetAmount(clampBudget(e.target.value))}
                       className="flex-1 h-3 bg-gradient-to-r from-[#DEF1F5] to-[#BCE2EB] rounded-full appearance-none cursor-pointer slider-thumb"
                       style={{
-                        background: `linear-gradient(to right, #3AA8C1 0%, #3AA8C1 ${((budgetAmount-150)/(2000-150))*100}%, #E2E8F0 ${((budgetAmount-150)/(2000-150))*100}%, #E2E8F0 100%)`
+                        background: `linear-gradient(to right, #3AA8C1 0%, #3AA8C1 ${((Math.min(budgetAmount, 10000)-100)/(10000-100))*100}%, #E2E8F0 ${((Math.min(budgetAmount, 10000)-100)/(10000-100))*100}%, #E2E8F0 100%)`
                       }}
+                    />
+                    <input
+                      type="number"
+                      min="100"
+                      value={budgetAmount}
+                      onChange={(e) => setBudgetAmount(clampBudget(e.target.value))}
+                      className="w-32 px-3 py-2 border-2 border-[#BCE2EB] rounded-lg text-[#0F172A] font-semibold"
                     />
                     <div className="bg-gradient-to-r from-[#3AA8C1] to-[#58B8CD] px-6 py-3 rounded-xl min-w-32 text-center shadow-lg">
                       <span className="text-2xl font-bold text-white">${budgetAmount}</span>
@@ -537,6 +576,18 @@ export default function ItineraryBuilder({ destination, onClose, onItineraryBuil
                       <div className="text-xs text-[#475569] font-medium">{m.desc}</div>
                     </button>
                   ))}
+                </div>
+                <div className="mt-4">
+                  <label className="block text-sm font-semibold text-[#475569] mb-2">
+                    Custom mood (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={customMood}
+                    onChange={(e) => setCustomMood(e.target.value)}
+                    placeholder="e.g., exam-break chill, research-focused, backpacking"
+                    className="w-full px-4 py-3 border-2 border-[#E2E8F0] rounded-xl focus:outline-none focus:border-[#3AA8C1]"
+                  />
                 </div>
               </div>
 

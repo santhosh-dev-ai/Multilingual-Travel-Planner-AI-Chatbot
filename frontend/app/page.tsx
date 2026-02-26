@@ -13,9 +13,11 @@ import WeatherWidget from './components/WeatherWidget';
 import ItineraryBuilder from './components/ItineraryBuilder';
 import WishlistModal from './components/WishlistModal';
 import SavedItineraries from './components/SavedItineraries';
+import StatesGrid from './components/StatesGrid';
+import { indianStates } from './data/indianStates';
 import { useWishlist } from './hooks/useWishlist';
-import { translations, destinations } from './data/destinations-new';
-import { savedItineraryAPI, destinationsAPI, authAPI } from './services/api';
+import { translations } from './data/destinations-new';
+import { savedItineraryAPI, locationsAPI, authAPI } from './services/api';
 import {
   SparklesIcon,
   GlobeAltIcon,
@@ -42,6 +44,7 @@ export default function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('en-US');
   
   const [showAllDestinations, setShowAllDestinations] = useState(false);
+  const useStateNavigation = true;
   
   // Dynamic destinations state
   const [destinations, setDestinations] = useState<any[]>([]);
@@ -63,7 +66,8 @@ export default function Home() {
   const fetchSavedItinerariesCount = async () => {
     try {
       const response = await savedItineraryAPI.getCount();
-      setSavedItinerariesCount(response.count || 0);
+      const resolvedCount = response?.count ?? response?.data?.count ?? 0;
+      setSavedItinerariesCount(resolvedCount);
     } catch (error) {
       console.error('Failed to fetch saved itineraries count:', error);
     }
@@ -75,14 +79,56 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const user = authAPI.getCurrentUser();
-    const resolvedUsername =
-      user?.display_name ||
-      user?.username ||
-      (user?.email ? String(user.email).split('@')[0] : null) ||
-      'Traveler';
-    setCurrentUsername(resolvedUsername);
-    setAuthChecked(true);
+    let isMounted = true;
+
+    const hydrateUser = async () => {
+      try {
+        const initResult = await authAPI.initializeUser();
+        const user = initResult?.user || authAPI.getCurrentUser();
+
+        if (!isMounted) return;
+
+        const resolvedUsername =
+          user?.user_metadata?.full_name ||
+          user?.display_name ||
+          user?.username ||
+          (user?.email ? String(user.email).split('@')[0] : null) ||
+          'Traveler';
+
+        setCurrentUsername(resolvedUsername);
+        fetchSavedItinerariesCount();
+      } catch (error) {
+        if (isMounted) {
+          setCurrentUsername('Traveler');
+        }
+      } finally {
+        if (isMounted) {
+          setAuthChecked(true);
+        }
+      }
+    };
+
+    hydrateUser();
+
+    const unsubscribe = authAPI.onAuthStateChange(async (_event, _session, payload) => {
+      const user = payload?.user || authAPI.getCurrentUser();
+      const resolvedUsername =
+        user?.user_metadata?.full_name ||
+        user?.display_name ||
+        user?.username ||
+        (user?.email ? String(user.email).split('@')[0] : null) ||
+        'Traveler';
+
+      if (isMounted) {
+        setCurrentUsername(resolvedUsername);
+        fetchSavedItinerariesCount();
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      unsubscribe?.();
+    };
   }, []);
   
   // Wishlist modal state
@@ -99,6 +145,8 @@ export default function Home() {
   
   // AI Search state
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchSuggestions, setSearchSuggestions] = useState<any[]>([]);
+  const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
@@ -113,15 +161,46 @@ export default function Home() {
   const chatRef = useRef<any>(null);
   const [aiPrompt, setAiPrompt] = useState<string>('');
 
-  // Fetch destinations from API with refresh
+  const mapLocationToDestinationCard = (location: any, index: number) => {
+    const city = location.city || 'Unknown City';
+    const state = location.state || 'Unknown State';
+    const popularity = Number(location.popularity || 0);
+    const safeCity = encodeURIComponent(city);
+    const locationImage = typeof location.image === 'string' ? location.image : '';
+
+    return {
+      id: Number(location.id || `${Date.now()}${index}`.slice(-8)),
+      name: city,
+      country: state,
+      region: 'india',
+      description: `${city} in ${state} is a popular student travel destination in India.`,
+      fullDescription: `${city}, ${state} offers student-friendly experiences, local culture, and practical travel options inside India.`,
+      image: locationImage || `https://source.unsplash.com/600x400/?${safeCity},india`,
+      rating: 4.5,
+      reviews: Math.max(500, popularity || 500),
+      duration: '3-5 days',
+      price: '$299',
+      priceValue: 299,
+      badge: 'India',
+      bestTimeToVisit: 'Oct - Mar',
+      climate: 'Varied',
+      highlights: ['Local culture', 'Student-friendly stays', 'City exploration', 'Food spots'],
+      tags: ['Culture', 'Student', 'City'],
+      rawLocation: location,
+    };
+  };
+
+  // Fetch destinations from hybrid locations API with refresh
   const fetchDestinations = async (forceRefresh = false) => {
     setLoadingDestinations(true);
     setDestinationError(null);
     
     try {
-      const count = forceRefresh ? Math.floor(Math.random() * 6) + 15 : 15; // Show 15-20 destinations
-      const response = await destinationsAPI.getRandomDestinations(count);
-      setDestinations(response.destinations || []);
+      const response = await locationsAPI.getPopular(100);
+      const cards = (response.locations || []).map((location: any, index: number) =>
+        mapLocationToDestinationCard(location, index)
+      );
+      setDestinations(cards);
     } catch (error) {
       console.error('Failed to fetch destinations:', error);
       setDestinationError('Failed to load destinations. Please try again.');
@@ -130,40 +209,29 @@ export default function Home() {
     }
   };
 
-  // AI-powered search with enhanced results
+  // Hybrid city search with suggestions
   const performAISearch = useCallback(async (query: string) => {
     if (!query || query.length < 2) {
       setSearchResults([]);
+      setSearchSuggestions([]);
+      setShowSearchSuggestions(false);
       setIsSearching(false);
       return;
     }
     
     setIsSearching(true);
     try {
-      const response = await destinationsAPI.searchDestinations(query, 12);
-      // Enhance search results with complete destination data
-      const enhancedResults = (response.destinations || []).map((dest: any) => ({
-        ...dest,
-        // Ensure all required fields are present
-        image: dest.image || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80',
-        rating: dest.rating || 4.5,
-        reviews: dest.reviews || Math.floor(Math.random() * 1000) + 500,
-        duration: dest.duration || '3-5 days',
-        price: dest.price || '$399',
-        priceValue: dest.priceValue || 399,
-        coordinates: dest.coordinates || { lat: 40.7128, lon: -74.0060 },
-        highlights: dest.highlights || [
-          'Educational opportunities',
-          'Student-friendly environment',
-          'Cultural experiences',
-          'Budget-conscious options'
-        ],
-        tags: dest.tags || ['Culture', 'Educational', 'Budget']
-      }));
-      setSearchResults(enhancedResults);
+      const response = await locationsAPI.search(query, 10);
+      const locations = response.locations || [];
+      setSearchSuggestions(locations);
+      setShowSearchSuggestions(true);
+      const cards = locations.map((location: any, index: number) => mapLocationToDestinationCard(location, index));
+      setSearchResults(cards);
     } catch (error) {
       console.error('Search failed:', error);
       setSearchResults([]);
+      setSearchSuggestions([]);
+      setShowSearchSuggestions(false);
     } finally {
       setIsSearching(false);
     }
@@ -185,13 +253,30 @@ export default function Home() {
       }, 500);
     } else {
       setSearchResults([]);
+      setSearchSuggestions([]);
+      setShowSearchSuggestions(false);
       setIsSearching(false);
     }
   }, [performAISearch]);
 
+  const handleSuggestionSelect = useCallback((location: any) => {
+    const city = location.city || '';
+    if (!city) return;
+
+    setSearchQuery(city);
+    setShowSearchSuggestions(false);
+    const card = mapLocationToDestinationCard(location, 0);
+    setSearchResults([card]);
+  }, []);
+
   // Fetch destinations on mount
   useEffect(() => {
-    fetchDestinations();
+    if (!useStateNavigation) {
+      fetchDestinations();
+    } else {
+      setLoadingDestinations(false);
+      setDestinationError(null);
+    }
   }, []);
 
   // Cleanup timeout on unmount
@@ -358,6 +443,8 @@ export default function Home() {
   const clearFilters = () => {
     setSearchQuery('');
     setSearchResults([]);
+    setSearchSuggestions([]);
+    setShowSearchSuggestions(false);
     setSelectedRegion('all');
     setSelectedPriceRange('all');
     setSelectedTripType('all');
@@ -419,6 +506,8 @@ export default function Home() {
     setSelectedRegion(region);
     setSearchQuery(''); // Clear any search
     setSearchResults([]);
+    setSearchSuggestions([]);
+    setShowSearchSuggestions(false);
     // Scroll to destinations section
     const destinationsSection = document.getElementById('destinations');
     if (destinationsSection) {
@@ -426,9 +515,10 @@ export default function Home() {
     }
   };
 
-  const handleLogout = () => {
-    authAPI.logout();
+  const handleLogout = async () => {
+    await authAPI.logout();
     setCurrentUsername('Traveler');
+    setSavedItinerariesCount(0);
   };
 
 
@@ -594,37 +684,44 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Filters */}
-          <DestinationFilters
-            searchQuery={searchQuery}
-            onSearchChange={handleSearchChange}
-            selectedRegion={selectedRegion}
-            onRegionChange={setSelectedRegion}
-            selectedPriceRange={selectedPriceRange}
-            onPriceRangeChange={setSelectedPriceRange}
-            selectedTripType={selectedTripType}
-            onTripTypeChange={setSelectedTripType}
-            sortBy={sortBy}
-            onSortChange={setSortBy}
-            resultCount={filteredDestinations.length}
-            onClearFilters={clearFilters}
-            isSearching={isSearching}
-          />
+          {!useStateNavigation && (
+            <>
+              {/* Filters */}
+              <DestinationFilters
+                searchQuery={searchQuery}
+                onSearchChange={handleSearchChange}
+                searchSuggestions={searchSuggestions}
+                onSuggestionSelect={handleSuggestionSelect}
+                showSuggestions={showSearchSuggestions && searchQuery.length >= 2}
+                selectedRegion={selectedRegion}
+                onRegionChange={setSelectedRegion}
+                selectedPriceRange={selectedPriceRange}
+                onPriceRangeChange={setSelectedPriceRange}
+                selectedTripType={selectedTripType}
+                onTripTypeChange={setSelectedTripType}
+                sortBy={sortBy}
+                onSortChange={setSortBy}
+                resultCount={filteredDestinations.length}
+                onClearFilters={clearFilters}
+                isSearching={isSearching}
+              />
 
-          {/* AI Search Indicator */}
-          {isSearching && (
-            <div className="flex items-center justify-center gap-2 py-4 text-[#3AA8C1]">
-              <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-              <span className="text-sm font-medium">Searching destinations...</span>
-            </div>
-          )}
+              {/* AI Search Indicator */}
+              {isSearching && (
+                <div className="flex items-center justify-center gap-2 py-4 text-[#3AA8C1]">
+                  <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <span className="text-sm font-medium">Searching destinations...</span>
+                </div>
+              )}
 
-          {/* Search Results Info */}
-          {searchQuery && searchQuery.length >= 2 && searchResults.length > 0 && !isSearching && (
-            <div className="flex items-center gap-2 py-2 px-4 bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 rounded-lg text-sm">
-              <MagnifyingGlassIcon className="w-5 h-5" />
-              <span>Found {searchResults.length} destination{searchResults.length !== 1 ? 's' : ''} for "{searchQuery}"</span>
-            </div>
+              {/* Search Results Info */}
+              {searchQuery && searchQuery.length >= 2 && searchResults.length > 0 && !isSearching && (
+                <div className="flex items-center gap-2 py-2 px-4 bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 rounded-lg text-sm">
+                  <MagnifyingGlassIcon className="w-5 h-5" />
+                  <span>Found {searchResults.length} destination{searchResults.length !== 1 ? 's' : ''} for "{searchQuery}"</span>
+                </div>
+              )}
+            </>
           )}
 
           {/* Loading State */}
@@ -660,8 +757,12 @@ export default function Home() {
             </div>
           )}
 
+          {useStateNavigation && (
+            <StatesGrid states={indianStates} />
+          )}
+
           {/* Destinations Grid */}
-          {!loadingDestinations && !destinationError && (
+          {!useStateNavigation && !loadingDestinations && !destinationError && (
             <>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {displayDestinations.map((destination) => (
@@ -693,7 +794,7 @@ export default function Home() {
             </>
           )}
 
-          {!loadingDestinations && !destinationError && displayDestinations.length === 0 && (
+          {!useStateNavigation && !loadingDestinations && !destinationError && displayDestinations.length === 0 && (
             <div className="text-center py-16">
               <div className="w-16 h-16 bg-gradient-to-r from-[#334155] to-[#475569] rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <MagnifyingGlassIcon className="w-8 h-8 text-[#94A3B8]" />

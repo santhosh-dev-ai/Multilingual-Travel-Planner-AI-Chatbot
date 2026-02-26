@@ -91,12 +91,17 @@ logger = logging.getLogger(__name__)
 async def get_destination_enrichment_endpoint(
     request: EnrichmentRequest = Body(
         ...,
-        example={
-            "destination": "Paris",
-            "country": "France",
-            "region": "europe",
-            "top_books": 5,
-            "student_friendly_only": True
+        examples={
+            "default": {
+                "summary": "Sample destination enrichment request",
+                "value": {
+                    "destination": "Paris",
+                    "country": "France",
+                    "region": "europe",
+                    "top_books": 5,
+                    "student_friendly_only": True
+                }
+            }
         }
     )
 ):

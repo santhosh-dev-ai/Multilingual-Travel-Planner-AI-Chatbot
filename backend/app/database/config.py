@@ -30,28 +30,63 @@ SUPABASE_ENABLED = bool(SUPABASE_URL and SUPABASE_ANON_KEY)
 # Global client instance (will be None if not configured)
 supabase: Optional[object] = None
 
+
+def reinitialize_supabase_client() -> bool:
+    """Reinitialize Supabase client for transient connection failures."""
+    global supabase
+
+    if not SUPABASE_ENABLED:
+        return False
+
+    try:
+        from supabase import create_client
+        from supabase.lib.client_options import SyncClientOptions
+
+        options = SyncClientOptions(
+            postgrest_client_timeout=8,
+            storage_client_timeout=8,
+            function_client_timeout=8,
+        )
+        supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY, options=options)
+        return True
+    except Exception as e:
+        print(f"[DB] Failed to reinitialize Supabase client: {e}")
+        supabase = None
+        return False
+
 if SUPABASE_ENABLED:
     try:
         from supabase import create_client, Client
+        from supabase.lib.client_options import SyncClientOptions
         
         # Create Supabase client
         def get_supabase_client() -> Client:
             """Get Supabase client instance."""
-            return create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+            options = SyncClientOptions(
+                postgrest_client_timeout=8,
+                storage_client_timeout=8,
+                function_client_timeout=8,
+            )
+            return create_client(SUPABASE_URL, SUPABASE_ANON_KEY, options=options)
 
         # Service role client for admin operations
         def get_supabase_admin_client() -> Client:
             """Get Supabase admin client with service role key."""
             if not SUPABASE_SERVICE_ROLE_KEY:
                 raise ValueError("SUPABASE_SERVICE_ROLE_KEY is required for admin operations")
-            return create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+            options = SyncClientOptions(
+                postgrest_client_timeout=8,
+                storage_client_timeout=8,
+                function_client_timeout=8,
+            )
+            return create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, options=options)
 
         # Initialize global client
         supabase = get_supabase_client()
-        print("✅ Supabase database connected successfully")
+        print("[DB] Supabase database connected successfully")
     except Exception as e:
-        print(f"⚠️ Failed to initialize Supabase: {e}")
+        print(f"[DB] Failed to initialize Supabase: {e}")
         supabase = None
         SUPABASE_ENABLED = False
 else:
-    print("⚠️ Supabase not configured. Database features (wishlist, saved itineraries) will be disabled.")
+    print("[DB] Supabase not configured. Database features (wishlist, saved itineraries) will be disabled.")

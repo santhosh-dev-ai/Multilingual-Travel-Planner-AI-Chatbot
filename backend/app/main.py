@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import chat, destinations, weather, itinerary, intelligence, ranking, recommendation, enrichment, budget, intelligent_itinerary, flights, trains, buses
+from app.api import chat, destinations, weather, itinerary, intelligence, ranking, recommendation, enrichment, budget, intelligent_itinerary, flights, trains, buses, locations, destination
 from app.database import api as database_api
 from app.core.config import settings
 from app.middleware.production import (
@@ -28,6 +28,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3001",
         "https://multilingual-travel-planner-ai-chat.vercel.app",
         "https://multilingual-travel-planner-ai-chatbot-nhi1l8na6.vercel.app"
     ],
@@ -50,6 +52,9 @@ app.include_router(intelligent_itinerary.router, prefix="/api/generate", tags=["
 app.include_router(flights.router, tags=["Flights"])
 app.include_router(trains.router, tags=["Trains"])
 app.include_router(buses.router, tags=["Buses"])
+app.include_router(locations.router, prefix="/api", tags=["Locations"])
+app.include_router(locations.router, tags=["Locations"])
+app.include_router(destination.router, tags=["Destination Intelligence"])
 app.include_router(database_api.router, tags=["Database"])
 
 @app.get("/")

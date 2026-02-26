@@ -1,17 +1,75 @@
+import { supabase } from './supabaseClient';
+import {
+  initializeUser as initializeSupabaseUser,
+  onAuthStateChange as onSupabaseAuthStateChange,
+  signIn,
+  signOut,
+  signUp,
+  getCurrentSession as getSupabaseCurrentSession,
+  fetchWishlist as fetchSupabaseWishlist,
+  addToWishlist as addSupabaseWishlist,
+  removeFromWishlist as removeSupabaseWishlist,
+  clearWishlist as clearSupabaseWishlist,
+  fetchItineraries as fetchSupabaseItineraries,
+  saveItinerary as saveSupabaseItinerary,
+  deleteItinerary as deleteSupabaseItinerary,
+  togglePublic as toggleSupabaseItineraryPublic,
+  fetchPublicItinerary,
+  addRecentlyViewed,
+  fetchRecentlyViewed,
+  updateLastLogin,
+} from './supabaseUserData';
+
 const normalizeApiBaseUrl = (url) => {
   const normalized = (url || '').trim().replace(/\/+$/, '');
-  if (!normalized) return 'http://localhost:8001/api';
+  if (!normalized) return 'http://localhost:8000/api';
   return normalized.endsWith('/api') ? normalized : `${normalized}/api`;
 };
 
 const toRootApiUrl = (apiUrl) => apiUrl.replace(/\/api$/, '');
 
-const API_BASE_URL = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8001/api');
+const API_BASE_URL = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api');
 // Database API is now integrated into the main API
 const DATABASE_API_URL = normalizeApiBaseUrl(
-  process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL || 'http://localhost:8001/api'
+  process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL || 'http://localhost:8000/api'
 );
 const ROOT_API_URL = toRootApiUrl(API_BASE_URL);
+
+const withLocalFallback = (url) => {
+  // Port fallback first
+  if (url.includes('http://localhost:8001')) {
+    return url.replace('http://localhost:8001', 'http://localhost:8000');
+  }
+  if (url.includes('http://127.0.0.1:8001')) {
+    return url.replace('http://127.0.0.1:8001', 'http://127.0.0.1:8000');
+  }
+
+  // Host fallback for environments where localhost/127 bindings differ
+  if (url.includes('http://localhost:8000')) {
+    return url.replace('http://localhost:8000', 'http://127.0.0.1:8000');
+  }
+  if (url.includes('http://127.0.0.1:8000')) {
+    return url.replace('http://127.0.0.1:8000', 'http://localhost:8000');
+  }
+
+  return null;
+};
+
+const fetchWithFallback = async (url, config, label) => {
+  try {
+    return await fetch(url, config);
+  } catch (error) {
+    const fallbackUrl = withLocalFallback(url);
+    const shouldRetry = error instanceof TypeError && !!fallbackUrl;
+
+    if (!shouldRetry) {
+      throw error;
+    }
+
+    console.warn(`[${label}] Primary fetch failed, retrying with fallback URL: ${fallbackUrl}`);
+    return await fetch(fallbackUrl, config);
+  }
+};
 
 const AUTH_STORAGE_KEY = 'travelgenie-auth-user';
 
@@ -34,10 +92,14 @@ const getUserId = () => {
 
 async function fetchAPI(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
-  
-  const defaultHeaders = {
-    'Content-Type': 'application/json',
-  };
+
+  const method = (options.method || 'GET').toUpperCase();
+  const hasBody = options.body !== undefined && options.body !== null;
+
+  const defaultHeaders = {};
+  if (hasBody && method !== 'GET' && method !== 'HEAD') {
+    defaultHeaders['Content-Type'] = 'application/json';
+  }
 
   const config = {
     ...options,
@@ -49,7 +111,7 @@ async function fetchAPI(endpoint, options = {}) {
 
   try {
     console.log(`[API] Calling: ${url}`);
-    const response = await fetch(url, config);
+    const response = await fetchWithFallback(url, config, 'API');
     
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
@@ -67,9 +129,13 @@ async function fetchAPI(endpoint, options = {}) {
 async function fetchRootAPI(endpoint, options = {}) {
   const url = `${ROOT_API_URL}${endpoint}`;
 
-  const defaultHeaders = {
-    'Content-Type': 'application/json',
-  };
+  const method = (options.method || 'GET').toUpperCase();
+  const hasBody = options.body !== undefined && options.body !== null;
+
+  const defaultHeaders = {};
+  if (hasBody && method !== 'GET' && method !== 'HEAD') {
+    defaultHeaders['Content-Type'] = 'application/json';
+  }
 
   const config = {
     ...options,
@@ -81,7 +147,7 @@ async function fetchRootAPI(endpoint, options = {}) {
 
   try {
     console.log(`[Root API] Calling: ${url}`);
-    const response = await fetch(url, config);
+    const response = await fetchWithFallback(url, config, 'Root API');
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
@@ -122,6 +188,25 @@ export const destinationsAPI = {
   
   searchDestinations: async (query, limit = 6) => {
     return fetchAPI(`/destinations/search?query=${encodeURIComponent(query)}&limit=${limit}`);
+  },
+};
+
+export const locationsAPI = {
+  getPopular: async (limit = 100) => {
+    return fetchAPI(`/locations/popular?limit=${limit}`);
+  },
+
+  search: async (query, limit = 10) => {
+    return fetchAPI(`/locations/search?q=${encodeURIComponent(query)}&limit=${limit}`);
+  },
+};
+
+export const destinationAPI = {
+  exploreState: async (state) => {
+    return fetchRootAPI('/destination/explore', {
+      method: 'POST',
+      body: JSON.stringify({ state }),
+    });
   },
 };
 
@@ -285,9 +370,13 @@ export const busesAPI = {
 async function fetchDatabaseAPI(endpoint, options = {}) {
   const url = `${DATABASE_API_URL}${endpoint}`;
 
-  const defaultHeaders = {
-    'Content-Type': 'application/json',
-  };
+  const method = (options.method || 'GET').toUpperCase();
+  const hasBody = options.body !== undefined && options.body !== null;
+
+  const defaultHeaders = {};
+  if (hasBody && method !== 'GET' && method !== 'HEAD') {
+    defaultHeaders['Content-Type'] = 'application/json';
+  }
 
   const config = {
     ...options,
@@ -299,7 +388,7 @@ async function fetchDatabaseAPI(endpoint, options = {}) {
 
   try {
     console.log(`[Database API] Calling: ${url}`);
-    const response = await fetch(url, config);
+    const response = await fetchWithFallback(url, config, 'Database API');
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
@@ -317,128 +406,119 @@ async function fetchDatabaseAPI(endpoint, options = {}) {
 // Database-based Wishlist API
 export const wishlistAPI = {
   getWishlist: async () => {
-    const userId = getUserId();
-    return fetchDatabaseAPI(`/wishlist/${userId}`);
+    return fetchSupabaseWishlist();
   },
 
   addToWishlist: async (destination) => {
-    const userId = getUserId();
-    return fetchDatabaseAPI('/wishlist', {
-      method: 'POST',
-      body: JSON.stringify({
-        user_id: userId,
-        destination_id: destination.id,
-        destination_name: destination.name,
-        destination_country: destination.country,
-        destination_image: destination.image,
-        destination_price: destination.price,
-        destination_rating: destination.rating,
-      }),
-    });
+    return addSupabaseWishlist(destination?.name || destination?.destination_name || destination);
   },
 
-  removeFromWishlist: async (destinationId) => {
-    const userId = getUserId();
-    return fetchDatabaseAPI(`/wishlist/${userId}/destination/${destinationId}`, {
-      method: 'DELETE',
-    });
+  removeFromWishlist: async (identifier) => {
+    return removeSupabaseWishlist(identifier);
   },
 
   checkInWishlist: async (destinationId) => {
-    const userId = getUserId();
-    return fetchDatabaseAPI(`/wishlist/${userId}/check/${destinationId}`);
+    const response = await fetchSupabaseWishlist();
+    if (!response.success) {
+      return { success: false, in_wishlist: false, data: null, message: response.message };
+    }
+    const inWishlist = (response.data || []).some((item) => item.destination_id === destinationId || item.id === destinationId);
+    return { success: true, in_wishlist: inWishlist, data: { in_wishlist: inWishlist } };
   },
 
   clearWishlist: async () => {
-    const userId = getUserId();
-    return fetchDatabaseAPI(`/wishlist/${userId}/clear`, {
-      method: 'DELETE',
-    });
+    return clearSupabaseWishlist();
   },
 };
 
 // Database-based Saved Itineraries API
 export const savedItineraryAPI = {
   getAll: async () => {
-    const userId = getUserId();
-    return fetchDatabaseAPI(`/itinerary/${userId}`);
+    return fetchSupabaseItineraries();
   },
 
   getById: async (itineraryId) => {
-    return fetchDatabaseAPI(`/itinerary/detail/${itineraryId}`);
+    const response = await fetchSupabaseItineraries();
+    if (!response.success) return response;
+    const found = (response.data || []).find((item) => item.id === itineraryId) || null;
+    return { success: true, data: found, message: found ? 'Itinerary retrieved' : 'Itinerary not found' };
   },
 
   save: async (itineraryData) => {
-    const userId = getUserId();
-    return fetchDatabaseAPI('/itinerary', {
-      method: 'POST',
-      body: JSON.stringify({
-        user_id: userId,
-        destination: itineraryData.destination,
-        destination_country: itineraryData.destination_country || null,
-        duration: itineraryData.duration,
-        travel_style: itineraryData.travel_style || 'balanced',
-        budget: itineraryData.budget || 'moderate',
-        summary: itineraryData.summary,
-        days: itineraryData.days,
-        budget_estimate: itineraryData.budget_estimate,
-        packing_tips: itineraryData.packing_tips,
-        local_phrases: itineraryData.local_phrases,
-      }),
-    });
+    return saveSupabaseItinerary(itineraryData.destination, itineraryData, Boolean(itineraryData.is_public));
   },
 
   update: async (itineraryId, updateData) => {
-    return fetchDatabaseAPI(`/itinerary/${itineraryId}`, {
-      method: 'PUT',
-      body: JSON.stringify(updateData),
-    });
+    const user = (await supabase.auth.getUser()).data?.user;
+    if (!user) return { success: false, data: null, message: 'User not authenticated' };
+
+    const { data, error } = await supabase
+      .from('itinerary')
+      .update({ itinerary_json: updateData })
+      .eq('id', itineraryId)
+      .eq('user_id', user.id)
+      .select('*')
+      .single();
+
+    if (error) {
+      return { success: false, data: null, message: error.message || 'Failed to update itinerary' };
+    }
+
+    return {
+      success: true,
+      data: {
+        id: data.id,
+        destination: data.destination,
+        ...(data.itinerary_json || {}),
+      },
+      message: 'Itinerary updated',
+    };
   },
 
   delete: async (itineraryId) => {
-    return fetchDatabaseAPI(`/itinerary/${itineraryId}`, {
-      method: 'DELETE',
-    });
+    return deleteSupabaseItinerary(itineraryId);
   },
 
   getCount: async () => {
-    const userId = getUserId();
-    return fetchDatabaseAPI(`/itinerary/${userId}/count`);
+    const response = await fetchSupabaseItineraries();
+    if (!response.success) return { success: false, count: 0, data: { count: 0 }, message: response.message };
+    const count = (response.data || []).length;
+    return { success: true, count, data: { count }, message: 'Count retrieved' };
   },
+
+  togglePublic: async (itineraryId, currentStatus) => {
+    return toggleSupabaseItineraryPublic(itineraryId, currentStatus);
+  },
+
+  fetchPublicItinerary: async (itineraryId) => {
+    return fetchPublicItinerary(itineraryId);
+  },
+};
+
+export const recentlyViewedAPI = {
+  add: async (destination) => addRecentlyViewed(destination),
+  fetch: async () => fetchRecentlyViewed(),
 };
 
 // Authentication API
 export const authAPI = {
-  register: async ({ username, password, email, phone_number }) => {
-    return fetchAPI('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({
+  register: async ({ username, password, email }) => {
+    return signUp({
+      email,
+      password,
+      metadata: {
         username,
-        password,
-        email,
-        phone_number,
-      }),
+      },
     });
   },
 
-  login: async ({ username, password }) => {
-    const response = await fetchAPI('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-    });
-
-    if (typeof window !== 'undefined' && response?.data?.user_id) {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(response.data));
-      localStorage.setItem('travelgenie-user-id', response.data.user_id);
-    }
-
-    return response;
+  login: async ({ username, password, email }) => {
+    const resolvedEmail = email || username;
+    return signIn({ email: resolvedEmail, password });
   },
 
-  logout: () => {
-    if (typeof window === 'undefined') return;
-    localStorage.removeItem(AUTH_STORAGE_KEY);
-    localStorage.removeItem('travelgenie-user-id');
+  logout: async () => {
+    return signOut();
   },
 
   getCurrentUser: () => {
@@ -450,6 +530,28 @@ export const authAPI = {
     } catch {
       return null;
     }
+  },
+
+  getCurrentUserAsync: async () => {
+    const session = await getSupabaseCurrentSession();
+    return session?.user || null;
+  },
+
+  getSession: async () => {
+    return getSupabaseCurrentSession();
+  },
+
+  initializeUser: async () => {
+    return initializeSupabaseUser();
+  },
+
+  onAuthStateChange: (callback) => {
+    const subscription = onSupabaseAuthStateChange(callback);
+    return () => subscription?.unsubscribe?.();
+  },
+
+  updateLastLogin: async (userId) => {
+    return updateLastLogin(userId);
   },
 
   isAuthenticated: () => {

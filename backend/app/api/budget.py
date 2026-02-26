@@ -87,10 +87,15 @@ logger = logging.getLogger(__name__)
 async def optimize_budget_allocation(
     request: BudgetRequest = Body(
         ...,
-        example={
-            "total_budget": 1500,
-            "duration": 7,
-            "group_size": 2
+        examples={
+            "default": {
+                "summary": "Sample budget optimization request",
+                "value": {
+                    "total_budget": 1500,
+                    "duration": 7,
+                    "group_size": 2
+                }
+            }
         }
     )
 ):

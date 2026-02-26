@@ -185,19 +185,24 @@ logger = logging.getLogger(__name__)
 async def generate_intelligent_itinerary(
     request: IntelligentItineraryRequest = Body(
         ...,
-        example={
-            "location": "Paris",
-            "latitude": 48.8566,
-            "longitude": 2.3522,
-            "budget": 1500,
-            "duration": 7,
-            "group_size": 2,
-            "mood": "relaxed",
-            "travel_type": "cultural",
-            "include_hotels": True,
-            "include_restaurants": True,
-            "include_enrichment": True,
-            "student_friendly": True
+        examples={
+            "default": {
+                "summary": "Sample intelligent itinerary request",
+                "value": {
+                    "location": "Paris",
+                    "latitude": 48.8566,
+                    "longitude": 2.3522,
+                    "budget": 1500,
+                    "duration": 7,
+                    "group_size": 2,
+                    "mood": "relaxed",
+                    "travel_type": "cultural",
+                    "include_hotels": True,
+                    "include_restaurants": True,
+                    "include_enrichment": True,
+                    "student_friendly": True
+                }
+            }
         }
     )
 ):
@@ -246,6 +251,15 @@ async def generate_intelligent_itinerary(
         if request.group_size <= 0 or request.group_size > 50:
             raise ValueError("Group size must be between 1 and 50 people")
         
+        # Calculate per-person-per-day budget (NEW)
+        per_person_per_day = round(
+            request.budget / max(request.group_size * request.duration, 1),
+            2
+        )   
+
+        logger.info(
+            f"[Budget Intelligence] Per person per day: ${per_person_per_day}"
+        )
         # Get orchestrator and generate itinerary
         orchestrator = get_orchestrator()
         result = await orchestrator.generate_intelligent_itinerary(request)

@@ -1,6 +1,6 @@
 """CRUD operations for Wishlist."""
 from typing import List, Optional
-from app.database.config import supabase, SUPABASE_ENABLED
+from app.database import config as db_config
 from app.database.models import WishlistItemCreate, WishlistItem
 
 
@@ -12,7 +12,7 @@ class WishlistCRUD:
     @staticmethod
     def _check_db_available() -> Optional[dict]:
         """Check if database is available."""
-        if not SUPABASE_ENABLED or supabase is None:
+        if not db_config.SUPABASE_ENABLED or db_config.supabase is None:
             return {
                 "success": False, 
                 "message": "Database not configured. Please set SUPABASE_URL and SUPABASE_ANON_KEY in .env file.",
@@ -28,7 +28,7 @@ class WishlistCRUD:
         
         try:
             data = item.model_dump()
-            response = supabase.table(WishlistCRUD.TABLE_NAME).insert(data).execute()
+            response = db_config.supabase.table(WishlistCRUD.TABLE_NAME).insert(data).execute()
             
             if response.data:
                 return {"success": True, "message": "Added to wishlist", "data": response.data[0]}
@@ -43,7 +43,7 @@ class WishlistCRUD:
             return error
         
         try:
-            response = supabase.table(WishlistCRUD.TABLE_NAME)\
+            response = db_config.supabase.table(WishlistCRUD.TABLE_NAME)\
                 .select("*")\
                 .eq("user_id", user_id)\
                 .order("created_at", desc=True)\
@@ -60,7 +60,7 @@ class WishlistCRUD:
             return error
         
         try:
-            response = supabase.table(WishlistCRUD.TABLE_NAME)\
+            response = db_config.supabase.table(WishlistCRUD.TABLE_NAME)\
                 .select("*")\
                 .eq("id", wishlist_id)\
                 .single()\
@@ -77,7 +77,7 @@ class WishlistCRUD:
             return error
         
         try:
-            response = supabase.table(WishlistCRUD.TABLE_NAME)\
+            response = db_config.supabase.table(WishlistCRUD.TABLE_NAME)\
                 .select("id")\
                 .eq("user_id", user_id)\
                 .eq("destination_id", destination_id)\
@@ -99,7 +99,7 @@ class WishlistCRUD:
             return error
         
         try:
-            response = supabase.table(WishlistCRUD.TABLE_NAME)\
+            response = db_config.supabase.table(WishlistCRUD.TABLE_NAME)\
                 .delete()\
                 .eq("id", wishlist_id)\
                 .execute()
@@ -115,7 +115,7 @@ class WishlistCRUD:
             return error
         
         try:
-            response = supabase.table(WishlistCRUD.TABLE_NAME)\
+            response = db_config.supabase.table(WishlistCRUD.TABLE_NAME)\
                 .delete()\
                 .eq("user_id", user_id)\
                 .eq("destination_id", destination_id)\
@@ -132,7 +132,7 @@ class WishlistCRUD:
             return error
         
         try:
-            response = supabase.table(WishlistCRUD.TABLE_NAME)\
+            response = db_config.supabase.table(WishlistCRUD.TABLE_NAME)\
                 .delete()\
                 .eq("user_id", user_id)\
                 .execute()

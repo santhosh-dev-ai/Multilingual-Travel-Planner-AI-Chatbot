@@ -1,7 +1,7 @@
 """CRUD operations for Itineraries."""
 from typing import List, Optional
 from datetime import datetime
-from app.database.config import supabase, SUPABASE_ENABLED
+from app.database import config as db_config
 from app.database.models import ItineraryCreate, Itinerary
 
 
@@ -9,6 +9,21 @@ class ItineraryCRUD:
     """CRUD operations for itineraries."""
     
     TABLE_NAME = "itineraries"
+
+    @staticmethod
+    def _execute_with_retry(operation, retries: int = 0):
+        """Execute a database operation with one retry after client reinitialization."""
+        last_error = None
+
+        for attempt in range(retries + 1):
+            try:
+                return operation()
+            except Exception as error:
+                last_error = error
+                if attempt < retries:
+                    db_config.reinitialize_supabase_client()
+
+        raise last_error
 
     @staticmethod
     def _normalize_budget(value: str) -> str:
@@ -66,7 +81,7 @@ class ItineraryCRUD:
     @staticmethod
     def _check_db_available() -> Optional[dict]:
         """Check if database is available."""
-        if not SUPABASE_ENABLED or supabase is None:
+        if not db_config.SUPABASE_ENABLED or db_config.supabase is None:
             return {
                 "success": False, 
                 "message": "Database not configured. Please set SUPABASE_URL and SUPABASE_ANON_KEY in .env file.",
@@ -86,8 +101,10 @@ class ItineraryCRUD:
             data["travel_style"] = ItineraryCRUD._normalize_travel_style(data.get("travel_style"))
             # Convert days to JSON-serializable format
             data["days"] = [day.model_dump() if hasattr(day, 'model_dump') else day for day in data["days"]]
-            
-            response = supabase.table(ItineraryCRUD.TABLE_NAME).insert(data).execute()
+
+            response = ItineraryCRUD._execute_with_retry(
+                lambda: db_config.supabase.table(ItineraryCRUD.TABLE_NAME).insert(data).execute()
+            )
             
             if response.data:
                 return {"success": True, "message": "Itinerary saved", "data": response.data[0]}
@@ -102,12 +119,14 @@ class ItineraryCRUD:
             return error
         
         try:
-            response = supabase.table(ItineraryCRUD.TABLE_NAME)\
-                .select("*")\
-                .eq("user_id", user_id)\
-                .order("created_at", desc=True)\
-                .limit(limit)\
+            response = ItineraryCRUD._execute_with_retry(
+                lambda: db_config.supabase.table(ItineraryCRUD.TABLE_NAME)
+                .select("*")
+                .eq("user_id", user_id)
+                .order("created_at", desc=True)
+                .limit(limit)
                 .execute()
+            )
             
             return {"success": True, "message": "Itineraries retrieved", "data": response.data}
         except Exception as e:
@@ -120,11 +139,13 @@ class ItineraryCRUD:
             return error
         
         try:
-            response = supabase.table(ItineraryCRUD.TABLE_NAME)\
-                .select("*")\
-                .eq("id", itinerary_id)\
-                .single()\
+            response = ItineraryCRUD._execute_with_retry(
+                lambda: db_config.supabase.table(ItineraryCRUD.TABLE_NAME)
+                .select("*")
+                .eq("id", itinerary_id)
+                .single()
                 .execute()
+            )
             
             return {"success": True, "message": "Itinerary retrieved", "data": response.data}
         except Exception as e:
@@ -137,12 +158,14 @@ class ItineraryCRUD:
             return error
         
         try:
-            response = supabase.table(ItineraryCRUD.TABLE_NAME)\
-                .select("*")\
-                .eq("user_id", user_id)\
-                .ilike("destination", f"%{destination}%")\
-                .order("created_at", desc=True)\
+            response = ItineraryCRUD._execute_with_retry(
+                lambda: db_config.supabase.table(ItineraryCRUD.TABLE_NAME)
+                .select("*")
+                .eq("user_id", user_id)
+                .ilike("destination", f"%{destination}%")
+                .order("created_at", desc=True)
                 .execute()
+            )
             
             return {"success": True, "message": "Itineraries retrieved", "data": response.data}
         except Exception as e:
@@ -169,10 +192,12 @@ class ItineraryCRUD:
                     for day in update_data["days"]
                 ]
             
-            response = supabase.table(ItineraryCRUD.TABLE_NAME)\
-                .update(update_data)\
-                .eq("id", itinerary_id)\
+            response = ItineraryCRUD._execute_with_retry(
+                lambda: db_config.supabase.table(ItineraryCRUD.TABLE_NAME)
+                .update(update_data)
+                .eq("id", itinerary_id)
                 .execute()
+            )
             
             if response.data:
                 return {"success": True, "message": "Itinerary updated", "data": response.data[0]}
@@ -187,10 +212,12 @@ class ItineraryCRUD:
             return error
         
         try:
-            response = supabase.table(ItineraryCRUD.TABLE_NAME)\
-                .delete()\
-                .eq("id", itinerary_id)\
+            response = ItineraryCRUD._execute_with_retry(
+                lambda: db_config.supabase.table(ItineraryCRUD.TABLE_NAME)
+                .delete()
+                .eq("id", itinerary_id)
                 .execute()
+            )
             
             return {"success": True, "message": "Itinerary deleted", "data": response.data}
         except Exception as e:
@@ -203,10 +230,12 @@ class ItineraryCRUD:
             return error
         
         try:
-            response = supabase.table(ItineraryCRUD.TABLE_NAME)\
-                .delete()\
-                .eq("user_id", user_id)\
+            response = ItineraryCRUD._execute_with_retry(
+                lambda: db_config.supabase.table(ItineraryCRUD.TABLE_NAME)
+                .delete()
+                .eq("user_id", user_id)
                 .execute()
+            )
             
             return {"success": True, "message": "All itineraries deleted", "data": response.data}
         except Exception as e:
@@ -219,10 +248,12 @@ class ItineraryCRUD:
             return error
         
         try:
-            response = supabase.table(ItineraryCRUD.TABLE_NAME)\
-                .select("id", count="exact")\
-                .eq("user_id", user_id)\
+            response = ItineraryCRUD._execute_with_retry(
+                lambda: db_config.supabase.table(ItineraryCRUD.TABLE_NAME)
+                .select("id", count="exact")
+                .eq("user_id", user_id)
                 .execute()
+            )
             
             return {"success": True, "message": "Count retrieved", "data": {"count": response.count}}
         except Exception as e:

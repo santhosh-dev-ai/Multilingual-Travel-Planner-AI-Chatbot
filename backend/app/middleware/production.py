@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from typing import Callable, Optional
 import time
 import logging
+from pathlib import Path
 from datetime import datetime
 from collections import defaultdict
 
@@ -14,11 +15,14 @@ from app.models.responses import ErrorResponse
 
 
 # Configure logging
+LOG_DIR = Path("logs")
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('logs/app.log'),
+        logging.FileHandler(LOG_DIR / 'app.log'),
         logging.StreamHandler()
     ]
 )

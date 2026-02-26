@@ -31,11 +31,12 @@ def health_check():
 @router.get("/wishlist/{user_id}")
 def get_user_wishlist(user_id: str):
     result = WishlistCRUD.get_by_user(user_id)
-    # Return empty wishlist gracefully if database not configured
-    if not result["success"] and "not configured" in result["message"].lower():
-        return {"success": True, "message": "Database not configured, returning empty wishlist", "data": []}
-    if not result["success"]:
-        raise HTTPException(status_code=500, detail=result["message"])
+    # Return empty wishlist gracefully on configuration or transient database issues
+    if not result.get("success"):
+        message = str(result.get("message", ""))
+        if "not configured" in message.lower():
+            return {"success": True, "message": "Database not configured, returning empty wishlist", "data": []}
+        return {"success": True, "message": "Wishlist temporarily unavailable, returning empty list", "data": []}
     return result
 
 
@@ -84,9 +85,12 @@ def clear_wishlist(user_id: str):
 @router.get("/itinerary/{user_id}")
 def get_user_itineraries(user_id: str, limit: int = Query(50)):
     result = ItineraryCRUD.get_by_user(user_id, limit)
-    # Return empty list gracefully if database not configured
-    if not result.get("success") and "not configured" in result.get("message", "").lower():
-        return {"success": True, "message": "Database not configured, returning empty itineraries", "data": []}
+    # Return empty list gracefully on configuration or transient database issues
+    if not result.get("success"):
+        message = str(result.get("message", ""))
+        if "not configured" in message.lower():
+            return {"success": True, "message": "Database not configured, returning empty itineraries", "data": []}
+        return {"success": True, "message": "Itineraries temporarily unavailable, returning empty list", "data": []}
     return result
 
 
@@ -102,10 +106,19 @@ def save_itinerary(itinerary: ItineraryCreate):
 @router.get("/itinerary/{user_id}/count")
 def count_itineraries(user_id: str):
     result = ItineraryCRUD.count_by_user(user_id)
-    # Return 0 gracefully if database not configured
-    if not result.get("success") and "not configured" in result.get("message", "").lower():
-        return {"success": True, "message": "Database not configured", "data": {"count": 0}}
-    return result
+    # Return 0 gracefully on configuration or transient database issues
+    if not result.get("success"):
+        message = str(result.get("message", ""))
+        if "not configured" in message.lower():
+            return {"success": True, "message": "Database not configured", "data": {"count": 0}, "count": 0}
+        return {"success": True, "message": "Itinerary count temporarily unavailable", "data": {"count": 0}, "count": 0}
+
+    count = 0
+    if isinstance(result.get("data"), dict):
+        count = result["data"].get("count") or 0
+
+    # Keep response backward compatible for frontend expecting response.count
+    return {**result, "count": count}
 
 
 @router.get("/itinerary/detail/{itinerary_id}")
